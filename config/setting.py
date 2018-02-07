@@ -4,7 +4,7 @@ import os
 # Imdb dataset path config
 #=======================
 
-work_dir = os.path.dirname(os.path.abspath(__file__))
+work_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 Imdb_file = os.path.join(work_dir, 'dataset', 'aclImdb')
 # data path
 train_pos = os.path.join( Imdb_file, 'train', 'pos')
