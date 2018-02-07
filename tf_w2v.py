@@ -122,6 +122,7 @@ with graph.as_default():
     train_labels = tf.placeholder(tf.int32, shape=[batch_size, 1])
     valid_dataset = tf.constant(valid_examples, dtype=tf.int32)
 
+    # TODO
     with tf.device('/cpu:0'):
         # embedding for inputs
         embeddings = tf.Variable(

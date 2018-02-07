@@ -1,10 +1,6 @@
-import pandas as pd
-import sqlalchemy as sa
+import os
+import numpy as np
 
-
-engine = sa.create_engine('mysql+pymysql://root:Admin@localhost/yelp_db?charset=utf8')
-conn = engine.connect()
-if conn:
-    sql_review = "select  text, stars  from review"
-    data_review = pd.read_sql(sql=sql_review, con=conn)
-    data = data_review.to_json(orient='records')
+class DataProvider(object):
+    def __init__(self, inputs, targets, batch_size, max_num_batches=-1):
+        pass

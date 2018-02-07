@@ -11,6 +11,6 @@ from gensim.models import Word2Vec
 import pandas as pd
 
 
-data_path = '/Users/yekun/Documents/CODE_/MLP/dataset/yelp.csv'
+data_path = 'MLP/dataset/yelp/yelp.csv'
 for ch in pd.read_csv(data_path, iterator=True, chunksize=1000):
     print(ch['text'].to_string)
