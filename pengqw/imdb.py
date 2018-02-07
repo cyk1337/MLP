@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Wed Feb  7 19:49:20 2018
+
+@author: pqw1995@163.com
+"""
 
 from config.setting import *
 import json
@@ -49,7 +54,7 @@ for inde, x in enumerate(train_data['text']):
     train_data['text'][inde]=mm
 
 print ('the preprocessing is done')
-vec_model = Word2Vec(train_data['text'],size=200, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=2, iter=20,compute_loss=True)
+vec_model = Word2Vec(train_data['text'],size=200, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=0, iter=40,compute_loss=True)
 print ('vector model training process is done')
 print ('vocabulary size is :', len(vec_model.wv.index2word))
 vec_model.save('vec_model')
