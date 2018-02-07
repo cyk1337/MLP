@@ -5,6 +5,7 @@ Created on Wed Feb  7 19:49:20 2018
 @author: pqw1995@163.com
 """
 
+from config.setting import *
 import json
 import os
 from keras.preprocessing.text import Tokenizer
@@ -21,8 +22,8 @@ import multiprocessing
 import glob
 import re
 
-txt_file='dataset/aclImdb/train/pos/*.txt'
-txt_neg='dataset/aclImdb/train/neg/*.txt'
+txt_file=os.path.join(train_pos,'*.txt')
+txt_neg=os.path.join(train_neg, '*.txt') 
 filename_pos= glob.glob(txt_file)
 filename_neg= glob.glob(txt_neg)
 train_data_pos=pd.DataFrame()
@@ -47,10 +48,15 @@ for file in filename_neg:
 train_data=pd.concat([train_data_pos,train_data_neg],ignore_index=True, axis=0)
 train_data=train_data.sample(frac=1)
 
+train_data['text'] = train_data.apply(lambda row: nltk.word_tokenize(row['text']), axis=1)
 for inde, x in enumerate(train_data['text']):
     mm= [w.lower() for w in x]
     train_data['text'][inde]=mm
 
 print ('the preprocessing is done')
+vec_model = Word2Vec(train_data['text'],size=200, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=2, iter=20,compute_loss=True)
+print ('vector model training process is done')
+print ('vocabulary size is :', len(vec_model.wv.index2word))
+vec_model.save('vec_model')
+
     
-#my_new = my_new.sample(frac=1)
