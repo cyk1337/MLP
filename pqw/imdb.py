@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Feb  7 19:49:20 2018
-
-@author: pqw1995@163.com
-"""
 
 from config.setting import *
 import json

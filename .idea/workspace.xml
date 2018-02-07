@@ -1,26 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0d872247-b394-4399-90cc-b8854cb57fb4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PQW/__init__.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/dictionaries/yekun.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CYK/data_processing.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CYK/notebooks/.ipynb_checkpoints/tf_w2v_tut-checkpoint.ipynb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CYK/notebooks/.ipynb_checkpoints/word2vec-checkpoint.ipynb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CYK/notebooks/word2vec.ipynb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CYK/w2v/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CYK/w2v/keras_w2v.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CYK/w2v/word2vec.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PQW/vec_model" afterPath="$PROJECT_DIR$/PQW/vec_model" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/paper/Character-Aware Neural Language Models.pdf" afterPath="$PROJECT_DIR$/paper/Character-Aware Neural Language Models.pdf" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/paper/wvSent_acl2011.pdf" afterPath="$PROJECT_DIR$/paper/wvSent_acl2011.pdf" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/MLP.iml" afterPath="$PROJECT_DIR$/.idea/MLP.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/setting.py" afterPath="$PROJECT_DIR$/config/setting.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pqw/imdb.py" afterPath="$PROJECT_DIR$/pqw/imdb.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/utils_.py" afterPath="$PROJECT_DIR$/test/utils_.py" />
-    </list>
+    <list default="true" id="0d872247-b394-4399-90cc-b8854cb57fb4" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -51,11 +32,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="setting.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="setting.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/setting.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="120">
               <caret line="8" column="11" lean-forward="false" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="imdb.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/PQW/imdb.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="23" lean-forward="false" selection-start-line="0" selection-start-column="23" selection-end-line="0" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -95,6 +86,7 @@
         <option value="$PROJECT_DIR$/test/__init__.py" />
         <option value="$PROJECT_DIR$/test/utils_.py" />
         <option value="$PROJECT_DIR$/config/setting.py" />
+        <option value="$PROJECT_DIR$/PQW/imdb.py" />
       </list>
     </option>
   </component>
@@ -170,6 +162,11 @@
               <item name="MLP" type="b2602c69:ProjectViewProjectNode" />
               <item name="MLP" type="462c0819:PsiDirectoryNode" />
               <item name="dataset" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MLP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MLP" type="462c0819:PsiDirectoryNode" />
+              <item name="PQW" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -384,7 +381,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32806325" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32806325" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32806325" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24981132" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32806325" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3992095" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -576,6 +573,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" column="11" lean-forward="false" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PQW/imdb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="23" lean-forward="false" selection-start-line="0" selection-start-column="23" selection-end-line="0" selection-end-column="23" />
           <folding />
         </state>
       </provider>
