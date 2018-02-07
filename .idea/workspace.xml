@@ -2,18 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0d872247-b394-4399-90cc-b8854cb57fb4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/__init__.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/config.py" afterPath="$PROJECT_DIR$/config/setting.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/tf_w2v_tut-checkpoint.ipynb" afterPath="$PROJECT_DIR$/CYK/notebooks/.ipynb_checkpoints/tf_w2v_tut-checkpoint.ipynb" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/word2vec-checkpoint.ipynb" afterPath="$PROJECT_DIR$/CYK/notebooks/.ipynb_checkpoints/word2vec-checkpoint.ipynb" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/notebooks/word2vec.ipynb" afterPath="$PROJECT_DIR$/CYK/notebooks/word2vec.ipynb" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test/data_processing.py" afterPath="$PROJECT_DIR$/CYK/data_processing.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test/w2v/__init__.py" afterPath="$PROJECT_DIR$/CYK/w2v/__init__.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test/w2v/keras_w2v.py" afterPath="$PROJECT_DIR$/CYK/w2v/keras_w2v.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test/w2v/word2vec.py" afterPath="$PROJECT_DIR$/CYK/w2v/word2vec.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/utils_.py" afterPath="$PROJECT_DIR$/test/utils_.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/setting.py" afterPath="$PROJECT_DIR$/config/setting.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -30,7 +19,7 @@
     <SUITE FILE_PATH="coverage/MLP$utils.coverage" NAME="utils Coverage Results" MODIFIED="1518039697445" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/MLP$tf_w2v.coverage" NAME="tf_w2v Coverage Results" MODIFIED="1518038203031" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/MLP$keras_w2v__1_.coverage" NAME="keras_w2v (1) Coverage Results" MODIFIED="1517945739127" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/w2v" />
-    <SUITE FILE_PATH="coverage/MLP$utils_.coverage" NAME="utils_ Coverage Results" MODIFIED="1518039709034" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
+    <SUITE FILE_PATH="coverage/MLP$utils_.coverage" NAME="utils_ Coverage Results" MODIFIED="1518042101294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -48,14 +37,14 @@
       <file leaf-file-name="setting.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/setting.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="27" lean-forward="false" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
+            <state relative-caret-position="45">
+              <caret line="3" column="53" lean-forward="false" selection-start-line="3" selection-start-column="53" selection-end-line="3" selection-end-column="53" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="15">
@@ -65,7 +54,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="utils_.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="utils_.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test/utils_.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="75">
@@ -107,6 +106,7 @@
         <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/test_/utils.py" />
         <option value="$PROJECT_DIR$/test/__init__.py" />
+        <option value="$PROJECT_DIR$/config/setting.py" />
       </list>
     </option>
   </component>
@@ -170,12 +170,22 @@
             <path>
               <item name="MLP" type="b2602c69:ProjectViewProjectNode" />
               <item name="MLP" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MLP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MLP" type="462c0819:PsiDirectoryNode" />
               <item name="CYK" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="MLP" type="b2602c69:ProjectViewProjectNode" />
               <item name="MLP" type="462c0819:PsiDirectoryNode" />
               <item name="dataset" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MLP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MLP" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -518,16 +528,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/config/setting.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="27" lean-forward="false" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/utils_.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="16" lean-forward="true" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+        <state relative-caret-position="45">
+          <caret line="3" column="53" lean-forward="false" selection-start-line="3" selection-start-column="53" selection-end-line="3" selection-end-column="53" />
           <folding />
         </state>
       </provider>
@@ -536,6 +538,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" column="26" lean-forward="true" selection-start-line="1" selection-start-column="26" selection-end-line="1" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/utils_.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="16" lean-forward="true" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
           <folding />
         </state>
       </provider>
