@@ -2,8 +2,8 @@
 
 ---
 #### Coursework 3&4 - G46
-Task: Sentiment Analysis
-Dataset: Large Moview Review Dataset
+- Task: Sentiment Analysis
+- Dataset: Large Moview Review Dataset, IMDB
 
 
 
