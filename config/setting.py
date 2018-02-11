@@ -22,6 +22,10 @@ embedding_dir = os.path.join(work_dir, 'embedding')
 plot_dir = os.path.join(work_dir, 'plot')
 log_dir = os.path.join(work_dir, 'logs')
 
+CBOW_embedding = os.path.join(embedding_dir, '100d_cbow.txt')
+SkipGram_embedding = os.path.join(embedding_dir, '100d_skipgram.txt')
+
+
 
 # sequence param
 MAX_NUM_WORDS = 20000

@@ -68,7 +68,8 @@ def load_pretrained_model(embedding_path):
 
 if __name__=='__main__':
     # 1. load pretrained embedding
-    embedding_path = os.path.join(embedding_dir, 'gensim_word2vec.txt')
+    embedding_path = 'gensim_word2vec.txt'
+    embedding_path = os.path.join(embedding_dir, embedding_path)
     embeddings_index = load_pretrained_model(embedding_path)
 
     # 2. prepare training data and labels

@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+
+# encoding: utf-8
+
+'''
+  
+             \ \ / /__| | ___   _ _ __    / ___| | | |  / \  |_ _|
+              \ V / _ \ |/ / | | | '_ \  | |   | |_| | / _ \  | | 
+               | |  __/   <| |_| | | | | | |___|  _  |/ ___ \ | | 
+               |_|\___|_|\_\\__,_|_| |_|  \____|_| |_/_/   \_\___
+ ==========================================================================
+@author: CYK
+
+@license: School of Informatics, Edinburgh
+
+@contact: s1718204@sms.ed.ac.uk
+
+@file: embedding_reader.py
+
+@time: 11/02/2018 20:21
+
+@desc:         
+               
+'''              
+
+from keras.preprocessing.text import Tokenizer
