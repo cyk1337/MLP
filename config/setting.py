@@ -13,7 +13,7 @@ test_pos = os.path.join(Imdb_file, 'train', 'pos')
 test_neg = os.path.join(work_dir, Imdb_file, 'train', 'neg')
 
 # csv raw docs
-data_file = 'csv'
+data_file = os.path.join(work_dir, 'csv')
 train_csv = os.path.join(data_file, 'train.csv')
 test_csv = os.path.join(data_file,'test.csv')
 
@@ -21,6 +21,7 @@ test_csv = os.path.join(data_file,'test.csv')
 embedding_dir = os.path.join(work_dir, 'embedding')
 plot_dir = os.path.join(work_dir, 'plot')
 log_dir = os.path.join(work_dir, 'logs')
+
 
 # sequence param
 MAX_NUM_WORDS = 20000
