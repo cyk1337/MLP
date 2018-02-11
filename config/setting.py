@@ -26,7 +26,6 @@ log_dir = os.path.join(work_dir, 'logs')
 MAX_NUM_WORDS = 20000
 MAX_SEQUENCE_LENGTH = 1000
 EMBEDDING_DIM = 100
-VALIDATION_SLPIT = 0.2
 
 SEED = 2018
 
