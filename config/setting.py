@@ -9,8 +9,8 @@ Imdb_file = os.path.join(work_dir, 'dataset', 'aclImdb')
 # data path
 train_pos = os.path.join( Imdb_file, 'train', 'pos')
 train_neg = os.path.join(Imdb_file, 'train', 'neg')
-test_pos = os.path.join(Imdb_file, 'train', 'pos')
-test_neg = os.path.join(work_dir, Imdb_file, 'train', 'neg')
+test_pos = os.path.join(Imdb_file, 'test', 'pos')
+test_neg = os.path.join(work_dir, Imdb_file, 'test', 'neg')
 
 # csv raw docs
 data_file = os.path.join(work_dir, 'csv')
@@ -33,6 +33,7 @@ MAX_SEQUENCE_LENGTH = 1000
 EMBEDDING_DIM = 100
 
 SEED = 2018
+RECORDS_NUM = 25000
 
 
 

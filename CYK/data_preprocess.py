@@ -50,13 +50,13 @@ def get_doc_list(folder_list):
         # append records(lines)
         for j, text in enumerate(texts):
             records.append((text,labels_index[j]))
-    assert len(records) == 25000, "Review size doesn't match!"
+    assert len(records) == RECORDS_NUM, "Review size doesn't match!"
     return records
 
 def get_file_num(folder):
     return len(os.listdir(folder))
 
-def generate_csv(folders, csv_file, shuffle_seed=2018):
+def generate_csv(folders, csv_file, shuffle_seed=SEED):
     record = get_doc_list(folders)
 
     # hand label then shuffle
@@ -74,7 +74,7 @@ def generate_csv(folders, csv_file, shuffle_seed=2018):
 
     if not os.path.exists(csv_file):
 
-        print('Generating train_csv...')
+        print('Generating {}...'.format(csv_file))
         shuffle_data.to_csv(csv_file, index=False, encoding='utf-8')
         print('Finished')
     else:
@@ -100,7 +100,8 @@ if __name__=="__main__":
         generate_csv(train_folders, csv_file=train_csv)
     if not os.path.exists(test_csv):
         generate_csv(test_folders, csv_file=test_csv)
-    print('Train and test data generated!\n','-'*80)
+    print('Train and test data generated!')
+    print('-'*80)
 
 
 

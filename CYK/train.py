@@ -85,7 +85,8 @@ if __name__=='__main__':
     y_test = test_data['target']
 
     # tokenize, filter punctuation, lowercase
-    tokenizer = Tokenizer(num_words=MAX_NUM_WORDS, lower=True, char_level=False)
+    # tokenizer = Tokenizer(num_words=MAX_NUM_WORDS, lower=True, char_level=False)
+    tokenizer = Tokenizer()
     tokenizer.fit_on_texts(X_train)
     vocarb_size = len(tokenizer.word_index) + 1
     print("%d word types" % len(tokenizer.word_index))
@@ -99,6 +100,11 @@ if __name__=='__main__':
     word_index = tokenizer.word_index
     print('index',word_index)
     train_pad_seq = pad_sequences(sequences=train_seq, maxlen=MAX_SEQUENCE_LENGTH)
+
+# check TODO
+    Xtrain_matrix = tokenizer.texts_to_matrix(X_train)
+
+    Xtest_matrix = tokenizer.texts_to_matrix(X_test)
 
     # pad test sequence
     test_seq = tokenizer.texts_to_sequences(X_test)
