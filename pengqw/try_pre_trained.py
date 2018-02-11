@@ -4,8 +4,7 @@ Created on Fri Feb  9 16:03:06 2018
 
 @author: pqw1995@163.com
 """
-import sys
-sys.path.append('D:\\MLP_Project\\MLP')
+
 import __init__
 from config.setting import *
 import os

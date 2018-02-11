@@ -4,7 +4,8 @@ Created on Fri Feb  9 13:16:08 2018
 
 @author: pqw1995@163.com
 """
-
+import sys
+sys.path.append('D:\\MLP_Project\\MLP')
 import tensorflow as tf
 from keras.datasets import imdb
 from keras.models import Sequential
