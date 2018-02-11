@@ -22,6 +22,7 @@
 @desc:         
                
 '''
+import numpy as np
 
 # encoding method 1: load pre-trained embedding
 
