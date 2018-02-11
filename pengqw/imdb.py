@@ -5,7 +5,9 @@ Created on Wed Feb  7 19:49:20 2018
 @author: pqw1995@163.com
 """
 
-from config.setting import *
+#from config.setting import *
+
+#import __init__
 import json
 import os
 from keras.preprocessing.text import Tokenizer
@@ -21,42 +23,62 @@ from nltk.corpus import stopwords
 import multiprocessing
 import glob
 import re
+from string import punctuation
+from keras.preprocessing.text import text_to_word_sequence
 
-txt_file=os.path.join(train_pos,'*.txt')
-txt_neg=os.path.join(train_neg, '*.txt') 
-filename_pos= glob.glob(txt_file)
-filename_neg= glob.glob(txt_neg)
-train_data_pos=pd.DataFrame()
-train_data_neg=pd.DataFrame()
-train_data=pd.DataFrame()
 
-for file in filename_pos:
-    with open (file, 'rb') as f:
-        data = f.read().decode('utf-8')
-        data=re.sub('<br />|<br />',' ',data)
-        score = re.findall(r'_(\d+).',file)
-        #train_data_pos=train_data_pos.append({'score': score[0], 'text': data},ignore_index=True)
-        train_data_pos=train_data_pos.append({'score': score[0], 'text': data},ignore_index=True)
-        
-for file in filename_neg:
-    with open (file, 'rb') as f:
-        data = f.read().decode('utf-8')
-        data=re.sub('<br />|<br />',' ',data)
-        score = re.findall(r'_(\d+).',file)
-        train_data_neg=train_data_neg.append({'score': score[0], 'text': data},ignore_index=True)
-    
-train_data=pd.concat([train_data_pos,train_data_neg],ignore_index=True, axis=0)
-train_data=train_data.sample(frac=1)
 
-train_data['text'] = train_data.apply(lambda row: nltk.word_tokenize(row['text']), axis=1)
-for inde, x in enumerate(train_data['text']):
-    mm= [w.lower() for w in x]
-    train_data['text'][inde]=mm
+#txt_file=os.path.join(train_pos,'*.txt')
+#txt_neg=os.path.join(train_neg, '*.txt') 
+
+############################write data to local
+
+#txt_file='D:\MLP_Project\MLP\dataset\\aclImdb\\train\pos\*.txt'
+#txt_neg='D:\MLP_Project\MLP\dataset\\aclImdb\\train\\neg\*.txt'
+#
+#filename_pos= glob.glob(txt_file)
+#filename_neg= glob.glob(txt_neg)
+#train_data_pos=pd.DataFrame()
+#train_data_neg=pd.DataFrame()
+#train_data=pd.DataFrame()
+#
+#for file in filename_pos:
+#    with open (file, 'rb') as f:
+#        data = f.read().decode('utf-8')
+#        data=re.sub(r'<br />|<br />','',data)
+#        score = re.findall(r'_(\d+).',file)
+#        #train_data_pos=train_data_pos.append({'score': score[0], 'text': data},ignore_index=True)
+#        train_data_pos=train_data_pos.append({'score': score[0], 'text': data},ignore_index=True)
+#        
+#for file in filename_neg:
+#    with open (file, 'rb') as f:
+#        data = f.read().decode('utf-8')
+#        data=re.sub(r'<br />|<br />','',data)
+#        score = re.findall(r'_(\d+).',file)
+#        train_data_neg=train_data_neg.append({'score': score[0], 'text': data},ignore_index=True)
+#    
+#train_data=pd.concat([train_data_pos,train_data_neg],ignore_index=True, axis=0)
+#train_data=train_data.sample(frac=1)
+#
+#train_data.to_csv('train_data.csv',index=False, encoding='utf-8')
+
+#\d+|[\u4e00-\u9fff]+
+
+
+train_data=pd.read_csv('train_data.csv')
+
+train_data['text'] = train_data.apply(lambda row: text_to_word_sequence(row['text']), axis=1)
+#for inde, x in enumerate(train_data['text']):
+##    mm= [w.lower() for w in x]
+#    mm= [word for word in x if word.isalpha()]
+#    train_data['text'][inde]=mm
 
 print ('the preprocessing is done')
-vec_model = Word2Vec(train_data['text'],size=200, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=0, iter=40,compute_loss=True)
-print ('vector model training process is done')
+vec_model = Word2Vec(train_data['text'],size=100, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=0, iter=40,compute_loss=True)
+print ('vector model training process is done') 
 print ('vocabulary size is :', len(vec_model.wv.index2word))
-vec_model.save('vec_model')
+print ('the latese loss is :', vec_model.get_latest_training_loss())
+#vec_model.save('vec_model_sg')
+vec_model.wv.save_word2vec_format('100d_vec_model_sg0.txt',binary=False)
 
     
