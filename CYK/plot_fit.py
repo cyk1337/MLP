@@ -21,8 +21,12 @@
                
 '''              
 
+import __init__
+from config.setting import *
+
 import os
 import matplotlib.pyplot as plt
+
 
 
 
@@ -58,7 +62,7 @@ def plot_fit(history, plot_filename):
     plt.show()
 
 
-def save_fig(plt, plot_filename, plot_dir='plot'):
+def save_fig(plt, plot_filename, plot_dir=plot_dir):
 
     if not os.path.exists(plot_dir):
         os.mkdir(plot_dir)

@@ -155,7 +155,7 @@ if __name__=='__main__':
     print("Accuracy: %.2f%%" % (scores[1] * 100))
 
     # save performance
-    plot_fit(history, plot_filename='DNN_test.pdf')
+    plot_fit(history, plot_filename='DNN_test.pdf',)
 
     # run tensorboard
     # tensorboard --logdir=logs
