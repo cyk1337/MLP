@@ -6,6 +6,8 @@ Created on Fri Feb  9 13:16:08 2018
 """
 import sys
 sys.path.append('D:\\MLP_Project\\MLP')
+from config.setting import *
+
 import tensorflow as tf
 from keras.datasets import imdb
 from keras.models import Sequential

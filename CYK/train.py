@@ -146,7 +146,6 @@ if __name__=='__main__':
 
     # Log to tensorboard
     tensorBoardCallback = TensorBoard(log_dir=log_dir, write_graph=True)
-    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     history = model.fit(train_pad_seq, y_train, epochs=5, callbacks=[tensorBoardCallback], batch_size=64, validation_data=(test_pad_seq, y_test))
 
