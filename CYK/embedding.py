@@ -1,5 +1,33 @@
+#!/usr/bin/env python
+
+# encoding: utf-8
+
+'''
+
+             \ \ / /__| | ___   _ _ __    / ___| | | |  / \  |_ _|
+              \ V / _ \ |/ / | | | '_ \  | |   | |_| | / _ \  | |
+               | |  __/   <| |_| | | | | | |___|  _  |/ ___ \ | |
+               |_|\___|_|\_\\__,_|_| |_|  \____|_| |_/_/   \_\___
+ ==========================================================================
+@author: CYK
+
+@license: School of Informatics, Edinburgh
+
+@contact: s1718204@sms.ed.ac.uk
+
+@file: test.py
+
+@time: 10/02/2018 10:28
+
+@desc:
+
+'''
+
 import __init__
 from config.setting import *
+from CYK.plot_fit import plot_fit
+from CYK.help import run_tensorboard
+
 
 import numpy as np
 import pandas as pd
@@ -55,7 +83,7 @@ if __name__=='__main__':
     y_test = test_data['target']
 
     # tokenize, filter punctuation, lowercase
-    tokenizer = Tokenizer(num_words=None, lower=True, char_level=False)
+    tokenizer = Tokenizer(num_words=MAX_NUM_WORDS, lower=True, char_level=False)
     tokenizer.fit_on_texts(X_train)
     vocarb_size = len(tokenizer.word_index) + 1
     print("%d word types" % len(tokenizer.word_index))
@@ -63,15 +91,19 @@ if __name__=='__main__':
 
     # encoding method 0 : Tokenizer.texts_to_sequence
     # ========================
-    sequences = tokenizer.texts_to_sequences(X_train)
+    train_seq = tokenizer.texts_to_sequences(X_train)
     # print(len(encoded_text))
 
     word_index = tokenizer.word_index
     print('index',word_index)
-    pad_seq = pad_sequences(sequences=sequences, maxlen=MAX_SEQUENCE_LENGTH)
+    train_pad_seq = pad_sequences(sequences=train_seq, maxlen=MAX_SEQUENCE_LENGTH)
+
+    # pad test sequence
+    test_seq = tokenizer.texts_to_sequences(X_test)
+    test_pad_seq = pad_sequences(sequences=test_seq, maxlen=MAX_SEQUENCE_LENGTH)
 
     # labels = to_categorical(np.asarray(y_train))
-    print("padding sequnce(X_input) shape:", pad_seq.shape)
+    print("padding sequnce(X_input) shape:", train_pad_seq.shape)
     # print("target(y_train) shape:", labels.shape)
     print('-'*80)
 
@@ -85,7 +117,7 @@ if __name__=='__main__':
         if embedding_vector is not None:
             embedding_matrix[i] = embedding_vector
 
-# TODO flase
+# TODO
     # input length
     embedding_layer = Embedding(num_words, EMBEDDING_DIM, weights=[embedding_matrix], input_length=MAX_SEQUENCE_LENGTH, trainable=False)
 
@@ -102,15 +134,21 @@ if __name__=='__main__':
     model.add(Dense(1, activation='sigmoid'))
 
     # Log to tensorboard
-    tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
+    tensorBoardCallback = TensorBoard(log_dir=log_dir, write_graph=True)
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-    model.fit(pad_seq, y_train, epochs=3, callbacks=[tensorBoardCallback], batch_size=64)
+    history = model.fit(train_pad_seq, y_train, epochs=20, callbacks=[tensorBoardCallback], batch_size=64, validation_data=(test_pad_seq, y_test))
 
     # Evaluation on the test set
-    scores = model.evaluate(X_test, y_test, verbose=0)
+    scores = model.evaluate(test_pad_seq, y_test, verbose=0)
     print("Accuracy: %.2f%%" % (scores[1] * 100))
 
-    # tensorboard
+    # save performance
+    plot_fit(history, plot_filename='test.pdf')
+
+    # run tensorboard
     # tensorboard --logdir=logs
+    run_tensorboard(log_dir)
+
+
 
