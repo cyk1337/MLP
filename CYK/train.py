@@ -40,7 +40,8 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Dense, Input, GlobalMaxPooling1D, Convolution1D, GlobalAveragePooling1D
 from keras.layers import Conv1D, MaxPooling1D, Embedding, Flatten, Dropout
 from keras.models import Model,Sequential
-from keras.callbacks import TensorBoard
+from keras.callbacks import TensorBoard, EarlyStopping
+
 
 # read from datafile
 
@@ -68,7 +69,7 @@ def load_pretrained_model(embedding_path):
 
 if __name__=='__main__':
     # 1. load pretrained embedding
-    embedding_path = 'gensim_word2vec.txt'
+    embedding_path = CBOW_embedding
     embedding_path = os.path.join(embedding_dir, embedding_path)
     embeddings_index = load_pretrained_model(embedding_path)
 
@@ -148,7 +149,10 @@ if __name__=='__main__':
     # Log to tensorboard
     tensorBoardCallback = TensorBoard(log_dir=log_dir, write_graph=True)
 
-    history = model.fit(train_pad_seq, y_train, epochs=5, callbacks=[tensorBoardCallback], batch_size=64, validation_data=(test_pad_seq, y_test))
+    # early stopping
+    earlystopping = EarlyStopping('val_loss', patience=2)
+
+    history = model.fit(train_pad_seq, y_train, epochs=5, callbacks=[tensorBoardCallback, earlystopping], batch_size=64, validation_data=(test_pad_seq, y_test))
 
     # Evaluation on the test set
     scores = model.evaluate(test_pad_seq, y_test, verbose=0)
@@ -159,7 +163,7 @@ if __name__=='__main__':
 
     # run tensorboard
     # tensorboard --logdir=logs
-    run_tensorboard(log_dir)
+    # run_tensorboard(log_dir)
 
 
 
