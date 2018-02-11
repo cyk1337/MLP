@@ -31,7 +31,7 @@ import matplotlib.pyplot as plt
 
 
 def plot_fit(history, plot_filename):
-    assert len(history.history)==4, "Error: did not fit validation data!"
+    assert len(history.history) == 4, "Error: did not fit validation data!"
     acc = history.history['acc']
     val_acc = history.history['val_acc']
     loss = history.history['loss']
@@ -63,9 +63,9 @@ def plot_fit(history, plot_filename):
 
 
 def save_fig(plt, plot_filename, plot_dir=plot_dir):
-
+    print("plot_dir:", plot_dir)
     if not os.path.exists(plot_dir):
         os.mkdir(plot_dir)
     filename = os.path.join(plot_dir, plot_filename)
-    plt.savefig('{}.pdf'.format(filename))
+    plt.savefig('{}'.format(filename))
     print('{} saved!'.format(filename))

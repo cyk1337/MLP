@@ -15,7 +15,7 @@
 
 @contact: s1718204@sms.ed.ac.uk
 
-@file: test.py
+@file: train.py
 
 @time: 10/02/2018 10:28
 
@@ -27,7 +27,8 @@ import __init__
 from config.setting import *
 from CYK.plot_fit import plot_fit
 from CYK.help import run_tensorboard
-
+from CYK.data_loader import load_imdb
+from CYK.embedding_loader import load_pretrained_model
 
 import numpy as np
 import pandas as pd
@@ -43,27 +44,6 @@ from keras.models import Model,Sequential
 from keras.callbacks import TensorBoard, EarlyStopping
 
 
-# read from datafile
-
-
-# encoding method 1: load pre-trained embedding
-
-# build mapping for pretrained models
-# dict {word->vector}
-# ====================
-def load_pretrained_model(embedding_path):
-    embedding_index = dict()
-    with open(embedding_path, encoding='utf-8') as f:
-        for line in f:
-            values = line.split()
-            word = values[0]
-            if word.isdigit(): continue
-            vector = np.asarray(values[1:], dtype='float32')
-            embedding_index[word] = vector
-    print("Found %s word vectors" % len(embedding_index))
-    return embedding_index
-
-
 
 
 
@@ -73,20 +53,14 @@ if __name__=='__main__':
     embedding_path = os.path.join(embedding_dir, embedding_path)
     embeddings_index = load_pretrained_model(embedding_path)
 
-    # 2. prepare training data and labels
-
-    ## train data
-    train_data = pd.read_csv(train_csv)
-    X_train = train_data['text']
-    y_train = train_data['target']
-    # test data
-    test_data = pd.read_csv(test_csv)
-    X_test = test_data['text']
-    y_test = test_data['target']
+    # load data
+    (X_train, y_train), (X_test, y_test) = load_imdb()
 
     # tokenize, filter punctuation, lowercase
-    # tokenizer = Tokenizer(num_words=MAX_NUM_WORDS, lower=True, char_level=False)
-    tokenizer = Tokenizer()
+    tokenizer = Tokenizer(num_words=MAX_NUM_WORDS, lower=True, char_level=False)
+
+    # test index
+    # tokenizer = Tokenizer()
     tokenizer.fit_on_texts(X_train)
     vocarb_size = len(tokenizer.word_index) + 1
     print("%d word types" % len(tokenizer.word_index))
@@ -102,9 +76,9 @@ if __name__=='__main__':
     train_pad_seq = pad_sequences(sequences=train_seq, maxlen=MAX_SEQUENCE_LENGTH)
 
 # check TODO
-    Xtrain_matrix = tokenizer.texts_to_matrix(X_train)
-
-    Xtest_matrix = tokenizer.texts_to_matrix(X_test)
+#     Xtrain_matrix = tokenizer.texts_to_matrix(X_train)
+#
+#     Xtest_matrix = tokenizer.texts_to_matrix(X_test)
 
     # pad test sequence
     test_seq = tokenizer.texts_to_sequences(X_test)
@@ -146,7 +120,7 @@ if __name__=='__main__':
     # model.add(Dense(1, activation='sigmoid'))
 
     # model=Sequential()
-    model.add(Embedding(num_words,32,input_length=MAX_SEQUENCE_LENGTH))
+    model.add(Embedding(num_words,32, input_length=MAX_SEQUENCE_LENGTH, trainable=False))
     model.add(Flatten())
     model.add(Dense(250,activation='relu'))
     model.add(Dense(1,activation='sigmoid'))
@@ -158,7 +132,7 @@ if __name__=='__main__':
     # early stopping
     earlystopping = EarlyStopping('val_loss', patience=2)
 
-    history = model.fit(train_pad_seq, y_train, epochs=5, callbacks=[tensorBoardCallback, earlystopping], batch_size=64, validation_data=(test_pad_seq, y_test))
+    history = model.fit(train_pad_seq, y_train, epochs=15, callbacks=[tensorBoardCallback, earlystopping], batch_size=64, validation_data=(test_pad_seq, y_test))
 
     # Evaluation on the test set
     scores = model.evaluate(test_pad_seq, y_test, verbose=0)
