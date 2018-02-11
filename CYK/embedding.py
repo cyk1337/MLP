@@ -119,32 +119,43 @@ if __name__=='__main__':
 
 # TODO
     # input length
-    embedding_layer = Embedding(num_words, EMBEDDING_DIM, weights=[embedding_matrix], input_length=MAX_SEQUENCE_LENGTH, trainable=False)
+    # embedding_layer = Embedding(num_words, EMBEDDING_DIM,
+    #                             weights=[embedding_matrix],
+    #                             input_length=MAX_SEQUENCE_LENGTH,
+    #                             trainable = False
+    #                             )
 
     model = Sequential()
-    model.add(embedding_layer)
+    # model.add(embedding_layer)
+    #
+    # model.add(Conv1D(64, 3, activation='relu', input_shape=(None, 100)))
+    # model.add(Conv1D(64, 3, activation='relu'))
+    # model.add(MaxPooling1D(3))
+    # model.add(Conv1D(128, 3, activation='relu'))
+    # model.add(Conv1D(128, 3, activation='relu'))
+    # model.add(GlobalAveragePooling1D())
+    # model.add(Dropout(0.5))
+    # model.add(Dense(1, activation='sigmoid'))
 
-    model.add(Conv1D(64, 3, activation='relu', input_shape=(None, 100)))
-    model.add(Conv1D(64, 3, activation='relu'))
-    model.add(MaxPooling1D(3))
-    model.add(Conv1D(128, 3, activation='relu'))
-    model.add(Conv1D(128, 3, activation='relu'))
-    model.add(GlobalAveragePooling1D())
-    model.add(Dropout(0.5))
-    model.add(Dense(1, activation='sigmoid'))
+    # model=Sequential()
+    model.add(Embedding(num_words,32,input_length=MAX_SEQUENCE_LENGTH))
+    model.add(Flatten())
+    model.add(Dense(250,activation='relu'))
+    model.add(Dense(1,activation='sigmoid'))
+    model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
 
     # Log to tensorboard
     tensorBoardCallback = TensorBoard(log_dir=log_dir, write_graph=True)
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-    history = model.fit(train_pad_seq, y_train, epochs=20, callbacks=[tensorBoardCallback], batch_size=64, validation_data=(test_pad_seq, y_test))
+    history = model.fit(train_pad_seq, y_train, epochs=5, callbacks=[tensorBoardCallback], batch_size=64, validation_data=(test_pad_seq, y_test))
 
     # Evaluation on the test set
     scores = model.evaluate(test_pad_seq, y_test, verbose=0)
     print("Accuracy: %.2f%%" % (scores[1] * 100))
 
     # save performance
-    plot_fit(history, plot_filename='test.pdf')
+    plot_fit(history, plot_filename='DNN_test.pdf')
 
     # run tensorboard
     # tensorboard --logdir=logs
