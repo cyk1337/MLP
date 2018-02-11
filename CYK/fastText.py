@@ -23,6 +23,11 @@
                
 '''              
 
+import __init__
+from config.setting import *
+from CYK.plot_fit import plot_fit
+from CYK.help import run_tensorboard
+
 from __future__ import print_function
 import numpy as np
 np.random.seed(1337)  # for reproducibility
