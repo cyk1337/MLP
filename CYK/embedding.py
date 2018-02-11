@@ -1,0 +1,116 @@
+import __init__
+from config.setting import *
+
+import numpy as np
+import pandas as pd
+import os, re
+
+
+from keras.preprocessing.text import Tokenizer
+from keras.utils import to_categorical
+from keras.preprocessing.sequence import pad_sequences
+from keras.layers import Dense, Input, GlobalMaxPooling1D, Convolution1D, GlobalAveragePooling1D
+from keras.layers import Conv1D, MaxPooling1D, Embedding, Flatten, Dropout
+from keras.models import Model,Sequential
+from keras.callbacks import TensorBoard
+
+# read from datafile
+
+
+# encoding method 1: load pre-trained embedding
+
+# build mapping for pretrained models
+# dict {word->vector}
+# ====================
+def load_pretrained_model(embedding_path):
+    embedding_index = dict()
+    with open(embedding_path, encoding='utf-8') as f:
+        for line in f:
+            values = line.split()
+            word = values[0]
+            if word.isdigit(): continue
+            vector = np.asarray(values[1:], dtype='float32')
+            embedding_index[word] = vector
+    print("Found %s word vectors" % len(embedding_index))
+    return embedding_index
+
+
+
+
+
+if __name__=='__main__':
+    # 1. load pretrained embedding
+    embedding_path = os.path.join(embedding_dir, 'gensim_word2vec.txt')
+    embeddings_index = load_pretrained_model(embedding_path)
+
+    # 2. prepare training data and labels
+
+    ## train data
+    train_data = pd.read_csv(train_csv)
+    X_train = train_data['text']
+    y_train = train_data['target']
+    # test data
+    test_data = pd.read_csv(test_csv)
+    X_test = test_data['text']
+    y_test = test_data['target']
+
+    # tokenize, filter punctuation, lowercase
+    tokenizer = Tokenizer(num_words=None, lower=True, char_level=False)
+    tokenizer.fit_on_texts(X_train)
+    vocarb_size = len(tokenizer.word_index) + 1
+    print("%d word types" % len(tokenizer.word_index))
+
+
+    # encoding method 0 : Tokenizer.texts_to_sequence
+    # ========================
+    sequences = tokenizer.texts_to_sequences(X_train)
+    # print(len(encoded_text))
+
+    word_index = tokenizer.word_index
+    print('index',word_index)
+    pad_seq = pad_sequences(sequences=sequences, maxlen=MAX_SEQUENCE_LENGTH)
+
+    # labels = to_categorical(np.asarray(y_train))
+    print("padding sequnce(X_input) shape:", pad_seq.shape)
+    # print("target(y_train) shape:", labels.shape)
+    print('-'*80)
+
+    # Embedding matrix
+    num_words = min(MAX_NUM_WORDS, len(word_index))
+    embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
+    for word, i in word_index.items():
+        if i >= MAX_NUM_WORDS:
+            continue
+        embedding_vector =  embeddings_index.get(word)
+        if embedding_vector is not None:
+            embedding_matrix[i] = embedding_vector
+
+# TODO flase
+    # input length
+    embedding_layer = Embedding(num_words, EMBEDDING_DIM, weights=[embedding_matrix], input_length=MAX_SEQUENCE_LENGTH, trainable=False)
+
+    model = Sequential()
+    model.add(embedding_layer)
+
+    model.add(Conv1D(64, 3, activation='relu', input_shape=(None, 100)))
+    model.add(Conv1D(64, 3, activation='relu'))
+    model.add(MaxPooling1D(3))
+    model.add(Conv1D(128, 3, activation='relu'))
+    model.add(Conv1D(128, 3, activation='relu'))
+    model.add(GlobalAveragePooling1D())
+    model.add(Dropout(0.5))
+    model.add(Dense(1, activation='sigmoid'))
+
+    # Log to tensorboard
+    tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+    model.fit(pad_seq, y_train, epochs=3, callbacks=[tensorBoardCallback], batch_size=64)
+
+    # Evaluation on the test set
+    scores = model.evaluate(X_test, y_test, verbose=0)
+    print("Accuracy: %.2f%%" % (scores[1] * 100))
+
+    # tensorboard
+    # tensorboard --logdir=logs
+
