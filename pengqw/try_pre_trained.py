@@ -46,16 +46,12 @@ import matplotlib.pyplot as plt
 from keras.callbacks import CSVLogger
 
 
-MAX_SEQUENCE_LENGTH = 1000
-EMBEDDING_DIM = 100
-MAX_NUM_WORDS = 20000
-
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
 print('Indexing word vectors.')
 embeddings_index = {}
 #f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
-f = open(CBOW_embedding)
+f = open(CBOW_embedding, encoding='utf-8')
 #f = open('keras_prepro_vec_model_sg0.txt','r',encoding="utf-8")
 #f = open('D:\MLP_Project\MLP\\embedding\gensim_word2vec.txt','r',encoding='utf-8')
 for line in f:
@@ -69,8 +65,8 @@ print('Found %s word vectors.' % len(embeddings_index))
 
 print('Processing text dataset')
 
-train_data=pd.read_csv(train_csv)
-test_data=pd.read_csv(test_csv)
+train_data=pd.read_csv('D:\\MLP_Project\\pengqw\\train_data.csv')
+test_data=pd.read_csv('D:\\MLP_Project\\pengqw\\test_data.csv')
 
 #train_data['text'] = train_data['text'].str.replace('\d+', '')
 #test_data['text'] = test_data['text'].str.replace('\d+', '')
@@ -79,8 +75,8 @@ test_data=pd.read_csv(test_csv)
 tokenizer= Tokenizer()
 
 tokenizer.fit_on_texts(train_data['text'])
-X_train = tokenizer.texts_to_matrix(train_data['text'], mode='count')
-#X_train = tokenizer.texts_to_sequences(train_data['text'])
+#X_train = tokenizer.texts_to_matrix(train_data['text'], mode='count')
+X_train = tokenizer.texts_to_sequences(train_data['text'])
 
 word_index = tokenizer.word_index
 print('Found %s unique tokens.' % len(word_index))
@@ -88,8 +84,8 @@ print('Found %s unique tokens.' % len(word_index))
 vocab_size=len(word_index)+1
 
 #text_to_word_sequence
-X_test = tokenizer.texts_to_matrix(test_data['text'], mode='count')
-#X_test = tokenizer.texts_to_sequences(test_data['text'])
+#X_test = tokenizer.texts_to_matrix(test_data['text'], mode='count')
+X_test = tokenizer.texts_to_sequences(test_data['text'])
 
 
 train_data['score'][train_data['score']<=4]=0
@@ -101,42 +97,40 @@ test_data['score'][test_data['score']>=7]=1
 y_train=train_data['score']
 y_test=test_data['score']
 
-#X_train = pad_sequences(X_train, maxlen=MAX_SEQUENCE_LENGTH)
-#X_test = pad_sequences(X_test, maxlen=MAX_SEQUENCE_LENGTH)
+X_train = pad_sequences(X_train, maxlen=MAX_SEQUENCE_LENGTH)
+X_test = pad_sequences(X_test, maxlen=MAX_SEQUENCE_LENGTH)
 y_train = np.array(y_train)
 y_test = np.array(y_test)
 
 
 
 print('Preparing embedding matrix.')
-embedding_matrix = np.zeros((vocab_size, EMBEDDING_DIM))
-for word, i in word_index.items():
-    embedding_vector = embeddings_index.get(word)
-    if embedding_vector is not None:
-        embedding_matrix[i] = embedding_vector
-        
-#num_words = min(MAX_NUM_WORDS, len(word_index))
-#embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
+#embedding_matrix = np.zeros((vocab_size, EMBEDDING_DIM))
 #for word, i in word_index.items():
-#    if i >= MAX_NUM_WORDS:
-#        continue
 #    embedding_vector = embeddings_index.get(word)
 #    if embedding_vector is not None:
-#        # words not found in embedding index will be all-zeros.
 #        embedding_matrix[i] = embedding_vector
         
-#labels = to_categorical(np.asarray(labels))
+num_words = min(MAX_NUM_WORDS, len(word_index))
+embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
+for word, i in word_index.items():
+    if i >= MAX_NUM_WORDS:
+        continue
+    embedding_vector = embeddings_index.get(word)
+    if embedding_vector is not None:
+        # words not found in embedding index will be all-zeros.
+        embedding_matrix[i] = embedding_vector
+        
 
 model = Sequential()
-embedding_layer = Embedding(vocab_size,
+embedding_layer = Embedding(num_words,
                             EMBEDDING_DIM,
-                            weights=[embedding_matrix],
+#                            weights=[embedding_matrix],
                             input_length=MAX_SEQUENCE_LENGTH,
-                            trainable=False
+#                            trainable=True
                             #dropout=0.2
                             )
-#model.add(embedding_layer)
-
+model.add(embedding_layer)
 #model.add(Convolution1D(64, 3, activation='relu',input_shape=(None,100)))
 #model.add(Convolution1D(64, 3, activation='relu'))
 #model.add(MaxPooling1D(3))
@@ -147,10 +141,8 @@ embedding_layer = Embedding(vocab_size,
 #model.add(Dense(1,activation='sigmoid'))
 
 model.add(Flatten())
-model.add(Dense(250,activation='sigmoid'))
+model.add(Dense(250,activation='relu'))
 model.add(Dense(1,activation='sigmoid'))
-
-
 
 #model.add(Convolution1D(64, 3, padding='same'))
 #model.add(Convolution1D(32, 3, padding='same'))
@@ -168,8 +160,8 @@ model.add(Dense(1,activation='sigmoid'))
 tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15,shuffle=False, callbacks=[tensorBoardCallback], batch_size=128)
-model.save_weights("own_vecmodel_model.h5")
+history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, callbacks=[tensorBoardCallback], batch_size=128)
+#model.save_weights("own_vecmodel_model.h5")
 #plot_model(model, to_file='model.png')
 # Evaluation on the test set
 scores = model.evaluate(X_test, y_test, verbose=0)
