@@ -5,8 +5,8 @@ Created on Fri Feb  9 16:03:06 2018
 @author: pqw1995@163.com
 """
 
-import __init__
-from config.setting import *
+import sys
+sys.path.append('D:\\MLP_Project\\MLP')
 import os
 import numpy as np
 import random as rn
@@ -77,13 +77,17 @@ test_data=pd.read_csv('test_data.csv')
 tokenizer= Tokenizer()
 
 tokenizer.fit_on_texts(train_data['text'])
+
 X_train = tokenizer.texts_to_sequences(train_data['text'])
+
 word_index = tokenizer.word_index
 print('Found %s unique tokens.' % len(word_index))
 
 vocab_size=len(word_index)+1
+
 #text_to_word_sequence
 X_test = tokenizer.texts_to_sequences(test_data['text'])
+
 
 train_data['score'][train_data['score']<=4]=0
 train_data['score'][train_data['score']>=7]=1
