@@ -32,10 +32,12 @@ SkipGram_embedding = os.path.join(embedding_dir, '100d_skipgram.txt')
 MAX_NUM_WORDS = 20000
 MAX_SEQUENCE_LENGTH = 1000
 EMBEDDING_DIM = 100
+EPOCH_NUM = 15
+BATCH_SIZE = 128
 
 SEED = 2018
 RECORDS_NUM = 25000
-EPOCH = 15
+
 
 
 

@@ -21,7 +21,10 @@
 
 @desc:         
                
-'''              
+'''
+import __init__
+from config.setting import *
+
 from keras.preprocessing.text import Tokenizer
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
@@ -39,7 +42,7 @@ def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, plot_filename):
 
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-    history = model.fit(Xtrain_matrix, y_train, epochs=10, batch_size=64, validation_data=(Xtest_matrix, y_test))
+    history = model.fit(Xtrain_matrix, y_train, epochs=EPOCH_NUM, batch_size=64, validation_data=(Xtest_matrix, y_test))
     visialize_model(model,filepath=plot_filename)
     plot_fit(history, plot_filename=plot_filename)
 
