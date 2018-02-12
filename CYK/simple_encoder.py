@@ -77,16 +77,16 @@ Xtest_tfidf = tokenizer.texts_to_matrix(texts=X_test, mode='tfidf')
 subdir = 'SimpleEnc'
 
 # count DNN
-run_DNN_2layer(Xtrain_count, y_train, Xtest_count, y_test, 'count_matrix_DNN_hid1_dropout0.5.pdf', subdir)
+run_DNN_2layer(Xtrain_count, y_train, Xtest_count, y_test, 'count_matrix_DNN_hid1_dropout0.2.pdf', subdir)
 
 # freq
-run_DNN_2layer(Xtrain_freq, y_train, Xtest_freq, y_test, 'freq_matrix_DNN_hid1_dropout0.5.pdf', subdir)
+run_DNN_2layer(Xtrain_freq, y_train, Xtest_freq, y_test, 'freq_matrix_DNN_hid1_dropout0.2.pdf', subdir)
 
 # one-hot
-run_DNN_2layer(Xtrain_1hot, y_train, Xtest_1hot, y_test, '1hot_matrix_DNN_hid1_dropout0.5.pdf', subdir)
+run_DNN_2layer(Xtrain_1hot, y_train, Xtest_1hot, y_test, '1hot_matrix_DNN_hid1_dropout0.2.pdf', subdir)
 
 # tfidf DNN
-run_DNN_2layer(Xtrain_tfidf, y_train, Xtest_tfidf, y_test, 'tfidf_matrix_DNN_hid1dropout0.5.pdf', subdir)
+run_DNN_2layer(Xtrain_tfidf, y_train, Xtest_tfidf, y_test, 'tfidf_matrix_DNN_hid1dropout0.2.pdf', subdir)
 
 
 plot_all_history(subdir, plot_filename='Plot_all_test.pdf')

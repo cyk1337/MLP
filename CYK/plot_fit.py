@@ -60,6 +60,7 @@ def plot_fit(history, plot_filename):
     plt.xlabel('Epochs')
     plt.ylabel('Acc')
     plt.legend()
+    plt.grid()
     save_fig(plt, plot_filename=plot_filename)
     plt.show()
 
@@ -130,6 +131,7 @@ def plot_all_history(subdir, plot_filename='default.pdf'):
         plt.xlabel('Epochs')
         plt.ylabel('Acc')
         plt.legend()
+        plt.grid()
     # =============================
     # plot acc
     plt.subplot(122)
@@ -148,9 +150,11 @@ def plot_all_history(subdir, plot_filename='default.pdf'):
         plt.xlabel('Epochs')
         plt.ylabel('Loss')
         plt.legend()
+        plt.grid()
     save_fig(plt, plot_filename=plot_filename, plot_dir=sum_plot)
     print("{} saved!".format(plot_filename))
     print('-'*80)
+
     plt.show()
 
 
