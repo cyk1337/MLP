@@ -126,7 +126,7 @@ for word, i in word_index.items():
 model = Sequential()
 embedding_layer = Embedding(num_words,
                             EMBEDDING_DIM,
-#                            weights=[embedding_matrix],
+                            weights=[embedding_matrix],
                             input_length=MAX_SEQUENCE_LENGTH,
                             trainable=False
                             #dropout=0.2
@@ -143,7 +143,6 @@ model.add(embedding_layer)
 #model.add(Dense(1,activation='sigmoid'))
 
 model.add(Flatten())
-model.add(Dense(250,activation='relu'))
 model.add(Dense(250,activation='relu'))
 model.add(Dense(1,activation='sigmoid'))
 
@@ -197,7 +196,7 @@ print (history.history.keys())
 #plt.savefig('graphs/index_LSTM_loss.pdf')
 
 
-plot_fit(history, plot_filename='test.pdf')
+plot_fit(history, plot_filename='cbow_1layerDNN.pdf')
 
 
 
