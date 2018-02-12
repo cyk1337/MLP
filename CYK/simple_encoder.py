@@ -37,7 +37,7 @@ def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, plot_filename):
     model = Sequential()
     # hidden layer 1
     model.add(Dense(250, activation='relu', input_shape=(Xtrain_matrix.shape[1],)))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.2))
     model.add(Dense(1, activation='sigmoid'))
 
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
