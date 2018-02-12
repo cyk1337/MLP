@@ -7,6 +7,7 @@ Created on Fri Feb  9 16:03:06 2018
 
 import sys
 sys.path.append('D:\\MLP_Project\\MLP')
+import __init__
 from config.setting import *
 from CYK.plot_fit import plot_fit
 import os
@@ -73,7 +74,7 @@ test_data=pd.read_csv(test_csv)
 #test_data['text'] = test_data['text'].str.replace('\d+', '')
 
 #tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
-tokenizer= Tokenizer()
+tokenizer= Tokenizer(num_words=MAX_NUM_WORDS)
 
 tokenizer.fit_on_texts(train_data['text'])
 #X_train = tokenizer.texts_to_matrix(train_data['text'], mode='count')
@@ -100,17 +101,13 @@ y_test=test_data['target']
 
 X_train = pad_sequences(X_train, maxlen=MAX_SEQUENCE_LENGTH)
 X_test = pad_sequences(X_test, maxlen=MAX_SEQUENCE_LENGTH)
+
 y_train = np.array(y_train)
 y_test = np.array(y_test)
 
 
 
 print('Preparing embedding matrix.')
-#embedding_matrix = np.zeros((vocab_size, EMBEDDING_DIM))
-#for word, i in word_index.items():`
-#    embedding_vector = embeddings_index.get(word)
-#    if embedding_vector is not None:
-#        embedding_matrix[i] = embedding_vector
         
 num_words = min(MAX_NUM_WORDS, len(word_index))
 embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
@@ -126,13 +123,15 @@ for word, i in word_index.items():
 model = Sequential()
 embedding_layer = Embedding(num_words,
                             EMBEDDING_DIM,
-                            weights=[embedding_matrix],
+#                            weights=[embedding_matrix],
                             input_length=MAX_SEQUENCE_LENGTH,
                             trainable=False
                             #dropout=0.2
                             )
 
 model.add(embedding_layer)
+print ('###########################################################')
+print ('embedding layer output shape is:',model.output_shape)
 #model.add(Convolution1D(64, 3, activation='relu',input_shape=(None,100)))
 #model.add(Convolution1D(64, 3, activation='relu'))
 #model.add(MaxPooling1D(3))
@@ -143,7 +142,9 @@ model.add(embedding_layer)
 #model.add(Dense(1,activation='sigmoid'))
 
 model.add(Flatten())
+print ('Flatten layer output shape is:',model.output_shape)
 model.add(Dense(250,activation='relu'))
+#model.add(Dropout(0.2))
 model.add(Dense(1,activation='sigmoid'))
 
 
@@ -157,16 +158,16 @@ model.add(Dense(1,activation='sigmoid'))
 #model.add(Dense(1,activation='sigmoid'))
 
 
-#model.add(LSTM(128, dropout_W=0.2, dropout_U=0.2))  # try using a GRU instead, for fun
+#model.add(LSTM(100, dropout_W=0.2, dropout_U=0.2))  # try using a GRU instead, for fun
 #model.add(Dense(1,activation='sigmoid'))
 
-#tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
+tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 #, callbacks=[earlystopping]
-history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=128)
+history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=128, callbacks=[tensorBoardCallback])
 #model.save_weights("own_vecmodel_model.h5")
-#plot_model(model, to_file='model.png')
+plot_model(model, to_file='model.png')
 # Evaluation on the test set
 scores = model.evaluate(X_test, y_test, verbose=0)
 print ('=====================the result for test set==============================')
@@ -196,7 +197,8 @@ print (history.history.keys())
 #plt.savefig('graphs/index_LSTM_loss.pdf')
 
 
-plot_fit(history, plot_filename='cbow_1layerDNN.pdf')
+plot_fit(history, plot_filename='test.pdf')
+
 
 
 
