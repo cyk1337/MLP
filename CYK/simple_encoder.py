@@ -24,21 +24,23 @@
 '''              
 from keras.preprocessing.text import Tokenizer
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Dropout
 
 from CYK.data_loader import load_imdb
-from CYK.plot_fit import plot_fit
+from CYK.plot_fit import plot_fit, visialize_model
 
 def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, plot_filename):
     print("Building model...")
     model = Sequential()
     # hidden layer 1
     model.add(Dense(250, activation='relu', input_shape=(Xtrain_matrix.shape[1],)))
+    model.add(Dropout(0.5))
     model.add(Dense(1, activation='sigmoid'))
 
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-    history = model.fit(Xtrain_matrix, y_train, epochs=5, batch_size=64, validation_data=(Xtest_matrix, y_test))
 
+    history = model.fit(Xtrain_matrix, y_train, epochs=10, batch_size=64, validation_data=(Xtest_matrix, y_test))
+    visialize_model(model,filepath=plot_filename)
     plot_fit(history, plot_filename=plot_filename)
 
 
@@ -64,15 +66,15 @@ Xtrain_tfidf = tokenizer.texts_to_matrix(texts=X_train, mode='tfidf')
 Xtest_tfidf = tokenizer.texts_to_matrix(texts=X_test, mode='tfidf')
 
 # count DNN
-run_DNN_2layer(Xtrain_count, y_train, Xtest_count, y_test, 'count_matrix_DNN_hid1.pdf')
+run_DNN_2layer(Xtrain_count, y_train, Xtest_count, y_test, 'count_matrix_DNN_hid1_dropout0.5.pdf')
 
 # freq
-run_DNN_2layer(Xtrain_freq, y_train, Xtest_freq, y_test, 'freq_matrix_DNN_hid1.pdf')
+run_DNN_2layer(Xtrain_freq, y_train, Xtest_freq, y_test, 'freq_matrix_DNN_hid1_dropout0.5.pdf')
 
 # one-hot
-run_DNN_2layer(Xtrain_1hot, y_train, Xtest_1hot, y_test, '1hot_matrix_DNN_hid1.pdf')
+run_DNN_2layer(Xtrain_1hot, y_train, Xtest_1hot, y_test, '1hot_matrix_DNN_hid1_dropout0.5.pdf')
 
 # tfidf DNN
-run_DNN_2layer(Xtrain_tfidf, y_train, Xtest_tfidf, y_test, 'tfidf_matrix_DNN_hid1.pdf')
+run_DNN_2layer(Xtrain_tfidf, y_train, Xtest_tfidf, y_test, 'tfidf_matrix_DNN_hid1dropout0.5.pdf')
 
 
