@@ -29,21 +29,34 @@ from keras.layers import Dense
 from CYK.data_loader import load_imdb
 from CYK.plot_fit import plot_fit
 
+def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, plot_filename):
+    print("Building model...")
+    model = Sequential()
+    # hidden layer 1
+    model.add(Dense(250, activation='relu', input_shape=(Xtrain_matrix.shape[1],)))
+    model.add(Dense(1, activation='sigmoid'))
+
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    history = model.fit(Xtrain_matrix, y_train, epochs=5, batch_size=64, validation_data=(Xtest_matrix, y_test))
+
+    plot_fit(history, plot_filename=plot_filename)
+
+
 (X_train, y_train), (X_test, y_test) = load_imdb()
 tokenizer = Tokenizer()
 tokenizer.fit_on_texts(X_train)
-Xtrain_matrix = tokenizer.texts_to_matrix(texts=X_train, mode='count')
-Xtest_matrix = tokenizer.texts_to_matrix(texts=X_test, mode='count')
 
+# count matrix
+Xtrain_count = tokenizer.texts_to_matrix(texts=X_train, mode='count')
+Xtest_count = tokenizer.texts_to_matrix(texts=X_test, mode='count')
 
+# tfidf matrix
+Xtrain_tfidf = tokenizer.texts_to_matrix(texts=X_train, mode='tfidf')
+Xtest_tfidf = tokenizer.texts_to_matrix(texts=X_test, mode='tfidf')
 
-print("Building model...")
-model = Sequential()
+# count
+run_DNN_2layer(Xtrain_count, y_train, Xtest_count, y_test, 'count_matrix_DNN_hid1.pdf')
 
-model.add(Dense(250, activation='relu', input_shape=(Xtrain_matrix.shape[1], )))
-model.add(Dense(1, activation='sigmoid'))
+# tfidf
+run_DNN_2layer(Xtrain_tfidf, y_train, Xtest_tfidf, y_test, 'tfidf_matrix_DNN_hid1.pdf')
 
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-history = model.fit(Xtrain_matrix, y_train, epochs=5, batch_size=64, validation_data=(Xtest_matrix, y_train))
-
-plot_fit(history, plot_filename='Count_matrix_test.pdf')
