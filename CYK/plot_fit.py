@@ -83,6 +83,7 @@ def visialize_model(model, filepath):
 
 
 def save_history(history, csv_name, subdir=False):
+    assert csv_name[-4:] == '.csv', "Error: didnot give a valid csv_name!"
     if not os.path.exists(history_dir):
         os.mkdir(history_dir)
     if subdir is not False:
@@ -95,7 +96,7 @@ def save_history(history, csv_name, subdir=False):
         # with open(filename, 'w') as f:
         #     f.write(str(history))
         # ==========================
-        hist = pd.DataFrame.from_dict(history,orient='columns')
+        hist = pd.DataFrame.from_dict(history.history, orient='columns')
         hist.to_csv(csv_file)
         print('History is written into {}'.format(csv_file))
         print('-'*80)
@@ -157,6 +158,9 @@ def plot_all_history(subdir, plot_filename='default.pdf'):
 
 if __name__=="__main__":
     # save_history({'val_acc':[1,1], 'val_loss':[2,3], 'acc':[3,3], 'loss':[5,3]}, 'test1.csv', 'test')
+    history = 'history example'
+    # use example
+    save_history(history, 'train_test.csv', subdir='Test')
 
-    subdir = 'test'
+    subdir = 'dir to save csv'
     plot_all_history(subdir, plot_filename='Plot_all_test.pdf')
