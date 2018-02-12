@@ -30,9 +30,9 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout
 
 from CYK.data_loader import load_imdb
-from CYK.plot_fit import plot_fit, visialize_model
+from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_history
 
-def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, plot_filename):
+def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, plot_filename, subdir):
     print("Building model...")
     model = Sequential()
     # hidden layer 1
@@ -43,7 +43,12 @@ def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, plot_filename):
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
     history = model.fit(Xtrain_matrix, y_train, epochs=EPOCH_NUM, batch_size=64, validation_data=(Xtest_matrix, y_test))
+
+    # save history info
+    save_history(history, '{}.csv'.format(plot_filename[:-4]), subdir=subdir)
+    # save model
     visialize_model(model,filepath=plot_filename)
+    # save single history
     plot_fit(history, plot_filename=plot_filename)
 
 
@@ -68,16 +73,20 @@ Xtest_freq = tokenizer.texts_to_matrix(texts=X_test, mode='freq')
 Xtrain_tfidf = tokenizer.texts_to_matrix(texts=X_train, mode='tfidf')
 Xtest_tfidf = tokenizer.texts_to_matrix(texts=X_test, mode='tfidf')
 
+# subdir to save history
+subdir = 'SimpleEnc'
+
 # count DNN
-run_DNN_2layer(Xtrain_count, y_train, Xtest_count, y_test, 'count_matrix_DNN_hid1_dropout0.5.pdf')
+run_DNN_2layer(Xtrain_count, y_train, Xtest_count, y_test, 'count_matrix_DNN_hid1_dropout0.5.pdf', subdir)
 
 # freq
-run_DNN_2layer(Xtrain_freq, y_train, Xtest_freq, y_test, 'freq_matrix_DNN_hid1_dropout0.5.pdf')
+run_DNN_2layer(Xtrain_freq, y_train, Xtest_freq, y_test, 'freq_matrix_DNN_hid1_dropout0.5.pdf', subdir)
 
 # one-hot
-run_DNN_2layer(Xtrain_1hot, y_train, Xtest_1hot, y_test, '1hot_matrix_DNN_hid1_dropout0.5.pdf')
+run_DNN_2layer(Xtrain_1hot, y_train, Xtest_1hot, y_test, '1hot_matrix_DNN_hid1_dropout0.5.pdf', subdir)
 
 # tfidf DNN
-run_DNN_2layer(Xtrain_tfidf, y_train, Xtest_tfidf, y_test, 'tfidf_matrix_DNN_hid1dropout0.5.pdf')
+run_DNN_2layer(Xtrain_tfidf, y_train, Xtest_tfidf, y_test, 'tfidf_matrix_DNN_hid1dropout0.5.pdf', subdir)
 
 
+plot_all_history(subdir, plot_filename='Plot_all_test.pdf')

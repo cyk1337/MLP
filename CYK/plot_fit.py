@@ -158,6 +158,9 @@ def plot_all_history(subdir, plot_filename='default.pdf'):
 
 if __name__=="__main__":
     # save_history({'val_acc':[1,1], 'val_loss':[2,3], 'acc':[3,3], 'loss':[5,3]}, 'test1.csv', 'test')
+    history = 'history example'
+    # use example
+    save_history(history, 'train_test.csv', subdir='Test')
 
-    subdir = 'test'
+    subdir = 'dir to save csv'
     plot_all_history(subdir, plot_filename='Plot_all_test.pdf')
