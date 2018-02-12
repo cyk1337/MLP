@@ -25,7 +25,7 @@
 
 import __init__
 from config.setting import *
-from CYK.plot_fit import plot_fit, visialize_model
+from CYK.plot_fit import plot_fit, visialize_model, save_history
 from CYK.help import run_tensorboard
 from CYK.data_loader import load_imdb
 from CYK.embedding_loader import load_pretrained_model
@@ -136,8 +136,9 @@ if __name__=='__main__':
     # early stopping
     earlystopping = EarlyStopping('val_loss', patience=2)
 
-    history = model.fit(train_pad_seq, y_train, epochs=15, callbacks=[tensorBoardCallback, earlystopping], batch_size=64, validation_data=(test_pad_seq, y_test))
+    history = model.fit(train_pad_seq, y_train, epochs=3, callbacks=[tensorBoardCallback, earlystopping], batch_size=128, validation_data=(test_pad_seq, y_test))
 
+    save_history(history,history, subdir='Test')
     # Evaluation on the test set
     scores = model.evaluate(test_pad_seq, y_test, verbose=0)
     print("Accuracy: %.2f%%" % (scores[1] * 100))

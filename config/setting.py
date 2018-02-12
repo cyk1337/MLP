@@ -22,6 +22,7 @@ embedding_dir = os.path.join(work_dir, 'embedding')
 plot_dir = os.path.join(work_dir, 'plot')
 log_dir = os.path.join(work_dir, 'logs')
 model_dir = os.path.join(work_dir, 'model')
+history_dir = os.path.join(work_dir, 'history')
 
 CBOW_embedding = os.path.join(embedding_dir, '100d_cbow.txt')
 SkipGram_embedding = os.path.join(embedding_dir, '100d_skipgram.txt')
@@ -32,6 +33,8 @@ SkipGram_embedding = os.path.join(embedding_dir, '100d_skipgram.txt')
 MAX_NUM_WORDS = 20000
 MAX_SEQUENCE_LENGTH = 1000
 EMBEDDING_DIM = 100
+EPOCH_NUM = 15
+BATCH_SIZE = 128
 
 SEED = 2018
 RECORDS_NUM = 25000

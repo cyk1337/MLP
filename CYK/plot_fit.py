@@ -25,7 +25,9 @@ import __init__
 from config.setting import *
 
 import os
+import matplotlib
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from keras.utils import plot_model
 
@@ -43,7 +45,7 @@ def plot_fit(history, plot_filename):
     # "bo" is for "blue dot"
     plt.plot(epochs, loss, 'r', label='Training loss')
     # b is for "solid blue line"
-    plt.plot(epochs, val_loss, 'g', label='Validation loss')
+    plt.plot(epochs, val_loss, 'g--', label='Validation loss')
     plt.title('Training and validation loss')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
@@ -53,7 +55,7 @@ def plot_fit(history, plot_filename):
     # "bo" is for "blue dot"
     plt.plot(epochs, acc, 'b', label='Training acc')
     # b is for "solid blue line"
-    plt.plot(epochs, val_acc, 'y', label='Validation acc')
+    plt.plot(epochs, val_acc, 'y--', label='Validation acc')
     plt.title('Training and validation acc')
     plt.xlabel('Epochs')
     plt.ylabel('Acc')
@@ -78,3 +80,83 @@ def visialize_model(model, filepath):
     # visualize model
     plot_model(model, filename, show_shapes=True)
     print("Plot model graph to {}".format(filename))
+
+
+def save_history(history, csv_name, subdir=False):
+    if not os.path.exists(history_dir):
+        os.mkdir(history_dir)
+    if subdir is not False:
+        subdir = os.path.join(history_dir,subdir)
+        if not os.path.isdir(subdir):
+            os.mkdir(subdir)
+        csv_file = os.path.join(subdir, csv_name)
+        # =========================
+        # 1. save to txt
+        # with open(filename, 'w') as f:
+        #     f.write(str(history))
+        # ==========================
+        hist = pd.DataFrame.from_dict(history,orient='columns')
+        hist.to_csv(csv_file)
+        print('History is written into {}'.format(csv_file))
+        print('-'*80)
+
+
+def plot_all_history(subdir, plot_filename='default.pdf'):
+    subdir = os.path.join(history_dir, subdir)
+    assert os.path.isdir(subdir) == True, "Error: {} does not exists!".format(subdir)
+
+    sum_plot = os.path.join(history_dir, 'plot_all')
+    if not os.path.isdir(sum_plot):
+        os.mkdir(sum_plot)
+
+    # set color list
+    # colors = [c for c in list(matplotlib.colors.cnames.keys()) if not c.startswith('light')]
+    colors = ['green','red','blue','goldenrod','black','lime','cyan','chatreuse','yellow','m','purple','olive','salmon','darkred','pink']
+
+    plt.figure(figsize=(16, 9))
+    plt.subplot(121)
+    for i, filename in enumerate(os.listdir(subdir)):
+        csv_file = os.path.join(subdir, filename)
+        history = pd.read_csv(csv_file)
+        line_label = filename[:-4]
+        acc = history['acc']
+        val_acc = history['val_acc']
+        epochs = range(1, len(acc) + 1)
+        # plot acc
+        plt.plot(epochs, acc, color=colors[i%len(colors)], linestyle='-', label='{} training acc'.format(line_label))
+        plt.plot(epochs, val_acc, color=colors[i%len(colors)], linestyle='dashed', label='{} validation acc'.format(line_label))
+        plt.title('Training and validation acc')
+        plt.xlabel('Epochs')
+        plt.ylabel('Acc')
+        plt.legend()
+    # =============================
+    # plot acc
+    plt.subplot(122)
+    for i, filename in enumerate(os.listdir(subdir)):
+        line_label = filename[:-4]
+        csv_file = os.path.join(subdir, filename)
+        history = pd.read_csv(csv_file)
+        # plot val and acc loss
+        loss = history['loss']
+        val_loss = history['val_loss']
+        epochs = range(1, len(loss) + 1)
+
+        plt.plot(epochs, loss, color=colors[i%len(colors)], linestyle='-', label='{} training loss'.format(line_label))
+        plt.plot(epochs, val_loss, color=colors[i%len(colors)], linestyle='dashed', label='{} validation loss'.format(line_label))
+        plt.title('Training and validation loss')
+        plt.xlabel('Epochs')
+        plt.ylabel('Loss')
+        plt.legend()
+    save_fig(plt, plot_filename=plot_filename, plot_dir=sum_plot)
+    print("{} saved!".format(plot_filename))
+    print('-'*80)
+    plt.show()
+
+
+
+
+if __name__=="__main__":
+    # save_history({'val_acc':[1,1], 'val_loss':[2,3], 'acc':[3,3], 'loss':[5,3]}, 'test1.csv', 'test')
+
+    subdir = 'test'
+    plot_all_history(subdir, plot_filename='Plot_all_test.pdf')
