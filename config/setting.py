@@ -21,6 +21,7 @@ test_csv = os.path.join(data_file,'test.csv')
 embedding_dir = os.path.join(work_dir, 'embedding')
 plot_dir = os.path.join(work_dir, 'plot')
 log_dir = os.path.join(work_dir, 'logs')
+model_dir = os.path.join(work_dir, 'model')
 
 CBOW_embedding = os.path.join(embedding_dir, '100d_cbow.txt')
 SkipGram_embedding = os.path.join(embedding_dir, '100d_skipgram.txt')

@@ -25,7 +25,7 @@
 
 import __init__
 from config.setting import *
-from CYK.plot_fit import plot_fit
+from CYK.plot_fit import plot_fit, visialize_model
 from CYK.help import run_tensorboard
 from CYK.data_loader import load_imdb
 from CYK.embedding_loader import load_pretrained_model
@@ -42,7 +42,7 @@ from keras.layers import Dense, Input, GlobalMaxPooling1D, Convolution1D, Global
 from keras.layers import Conv1D, MaxPooling1D, Embedding, Flatten, Dropout
 from keras.models import Model,Sequential
 from keras.callbacks import TensorBoard, EarlyStopping
-
+from keras.utils import plot_model
 
 
 
@@ -121,10 +121,14 @@ if __name__=='__main__':
 
     # model=Sequential()
     model.add(Embedding(num_words,32, input_length=MAX_SEQUENCE_LENGTH, trainable=False))
+    model.add(Dropout(0.5))
     model.add(Flatten())
     model.add(Dense(250,activation='relu'))
     model.add(Dense(1,activation='sigmoid'))
     model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
+
+    # visualize model
+    visialize_model(model,filepath='plot_test_DNN.pdf')
 
     # Log to tensorboard
     tensorBoardCallback = TensorBoard(log_dir=log_dir, write_graph=True)

@@ -27,7 +27,7 @@ from config.setting import *
 import os
 import matplotlib.pyplot as plt
 
-
+from keras.utils import plot_model
 
 
 def plot_fit(history, plot_filename):
@@ -69,3 +69,12 @@ def save_fig(plt, plot_filename, plot_dir=plot_dir):
     filename = os.path.join(plot_dir, plot_filename)
     plt.savefig('{}'.format(filename))
     print('{} saved!'.format(filename))
+
+
+def visialize_model(model, filepath):
+    if not os.path.exists(model_dir):
+        os.mkdir(model_dir)
+    filename = os.path.join(model_dir, filepath)
+    # visualize model
+    plot_model(model, filename, show_shapes=True)
+    print("Plot model graph to {}".format(filename))
