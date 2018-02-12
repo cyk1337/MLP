@@ -45,14 +45,16 @@ from keras.layers import Conv1D, MaxPooling1D, Embedding
 from keras.models import Model
 import matplotlib.pyplot as plt
 from keras.callbacks import CSVLogger, EarlyStopping
+from CYK.plot_fit import visialize_model
+
 
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
 print('Indexing word vectors.')
 embeddings_index = {}
-#f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
-f = open(CBOW_embedding, encoding='utf-8')
+f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
+#f = open(CBOW_embedding, encoding='utf-8')
 #f = open(SkipGram_embedding, encoding='utf-8')
 ####hello
 #f = open('D:\MLP_Project\MLP\\embedding\gensim_word2vec.txt','r',encoding='utf-8')
@@ -123,7 +125,7 @@ for word, i in word_index.items():
 model = Sequential()
 embedding_layer = Embedding(num_words,
                             EMBEDDING_DIM,
-#                            weights=[embedding_matrix],
+                            weights=[embedding_matrix],
                             input_length=MAX_SEQUENCE_LENGTH,
                             trainable=False
                             #dropout=0.2
@@ -132,34 +134,29 @@ embedding_layer = Embedding(num_words,
 model.add(embedding_layer)
 print ('###########################################################')
 print ('embedding layer output shape is:',model.output_shape)
-#model.add(Convolution1D(64, 3, activation='relu',input_shape=(None,100)))
-#model.add(Convolution1D(64, 3, activation='relu'))
-#model.add(MaxPooling1D(3))
-#model.add(Convolution1D(128, 3, activation='relu'))
-#model.add(Convolution1D(128, 3, activation='relu'))
-#model.add(GlobalAveragePooling1D())
+#model.add(Dropout(0.2))
+#model.add(Conv1D(250,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+#model.add(GlobalMaxPooling1D())
+#model.add(Dense(250,activation='relu'))
 #model.add(Dropout(0.2))
 #model.add(Dense(1,activation='sigmoid'))
 
-model.add(Flatten())
-print ('Flatten layer output shape is:',model.output_shape)
-model.add(Dense(250,activation='relu'))
-#model.add(Dropout(0.2))
-model.add(Dense(1,activation='sigmoid'))
 
-
-#model.add(Convolution1D(64, 3, padding='same'))
-#model.add(Convolution1D(32, 3, padding='same'))
-#model.add(Convolution1D(16, 3, padding='same'))
 #model.add(Flatten())
+#print ('Flatten layer output shape is:',model.output_shape)
+#model.add(Dense(250,activation='relu'))
 #model.add(Dropout(0.2))
-#model.add(Dense(180,activation='sigmoid'))
+#model.add(Dense(250,activation='relu'))
 #model.add(Dropout(0.2))
 #model.add(Dense(1,activation='sigmoid'))
 
 
-#model.add(LSTM(100, dropout_W=0.2, dropout_U=0.2))  # try using a GRU instead, for fun
-#model.add(Dense(1,activation='sigmoid'))
+model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))  # try using a GRU instead, for fun
+model.add(Dense(1,activation='sigmoid'))
 
 tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -174,36 +171,17 @@ print ('=====================the result for test set============================
 print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
 print (history.history.keys())
-#plt.plot(history.history['acc'])
-#plt.plot(history.history['val_acc'])
-#plt.title('Accuracy')
-#plt.ylabel('accuracy')
-#plt.xlabel('epoch')
-#plt.legend(['train','validation'],loc='upper left')
-#plt.show()
-##plt.savefig('graphs/index_LSTM_accuracy.pdf')
-#
-#plt.clf()
-#plt.cla()
-#plt.close()
-#
-#plt.plot(history.history['loss'])
-#plt.plot(history.history['val_loss'])
-#plt.title('Loss')
-#plt.ylabel('loss')
-#plt.xlabel('epoch')
-#plt.legend(['train','validation'],loc='upper left')
-#plt.show()
-#plt.savefig('graphs/index_LSTM_loss.pdf')
 
 
-plot_fit(history, plot_filename='test.pdf')
+write_filename='model_glove_LSTM_dropout_02.pdf'
+visialize_model(model, write_filename)
+plot_fit(history, plot_filename=write_filename)
 
 
 
 
-
-
+##### model_glove_CNN_dropout_02:  best: val_loss:0.2798; val_acc:0.8828
+##### model_glove_CNN_dropout_05:  best: val_loss:0.2881; val_acc:0.8778
 
 
 

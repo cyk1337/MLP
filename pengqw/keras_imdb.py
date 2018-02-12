@@ -8,6 +8,7 @@ import sys
 sys.path.append('D:\\MLP_Project\\MLP')
 from config.setting import *
 
+from CYK.plot_fit import visialize_model
 import tensorflow as tf
 from keras.datasets import imdb
 from keras.models import Sequential
@@ -36,7 +37,7 @@ model = Sequential()
 """ it directly concatenates word embeddings to get the sentence embedding.
     Could try aggregate word embedding values to gain sentence embedding.
 """
-model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_length))  
+model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_length, trainable=False))  
 
 # Convolutional model (3x conv, flatten, 2x dense)
 #model.add(Convolution1D(64, 3, padding='same'))
@@ -48,9 +49,9 @@ model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_l
 #model.add(Dropout(0.2))
 #model.add(Dense(1,activation='sigmoid'))
 
-#model.add(Flatten())
-#model.add(Dense(250,activation='sigmoid'))
-#model.add(Dense(1,activation='sigmoid'))
+model.add(Flatten())
+model.add(Dense(250,activation='sigmoid'))
+model.add(Dense(1,activation='sigmoid'))
 
 #model.add(Convolution1D(64, 3, activation='relu',input_shape=(None,300)))
 #model.add(Convolution1D(64, 3, activation='relu'))
@@ -61,8 +62,10 @@ model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_l
 #model.add(Dropout(0.2))
 #model.add(Dense(1,activation='sigmoid'))
 
-model.add(LSTM(128, dropout_W=0.2, dropout_U=0.2))  # try using a GRU instead, for fun
-model.add(Dense(1,activation='sigmoid'))
+# model.add(LSTM(128, dropout_W=0.2, dropout_U=0.2))  # try using a GRU instead, for fun
+# model.add(Dense(1,activation='sigmoid'))
+
+visialize_model(model, 'model_test.pdf')
 
 # Log to tensorboard
 tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)

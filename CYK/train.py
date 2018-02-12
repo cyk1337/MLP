@@ -72,7 +72,7 @@ if __name__=='__main__':
     # print(len(encoded_text))
 
     word_index = tokenizer.word_index
-    print('index',word_index)
+#    print('index',word_index)
     train_pad_seq = pad_sequences(sequences=train_seq, maxlen=MAX_SEQUENCE_LENGTH)
 
 # check TODO
