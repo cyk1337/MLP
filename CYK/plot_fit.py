@@ -50,6 +50,7 @@ def plot_fit(history, plot_filename):
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.legend()
+    plt.grid()
 
     plt.subplot(122)
     # "bo" is for "blue dot"
