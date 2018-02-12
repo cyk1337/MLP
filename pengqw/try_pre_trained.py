@@ -45,7 +45,8 @@ from keras.layers import Conv1D, MaxPooling1D, Embedding
 from keras.models import Model
 import matplotlib.pyplot as plt
 from keras.callbacks import CSVLogger, EarlyStopping
-from CYK.plot_fit import visialize_model
+from CYK.plot_fit import visialize_model,save_history,plot_all_history
+
 
 
 #earlystopping = EarlyStopping(patience=4)

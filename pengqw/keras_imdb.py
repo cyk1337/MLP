@@ -13,7 +13,7 @@ import tensorflow as tf
 from keras.datasets import imdb
 from keras.models import Sequential
 from keras.layers import Dense
-from keras.layers import LSTM, Convolution1D, Flatten, Dropout,MaxPooling1D,GlobalAveragePooling1D
+from keras.layers import LSTM, Convolution1D, Flatten, Dropout,MaxPooling1D,GlobalAveragePooling1D,Conv1D,GlobalMaxPooling1D
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
 from keras.callbacks import TensorBoard
@@ -27,7 +27,7 @@ top_words = 50000
 (X_train, y_train), (X_test, y_test) = imdb.load_data(num_words=top_words)
 
 # Pad the sequence to the same length
-max_review_length = 500
+max_review_length = 400
 X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
 X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
 
@@ -49,8 +49,19 @@ model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_l
 #model.add(Dropout(0.2))
 #model.add(Dense(1,activation='sigmoid'))
 
-model.add(Flatten())
-model.add(Dense(250,activation='sigmoid'))
+#model.add(Flatten())
+#model.add(Dense(250,activation='sigmoid'))
+#model.add(Dense(1,activation='sigmoid'))
+
+model.add(Dropout(0.2))
+model.add(Conv1D(250,
+                 3,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
+model.add(GlobalMaxPooling1D())
+model.add(Dense(250,activation='relu'))
+model.add(Dropout(0.2))
 model.add(Dense(1,activation='sigmoid'))
 
 #model.add(Convolution1D(64, 3, activation='relu',input_shape=(None,300)))
@@ -64,8 +75,6 @@ model.add(Dense(1,activation='sigmoid'))
 
 # model.add(LSTM(128, dropout_W=0.2, dropout_U=0.2))  # try using a GRU instead, for fun
 # model.add(Dense(1,activation='sigmoid'))
-
-visialize_model(model, 'model_test.pdf')
 
 # Log to tensorboard
 tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
