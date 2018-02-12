@@ -72,7 +72,7 @@ if __name__=='__main__':
     # print(len(encoded_text))
 
     word_index = tokenizer.word_index
-    print('index',word_index)
+    # print('index len:', len(word_index))
     train_pad_seq = pad_sequences(sequences=train_seq, maxlen=MAX_SEQUENCE_LENGTH)
 
 # check TODO
@@ -136,9 +136,9 @@ if __name__=='__main__':
     # early stopping
     earlystopping = EarlyStopping('val_loss', patience=2)
 
-    history = model.fit(train_pad_seq, y_train, epochs=3, callbacks=[tensorBoardCallback, earlystopping], batch_size=128, validation_data=(test_pad_seq, y_test))
+    history = model.fit(train_pad_seq, y_train, epochs=1, callbacks=[tensorBoardCallback, earlystopping], batch_size=128, validation_data=(test_pad_seq, y_test))
 
-    save_history(history,history, subdir='Test')
+    save_history(history, 'train_test.csv', subdir='Test')
     # Evaluation on the test set
     scores = model.evaluate(test_pad_seq, y_test, verbose=0)
     print("Accuracy: %.2f%%" % (scores[1] * 100))
