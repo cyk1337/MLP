@@ -32,12 +32,13 @@ from keras.layers import Dense, Dropout
 from CYK.data_loader import load_imdb
 from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_history
 
-def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, plot_filename, subdir):
+
+def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test,dropout_rate, plot_filename, subdir):
     print("Building model...")
     model = Sequential()
     # hidden layer 1
     model.add(Dense(250, activation='relu', input_shape=(Xtrain_matrix.shape[1],)))
-    model.add(Dropout(0.2))
+    model.add(Dropout(dropout_rate))
     model.add(Dense(1, activation='sigmoid'))
 
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
@@ -50,7 +51,6 @@ def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, plot_filename, 
     visialize_model(model,filepath=plot_filename)
     # save single history
     plot_fit(history, plot_filename=plot_filename)
-
 
 
 (X_train, y_train), (X_test, y_test) = load_imdb()
@@ -76,17 +76,19 @@ Xtest_tfidf = tokenizer.texts_to_matrix(texts=X_test, mode='tfidf')
 # subdir to save history
 subdir = 'SimpleEnc'
 
+dropout_rate = 0.5
+
 # count DNN
-run_DNN_2layer(Xtrain_count, y_train, Xtest_count, y_test, 'count_matrix_DNN_hid1_dropout0.2.pdf', subdir)
+run_DNN_2layer(Xtrain_count, y_train, Xtest_count, y_test, dropout_rate, 'count_matrix_DNN_hid1_dropout{}.pdf'.format(dropout_rate), subdir)
 
 # freq
-run_DNN_2layer(Xtrain_freq, y_train, Xtest_freq, y_test, 'freq_matrix_DNN_hid1_dropout0.2.pdf', subdir)
+run_DNN_2layer(Xtrain_freq, y_train, Xtest_freq, y_test, dropout_rate, 'freq_matrix_DNN_hid1_dropout{}.pdf'.format(dropout_rate), subdir)
 
 # one-hot
-run_DNN_2layer(Xtrain_1hot, y_train, Xtest_1hot, y_test, '1hot_matrix_DNN_hid1_dropout0.2.pdf', subdir)
+run_DNN_2layer(Xtrain_1hot, y_train, Xtest_1hot, y_test, dropout_rate, '1hot_matrix_DNN_hid1_dropout{}.pdf'.format(dropout_rate), subdir)
 
 # tfidf DNN
-run_DNN_2layer(Xtrain_tfidf, y_train, Xtest_tfidf, y_test, 'tfidf_matrix_DNN_hid1dropout0.2.pdf', subdir)
+run_DNN_2layer(Xtrain_tfidf, y_train, Xtest_tfidf, y_test, dropout_rate, 'tfidf_matrix_DNN_hid1dropout{}.pdf'.format(dropout_rate), subdir)
 
 
-plot_all_history(subdir, plot_filename='Plot_all_test.pdf')
+plot_all_history(subdir, plot_filename='Plot_all_DNN_1layer_dropout{}.pdf'.format(dropout_rate))
