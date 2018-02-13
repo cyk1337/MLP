@@ -54,7 +54,7 @@ def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test,dropout_rate, pl
 
 
 (X_train, y_train), (X_test, y_test) = load_imdb()
-tokenizer = Tokenizer()
+tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
 tokenizer.fit_on_texts(X_train)
 
 # count matrix
