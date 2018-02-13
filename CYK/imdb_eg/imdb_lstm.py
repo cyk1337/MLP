@@ -1,4 +1,37 @@
-from __future__ import print_function
+#!/usr/bin/env python
+
+# encoding: utf-8
+
+'''
+  
+             \ \ / /__| | ___   _ _ __    / ___| | | |  / \  |_ _|
+              \ V / _ \ |/ / | | | '_ \  | |   | |_| | / _ \  | | 
+               | |  __/   <| |_| | | | | | |___|  _  |/ ___ \ | | 
+               |_|\___|_|\_\\__,_|_| |_|  \____|_| |_/_/   \_\___
+ ==========================================================================
+@author: CYK
+
+@license: School of Informatics, Edinburgh
+
+@contact: s1718204@sms.ed.ac.uk
+
+@file: imdb_lstm.py
+
+@time: 13/02/2018 16:43
+
+@desc:         
+               
+'''              
+'''Trains an LSTM model on the IMDB sentiment classification task.
+The dataset is actually too small for LSTM to be of any advantage
+compared to simpler, much faster methods such as TF-IDF + LogReg.
+# Notes
+- RNNs are tricky. Choice of batch size is important,
+choice of loss and optimizer is critical, etc.
+Some configurations won't converge.
+- LSTM loss decrease patterns during training can be quite different
+from what you see with CNNs/MLPs/etc.
+'''
 
 from keras.preprocessing import sequence
 from keras.models import Sequential
