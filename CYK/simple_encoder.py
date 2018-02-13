@@ -27,7 +27,7 @@ from config.setting import *
 
 from keras.preprocessing.text import Tokenizer
 from keras.models import Sequential
-from keras.layers import Dense, Dropout
+from keras.layers import Dense, Dropout, Embedding, Conv1D, GlobalMaxPool1D
 
 from CYK.data_loader import load_imdb
 from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_history
