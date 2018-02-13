@@ -148,7 +148,7 @@ model.add(Conv1D(100,
 model.add(GlobalMaxPooling1D())
 print ('after maxpooling layer the shape is:',model.output_shape)
 model.add(Dense(150,activation='relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.4))
 model.add(Dense(1,activation='sigmoid'))
 
 ################################
@@ -183,11 +183,10 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='model_CBOW_CNN_dropout_05_size5_200unit.pdf'
-save_history(history, 'CBOW_CNN_dropout05_size5_200unit.csv', subdir='CBOW_CNN_MODEL')
+write_filename='model_CBOW_CNN_dropout_04_size5.pdf'
+save_history(history, 'CBOW_CNN_dropout04_size5.csv', subdir='CBOW_CNN_dropout04_kernel_X_size')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
-
 
 
 
