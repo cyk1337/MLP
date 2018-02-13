@@ -130,11 +130,12 @@ def plot_all_history(subdir, plot_filename='default.pdf'):
 
         plt.plot(epochs, loss, color=colors[i%len(colors)], linestyle='-', label='{} training loss'.format(line_label))
         plt.plot(epochs, val_loss, color=colors[i%len(colors)], linestyle='dashed', label='{} validation loss'.format(line_label))
-        plt.title('Training and validation loss')
-        plt.xlabel('Epochs')
-        plt.ylabel('Loss')
-        plt.legend()
-        plt.grid()
+    plt.title('Training and validation loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+        # plt.grid()
+    plt.legend()
+    plt.grid()
     # =============================
     # plot acc
     plt.subplot(122)
@@ -150,10 +151,12 @@ def plot_all_history(subdir, plot_filename='default.pdf'):
         plt.plot(epochs, acc, color=colors[i%len(colors)], linestyle='-', label='{} training acc'.format(line_label))
         plt.plot(epochs, val_acc, color=colors[i%len(colors)], linestyle='dashed', label='{} validation acc'.format(line_label))
         plt.title('Training and validation acc')
-        plt.xlabel('Epochs')
-        plt.ylabel('Acc')
-        plt.legend()
-        plt.grid()
+    plt.xlabel('Epochs')
+    plt.ylabel('Acc')
+    plt.legend()
+    plt.grid()
+
+
 
 
     save_fig(plt, plot_filename=plot_filename, plot_dir=sum_plot)
