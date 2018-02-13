@@ -104,7 +104,7 @@ def save_history(history, csv_name, subdir=False):
         print('-'*80)
 
 
-def plot_all_history(subdir, plot_filename='default.pdf'):
+def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
     subdir = os.path.join(history_dir, subdir)
     assert os.path.isdir(subdir) == True, "Error: {} does not exists!".format(subdir)
 
@@ -116,7 +116,7 @@ def plot_all_history(subdir, plot_filename='default.pdf'):
     # colors = [c for c in list(matplotlib.colors.cnames.keys()) if not c.startswith('light')]
     colors = ['green','red','blue','goldenrod','black','lime','cyan','chatreuse','yellow','m','purple','olive','salmon','darkred','pink']
 
-    plt.figure(figsize=(16, 9))
+    plt.figure(figsize=figsize)
     plt.subplot(121)
     for i, filename in enumerate(os.listdir(subdir)):
         if filename[-4:] != '.csv': continue
