@@ -40,7 +40,7 @@ from keras.utils.np_utils import to_categorical
 from tensorflow.python.client import device_lib
 from nltk.corpus import stopwords
 import nltk
-from keras.layers import Dense, Input, GlobalMaxPooling1D
+from keras.layers import Dense, Input, GlobalMaxPooling1D,Bidirectional
 from keras.layers import Conv1D, MaxPooling1D, Embedding
 from keras.models import Model
 import matplotlib.pyplot as plt
@@ -52,7 +52,7 @@ from keras import metrics
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
-MAX_SEQUENCE_LENGTH=100
+#MAX_SEQUENCE_LENGTH=100
 
 print('Indexing word vectors.')
 embeddings_index = {}
@@ -137,18 +137,20 @@ embedding_layer = Embedding(num_words,
 model.add(embedding_layer)
 print ('###########################################################')
 print ('embedding layer output shape is:',model.output_shape)
-model.add(Dropout(0.2))
-model.add(Conv1D(250,
+
+
+model.add(Dropout(0.3))
+model.add(Conv1D(100,
                  3,
                  padding='valid',
                  activation='relu',
                  strides=1))
 model.add(GlobalMaxPooling1D())
 model.add(Dense(250,activation='relu'))
-model.add(Dropout(0.2))
+model.add(Dropout(0.3))
 model.add(Dense(1,activation='sigmoid'))
 
-
+################################
 #model.add(Flatten())
 #print ('Flatten layer output shape is:',model.output_shape)
 #model.add(Dense(250,activation='relu'))
@@ -157,8 +159,9 @@ model.add(Dense(1,activation='sigmoid'))
 #model.add(Dropout(0.2))
 #model.add(Dense(1,activation='sigmoid'))
 
-
-#model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
+#
+#model.add(LSTM(100))
+##model.add(Bidirectional(LSTM(64)))
 #model.add(Dense(1,activation='sigmoid'))
 
 
@@ -168,7 +171,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 
 #, callbacks=[earlystopping]
-history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=32, callbacks=[tensorBoardCallback])
+history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=128, callbacks=[tensorBoardCallback])
 #model.save_weights("own_vecmodel_model.h5")
 plot_model(model, to_file='model.png')
 # Evaluation on the test set
@@ -179,8 +182,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='model_glove_CNN_dropout_02.pdf'
-save_history(history, 'glove_CNN_dropout02.csv', subdir='CNN_drop')
+write_filename='model_glove_CNN_dropout_03_size3.pdf'
+save_history(history, 'glove_CNN_dropout03_size3.csv', subdir='GLOVE')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
