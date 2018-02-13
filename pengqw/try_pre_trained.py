@@ -56,8 +56,8 @@ csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
 print('Indexing word vectors.')
 embeddings_index = {}
-f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
-#f = open(CBOW_embedding, encoding='utf-8')
+#f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
+f = open(CBOW_embedding, encoding='utf-8')
 #f = open(SkipGram_embedding, encoding='utf-8')
 ####hello
 #f = open('D:\MLP_Project\MLP\\embedding\gensim_word2vec.txt','r',encoding='utf-8')
@@ -139,15 +139,16 @@ print ('###########################################################')
 print ('embedding layer output shape is:',model.output_shape)
 
 
-model.add(Dropout(0.3))
+#model.add(Dropout(0.4))
 model.add(Conv1D(100,
-                 3,
+                 5,
                  padding='valid',
                  activation='relu',
                  strides=1))
 model.add(GlobalMaxPooling1D())
-model.add(Dense(250,activation='relu'))
-model.add(Dropout(0.3))
+print ('after maxpooling layer the shape is:',model.output_shape)
+model.add(Dense(100,activation='relu'))
+model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 
 ################################
@@ -182,15 +183,15 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='model_glove_CNN_dropout_03_size3.pdf'
-save_history(history, 'glove_CNN_dropout03_size3.csv', subdir='GLOVE')
+write_filename='model_CBOW_CNN_dropout_05_size5_100unit.pdf'
+save_history(history, 'CBOW_CNN_dropout05_size5_100unit.csv', subdir='CBOW_CNN_MODEL')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
 
 
 
-##### model_glove_CNN_dropout_02:  best: val_loss:0.2798; val_acc:0.8828
+##### 
 ##### model_glove_CNN_dropout_05:  best: val_loss:0.2881; val_acc:0.8778
 
 
