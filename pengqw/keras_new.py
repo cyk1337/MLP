@@ -1,28 +1,24 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Feb 12 23:06:37 2018
-
-@author: pqw1995@163.com
-"""
-
+'''Trains an LSTM model on the IMDB sentiment classification task.
+The dataset is actually too small for LSTM to be of any advantage
+compared to simpler, much faster methods such as TF-IDF + LogReg.
+# Notes
+- RNNs are tricky. Choice of batch size is important,
+choice of loss and optimizer is critical, etc.
+Some configurations won't converge.
+- LSTM loss decrease patterns during training can be quite different
+from what you see with CNNs/MLPs/etc.
+'''
 from __future__ import print_function
 
 from keras.preprocessing import sequence
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation
-from keras.layers import Embedding
-from keras.layers import Conv1D, GlobalMaxPooling1D
+from keras.layers import Dense, Embedding
+from keras.layers import LSTM
 from keras.datasets import imdb
 
-# set parameters:
-max_features = 5000
-maxlen = 400
+max_features = 20000
+maxlen = 80  # cut texts after this number of words (among top max_features most common words)
 batch_size = 32
-embedding_dims = 50
-filters = 250
-kernel_size = 3
-hidden_dims = 250
-epochs = 2
 
 print('Loading data...')
 (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=max_features)
@@ -37,38 +33,21 @@ print('x_test shape:', x_test.shape)
 
 print('Build model...')
 model = Sequential()
+model.add(Embedding(max_features, 128))
+model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
+model.add(Dense(1, activation='sigmoid'))
 
-# we start off with an efficient embedding layer which maps
-# our vocab indices into embedding_dims dimensions
-model.add(Embedding(max_features,
-                    embedding_dims,
-                    input_length=maxlen,
-                    trainable=False))
-model.add(Dropout(0.2))
-
-# we add a Convolution1D, which will learn filters
-# word group filters of size filter_length:
-model.add(Conv1D(filters,
-                 kernel_size,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-# we use max pooling:
-model.add(GlobalMaxPooling1D())
-
-# We add a vanilla hidden layer:
-model.add(Dense(hidden_dims))
-model.add(Dropout(0.2))
-model.add(Activation('relu'))
-
-# We project onto a single unit output layer, and squash it with a sigmoid:
-model.add(Dense(1))
-model.add(Activation('sigmoid'))
-
+# try using different optimizers and different optimizer configs
 model.compile(loss='binary_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
+
+print('Train...')
 model.fit(x_train, y_train,
           batch_size=batch_size,
-          epochs=epochs,
+          epochs=15,
           validation_data=(x_test, y_test))
+score, acc = model.evaluate(x_test, y_test,
+                            batch_size=batch_size)
+print('Test score:', score)
+print('Test accuracy:', acc)
