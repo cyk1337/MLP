@@ -27,7 +27,7 @@ from config.setting import *
 
 from keras.preprocessing.text import Tokenizer
 from keras.models import Sequential
-from keras.layers import Dense, Dropout
+from keras.layers import Dense, Dropout, Embedding, Conv1D, GlobalMaxPool1D
 
 from CYK.data_loader import load_imdb
 from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_history
@@ -54,7 +54,7 @@ def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test,dropout_rate, pl
 
 
 (X_train, y_train), (X_test, y_test) = load_imdb()
-tokenizer = Tokenizer()
+tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
 tokenizer.fit_on_texts(X_train)
 
 # count matrix
