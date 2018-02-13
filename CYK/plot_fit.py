@@ -119,24 +119,7 @@ def plot_all_history(subdir, plot_filename='default.pdf'):
     plt.figure(figsize=(16, 9))
     plt.subplot(121)
     for i, filename in enumerate(os.listdir(subdir)):
-        csv_file = os.path.join(subdir, filename)
-        history = pd.read_csv(csv_file)
-        line_label = filename[:-4]
-        acc = history['acc']
-        val_acc = history['val_acc']
-        epochs = range(1, len(acc) + 1)
-        # plot acc
-        plt.plot(epochs, acc, color=colors[i%len(colors)], linestyle='-', label='{} training acc'.format(line_label))
-        plt.plot(epochs, val_acc, color=colors[i%len(colors)], linestyle='dashed', label='{} validation acc'.format(line_label))
-        plt.title('Training and validation acc')
-        plt.xlabel('Epochs')
-        plt.ylabel('Acc')
-        plt.legend()
-        plt.grid()
-    # =============================
-    # plot acc
-    plt.subplot(122)
-    for i, filename in enumerate(os.listdir(subdir)):
+        if filename[-4:] != '.csv': continue
         line_label = filename[:-4]
         csv_file = os.path.join(subdir, filename)
         history = pd.read_csv(csv_file)
@@ -152,6 +135,27 @@ def plot_all_history(subdir, plot_filename='default.pdf'):
         plt.ylabel('Loss')
         plt.legend()
         plt.grid()
+    # =============================
+    # plot acc
+    plt.subplot(122)
+    for i, filename in enumerate(os.listdir(subdir)):
+        if filename[-4:] != '.csv': continue
+        csv_file = os.path.join(subdir, filename)
+        history = pd.read_csv(csv_file)
+        line_label = filename[:-4]
+        acc = history['acc']
+        val_acc = history['val_acc']
+        epochs = range(1, len(acc) + 1)
+        # plot acc
+        plt.plot(epochs, acc, color=colors[i%len(colors)], linestyle='-', label='{} training acc'.format(line_label))
+        plt.plot(epochs, val_acc, color=colors[i%len(colors)], linestyle='dashed', label='{} validation acc'.format(line_label))
+        plt.title('Training and validation acc')
+        plt.xlabel('Epochs')
+        plt.ylabel('Acc')
+        plt.legend()
+        plt.grid()
+
+
     save_fig(plt, plot_filename=plot_filename, plot_dir=sum_plot)
     print("{} saved!".format(plot_filename))
     print('-'*80)
@@ -163,9 +167,10 @@ def plot_all_history(subdir, plot_filename='default.pdf'):
 
 if __name__=="__main__":
     # save_history({'val_acc':[1,1], 'val_loss':[2,3], 'acc':[3,3], 'loss':[5,3]}, 'test1.csv', 'test')
-    history = 'history example'
+    # history = 'history example'
     # use example
-    save_history(history, 'train_test.csv', subdir='Test')
+    # save_history(history, 'train_test.csv', subdir='Test')
 
-    subdir = 'dir to save csv'
-    plot_all_history(subdir, plot_filename='Plot_all_test.pdf')
+    # subdir = 'dir to save csv'
+    subdir = 'CNN1layer_pretrained'
+    plot_all_history(subdir, plot_filename='Dropout_1_and_2_layers.pdf')

@@ -59,7 +59,7 @@ def run_CNN_pretrianed_embedding(Xtrain, y_train, Xtest, y_test, embedding_matri
                           )
     # hidden layer 1
     model.add(embedding)
-    model.add(Dropout(dropout_rate))
+    # model.add(Dropout(dropout_rate))
     # model.add(Reshape((MAX_NUM_WORDS, 1,),input_shape=(MAX_NUM_WORDS,)))
     # print(model.output_shape)
 
@@ -145,6 +145,6 @@ if __name__=='__main__':
 
 
     # count DNN
-    run_CNN_pretrianed_embedding(train_pad_seq, y_train, test_pad_seq, y_test,embedding_matrix, dropout_rate, 'pretrained_{}_CNN_hid1_dropout{}.pdf'.format(embeddings[embedding_num], dropout_rate), subdir)
+    run_CNN_pretrianed_embedding(train_pad_seq, y_train, test_pad_seq, y_test,embedding_matrix, dropout_rate, 'pretrained_{}_CNN_hid1_1dropout{}.pdf'.format(embeddings[embedding_num], dropout_rate), subdir)
 
 
