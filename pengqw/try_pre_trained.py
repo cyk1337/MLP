@@ -46,7 +46,7 @@ from keras.models import Model
 import matplotlib.pyplot as plt
 from keras.callbacks import CSVLogger, EarlyStopping
 from CYK.plot_fit import visialize_model,save_history,plot_all_history
-
+from keras import metrics
 
 
 #earlystopping = EarlyStopping(patience=4)
@@ -161,8 +161,11 @@ model.add(Dense(1,activation='sigmoid'))
 #model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 #model.add(Dense(1,activation='sigmoid'))
 
+
+
 tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
 
 #, callbacks=[earlystopping]
 history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=32, callbacks=[tensorBoardCallback])
@@ -177,6 +180,7 @@ print (history.history.keys())
 
 
 write_filename='model_glove_CNN_dropout_02.pdf'
+save_history(history, 'glove_CNN_dropout02.csv', subdir='CNN_drop')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
