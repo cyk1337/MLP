@@ -67,7 +67,7 @@ def run_CNN_pretrianed_embedding(Xtrain, y_train, Xtest, y_test, embedding_matri
                      input_shape=(MAX_NUM_WORDS, 1)))
     # temporal maxpooling
     model.add(GlobalMaxPool1D())
-    model.add(Dense(250))
+    model.add(Dense(150))
     model.add(Dropout(dropout_rate))
     model.add(Activation('relu'))
 

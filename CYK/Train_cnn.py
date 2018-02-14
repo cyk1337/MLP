@@ -36,8 +36,8 @@ from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_histo
 
 
 def run_CNN_1layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, dropout_rate, plot_filename, subdir):
-    filters = 64
-    kernel_size = 5
+    filters = 100
+    kernel_size = 4
 
     # Xtrain_matrix = Xtrain_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
     # Xtest_matrix = Xtest_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
