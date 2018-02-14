@@ -141,14 +141,15 @@ print ('embedding layer output shape is:',model.output_shape)
 
 #model.add(Dropout(0.4))
 model.add(Conv1D(100,
-                 5,
+                 4,
                  padding='valid',
                  activation='relu',
                  strides=1))
 model.add(GlobalMaxPooling1D())
+
 print ('after maxpooling layer the shape is:',model.output_shape)
 model.add(Dense(150,activation='relu'))
-model.add(Dropout(0.2))
+model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 
 ################################

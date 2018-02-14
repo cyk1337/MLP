@@ -36,8 +36,8 @@ from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_histo
 
 
 def run_CNN_1layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, dropout_rate, plot_filename, subdir):
-    filters = 64
-    kernel_size = 5
+    filters = 100
+    kernel_size = 4
 
     # Xtrain_matrix = Xtrain_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
     # Xtest_matrix = Xtest_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
@@ -52,7 +52,7 @@ def run_CNN_1layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, dropout_rate, p
     model.add(Conv1D(filters, kernel_size, padding='valid', activation='relu', strides=1, input_shape=(MAX_NUM_WORDS, 1)))
     # temporal maxpooling
     model.add(GlobalMaxPool1D())
-    model.add(Dense(250))
+    model.add(Dense(150))
     model.add(Dropout(dropout_rate))
     model.add(Activation('relu'))
 
@@ -61,7 +61,7 @@ def run_CNN_1layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, dropout_rate, p
 
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-    history = model.fit(Xtrain_matrix, y_train, epochs=EPOCH_NUM, batch_size=64, validation_data=(Xtest_matrix, y_test))
+    history = model.fit(Xtrain_matrix, y_train, epochs=EPOCH_NUM, batch_size=128, validation_data=(Xtest_matrix, y_test))
 
     # save history info
     save_history(history, '{}.csv'.format(plot_filename[:-4]), subdir=subdir)
@@ -71,7 +71,7 @@ def run_CNN_1layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, dropout_rate, p
     plot_fit(history, plot_filename=plot_filename)
 
 
-
+MAX_NUM_WORDS=10000
 (X_train, y_train), (X_test, y_test) = load_imdb()
 tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
 tokenizer.fit_on_texts(X_train)
