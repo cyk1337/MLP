@@ -52,8 +52,6 @@ from keras import metrics
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
-#MAX_SEQUENCE_LENGTH=100
-
 print('Indexing word vectors.')
 embeddings_index = {}
 #f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
@@ -145,18 +143,14 @@ model.add(Conv1D(100,
                  padding='valid',
                  activation='relu',
                  strides=1))
-model.add(GlobalMaxPooling1D())
+#model.add(GlobalMaxPooling1D())
 
-model.add(Conv1D(100,
-                 4,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-model.add(GlobalMaxPooling1D())
+model.add(MaxPooling1D(pool_size=4))
 
+model.add(LSTM(80))
 print ('after maxpooling layer the shape is:',model.output_shape)
-model.add(Dense(150,activation='relu'))
-model.add(Dropout(0.5))
+#model.add(Dense(150,activation='relu'))
+#model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 
 ################################
@@ -180,7 +174,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 
 #, callbacks=[earlystopping]
-history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=128, callbacks=[tensorBoardCallback])
+history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=32, callbacks=[tensorBoardCallback])
 #model.save_weights("own_vecmodel_model.h5")
 plot_model(model, to_file='model.png')
 # Evaluation on the test set
