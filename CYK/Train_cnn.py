@@ -34,6 +34,8 @@ from keras.layers import Dense, Dropout, Embedding, Conv1D, GlobalMaxPool1D, Max
 from CYK.data_loader import load_imdb
 from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_history
 
+MAX_NUM_WORDS=10000
+
 
 def run_CNN_1layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, dropout_rate, plot_filename, subdir):
     filters = 100
@@ -43,16 +45,17 @@ def run_CNN_1layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, dropout_rate, p
     # Xtest_matrix = Xtest_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
     print("Building model...")
     model = Sequential()
-    # embedding = Embedding(MAX_NUM_WORDS, EMBEDDING_DIM, trainable=False)
+#    embedding = Embedding(MAX_NUM_WORDS, EMBEDDING_DIM, trainable=False)
     # hidden layer 1
     # model.add(embedding)
     # model.add(Dropout(dropout_rate))
+    print (MAX_NUM_WORDS)
     model.add(Reshape((MAX_NUM_WORDS, 1,),input_shape=(MAX_NUM_WORDS,)))
     print(model.output_shape)
     model.add(Conv1D(filters, kernel_size, padding='valid', activation='relu', strides=1, input_shape=(MAX_NUM_WORDS, 1)))
     # temporal maxpooling
     model.add(GlobalMaxPool1D())
-    model.add(Dense(250))
+    model.add(Dense(150))
     model.add(Dropout(dropout_rate))
     model.add(Activation('relu'))
 
@@ -61,7 +64,7 @@ def run_CNN_1layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, dropout_rate, p
 
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-    history = model.fit(Xtrain_matrix, y_train, epochs=EPOCH_NUM, batch_size=64, validation_data=(Xtest_matrix, y_test))
+    history = model.fit(Xtrain_matrix, y_train, epochs=EPOCH_NUM, batch_size=128, validation_data=(Xtest_matrix, y_test))
 
     # save history info
     save_history(history, '{}.csv'.format(plot_filename[:-4]), subdir=subdir)
@@ -69,7 +72,6 @@ def run_CNN_1layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, dropout_rate, p
     visialize_model(model, filepath=plot_filename)
     # save single history
     plot_fit(history, plot_filename=plot_filename)
-
 
 
 (X_train, y_train), (X_test, y_test) = load_imdb()
