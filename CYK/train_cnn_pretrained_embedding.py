@@ -46,8 +46,9 @@ from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_histo
 
 
 def run_CNN_pretrianed_embedding(Xtrain, y_train, Xtest, y_test, embedding_matrix, dropout_rate, plot_filename, subdir):
-    filters = 64
-    kernel_size = 5
+    filters = 100
+    kernel_size = 4
+    units = 150
 
     # Xtrain_matrix = Xtrain_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
     # Xtest_matrix = Xtest_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
@@ -65,9 +66,11 @@ def run_CNN_pretrianed_embedding(Xtrain, y_train, Xtest, y_test, embedding_matri
 
     model.add(Conv1D(filters, kernel_size, padding='valid', activation='relu', strides=1,
                      input_shape=(MAX_NUM_WORDS, 1)))
+
+    model.add(Conv1D(filters, kernel_size, padding='valid', activation='relu', strides=1))
     # temporal maxpooling
     model.add(GlobalMaxPool1D())
-    model.add(Dense(250))
+    model.add(Dense(units))
     model.add(Dropout(dropout_rate))
     model.add(Activation('relu'))
 
@@ -139,12 +142,12 @@ if __name__=='__main__':
 
 
     # subdir to save history
-    subdir = 'CNN1layer_pretrained'
+    subdir = 'CNN2layer_pretrained'
 
     dropout_rate = 0.5
 
 
     # count DNN
-    run_CNN_pretrianed_embedding(train_pad_seq, y_train, test_pad_seq, y_test,embedding_matrix, dropout_rate, 'pretrained_{}_CNN_hid1_1dropout{}.pdf'.format(embeddings[embedding_num], dropout_rate), subdir)
+    run_CNN_pretrianed_embedding(train_pad_seq, y_train, test_pad_seq, y_test,embedding_matrix, dropout_rate, 'pretrained_{}_CNN_hid2_1dropout{}.pdf'.format(embeddings[embedding_num], dropout_rate), subdir)
 
 
