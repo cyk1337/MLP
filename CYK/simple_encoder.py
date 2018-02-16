@@ -68,17 +68,17 @@ Xtrain_count = tokenizer.texts_to_matrix(texts=X_train, mode='count')
 Xtest_count = tokenizer.texts_to_matrix(texts=X_test, mode='count')
 
 
-# one-hot matrix
-Xtrain_1hot = tokenizer.texts_to_matrix(texts=X_train, mode='binary')
-Xtest_1hot = tokenizer.texts_to_matrix(texts=X_test, mode='binary')
-
-# freq matrix
-Xtrain_freq = tokenizer.texts_to_matrix(texts=X_train, mode='freq')
-Xtest_freq = tokenizer.texts_to_matrix(texts=X_test, mode='freq')
-
-# tfidf matrix
-Xtrain_tfidf = tokenizer.texts_to_matrix(texts=X_train, mode='tfidf')
-Xtest_tfidf = tokenizer.texts_to_matrix(texts=X_test, mode='tfidf')
+# # one-hot matrix
+# Xtrain_1hot = tokenizer.texts_to_matrix(texts=X_train, mode='binary')
+# Xtest_1hot = tokenizer.texts_to_matrix(texts=X_test, mode='binary')
+#
+# # freq matrix
+# Xtrain_freq = tokenizer.texts_to_matrix(texts=X_train, mode='freq')
+# Xtest_freq = tokenizer.texts_to_matrix(texts=X_test, mode='freq')
+#
+# # tfidf matrix
+# Xtrain_tfidf = tokenizer.texts_to_matrix(texts=X_train, mode='tfidf')
+# Xtest_tfidf = tokenizer.texts_to_matrix(texts=X_test, mode='tfidf')
 
 # subdir to save history
 subdir = 'SimpleEnc'
