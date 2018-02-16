@@ -28,6 +28,7 @@ from config.setting import *
 from keras.preprocessing.text import Tokenizer
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Embedding, Conv1D, GlobalMaxPool1D, MaxPooling1D, Activation
+from keras import regularizers
 
 from CYK.data_loader import load_imdb
 from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_history
@@ -37,13 +38,15 @@ def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test,dropout_rate, pl
     print("Building model...")
     model = Sequential()
     # hidden layer 1
-    model.add(Dense(250, activation='relu', input_shape=(Xtrain_matrix.shape[1],)))
+    model.add(Dense(250, activation='relu', input_shape=(Xtrain_matrix.shape[1],),
+
+                    ))
     model.add(Dropout(dropout_rate))
     model.add(Dense(1, activation='sigmoid'))
 
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-    history = model.fit(Xtrain_matrix, y_train, epochs=EPOCH_NUM, batch_size=64, validation_data=(Xtest_matrix, y_test))
+    history = model.fit(Xtrain_matrix, y_train, epochs=EPOCH_NUM, batch_size=128, validation_data=(Xtest_matrix, y_test))
 
     # save history info
     save_history(history, '{}.csv'.format(plot_filename[:-4]), subdir=subdir)
