@@ -72,7 +72,7 @@ print('---Beginning 1 hot fitting...')
 clf_1hot.fit(Xtrain_1hot, y_train)
 print('Beginning 1 hot evaluation...')
 score_1hot = clf_1hot.score(Xtest_1hot, y_test)
-enc_dict[score_1hot] = score_1hot
+enc_dict['score_1hot'] = score_1hot
 print('1 hot validation accuracy:', score_1hot)
 
 del Xtrain_1hot
@@ -90,7 +90,7 @@ print('---Beginning 1 hot fitting...')
 clf_freq.fit(Xtrain_freq, y_train)
 print('Beginning 1 hot evaluation...')
 score_freq = clf_freq.score(Xtest_freq, y_test)
-enc_dict[score_freq] = score_freq
+enc_dict['score_freq'] = score_freq
 print('1 hot validation accuracy:', score_freq)
 
 
@@ -108,7 +108,7 @@ print('---Beginning 1 hot fitting...')
 clf_tfidf.fit(Xtrain_tfidf, y_train)
 print('Beginning 1 hot evaluation...')
 score_tfidf = clf_tfidf.score(Xtest_tfidf, y_test)
-enc_dict[clf_tfidf] = score_tfidf
+enc_dict['clf_tfidf'] = score_tfidf
 print('1 hot validation accuracy:', score_tfidf)
 
 del Xtrain_tfidf
