@@ -114,7 +114,9 @@ print('1 hot validation accuracy:', score_tfidf)
 del Xtrain_tfidf
 del Xtest_tfidf
 print('='*80)
-
 # ++++++++++++++++++++++++++
+with open('basic_matrix.txt', 'w') as f:
+    f.write(str(enc_dict))
+#==========
 score_basic_matrix = pd.DataFrame.from_dict(enc_dict)
 score_basic_matrix.to_csv('basic matrics.csv')
