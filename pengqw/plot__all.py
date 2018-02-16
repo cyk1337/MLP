@@ -9,7 +9,7 @@ sys.path.append('D:\\MLP_Project\\MLP')
 from config.setting import *
 from CYK.plot_fit import *
 
-subdir = 'CBOW_CNN_kernelsize4_dropout_X'
-plot_all_history(subdir, plot_filename='CBOW_CNN_kernelsize4_dropout_X.pdf',figsize=(16,8))
+subdir = 'FixedCNN_Different_Embedding'
+plot_all_history(subdir, plot_filename='FixedCNN_Different_Embedding.pdf',figsize=(16,8))
 
 
