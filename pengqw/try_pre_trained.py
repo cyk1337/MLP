@@ -174,7 +174,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 
 #, callbacks=[earlystopping]
-history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=32, callbacks=[tensorBoardCallback])
+history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=32)
 #model.save_weights("own_vecmodel_model.h5")
 plot_model(model, to_file='model.png')
 # Evaluation on the test set
