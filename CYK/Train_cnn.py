@@ -38,7 +38,7 @@ MAX_NUM_WORDS=10000
 
 
 def run_CNN_1layer(Xtrain_matrix, y_train, Xtest_matrix, y_test, dropout_rate, plot_filename, subdir):
-    filters = 100
+    filters = 1000
     kernel_size = 4
 
     # Xtrain_matrix = Xtrain_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))

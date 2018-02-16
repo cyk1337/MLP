@@ -57,12 +57,16 @@ def run_DNN_2layer(Xtrain_matrix, y_train, Xtest_matrix, y_test,dropout_rate, pl
 
 
 (X_train, y_train), (X_test, y_test) = load_imdb()
-tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
+# tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
+tokenizer = Tokenizer()
 tokenizer.fit_on_texts(X_train)
 
+
 # count matrix
+
 Xtrain_count = tokenizer.texts_to_matrix(texts=X_train, mode='count')
 Xtest_count = tokenizer.texts_to_matrix(texts=X_test, mode='count')
+
 
 # one-hot matrix
 Xtrain_1hot = tokenizer.texts_to_matrix(texts=X_train, mode='binary')
@@ -85,13 +89,13 @@ dropout_rate = 0.5
 run_DNN_2layer(Xtrain_count, y_train, Xtest_count, y_test, dropout_rate, 'count_matrix_DNN_hid1_dropout{}.pdf'.format(dropout_rate), subdir)
 
 # freq
-run_DNN_2layer(Xtrain_freq, y_train, Xtest_freq, y_test, dropout_rate, 'freq_matrix_DNN_hid1_dropout{}.pdf'.format(dropout_rate), subdir)
+# run_DNN_2layer(Xtrain_freq, y_train, Xtest_freq, y_test, dropout_rate, 'freq_matrix_DNN_hid1_dropout{}.pdf'.format(dropout_rate), subdir)
+#
+# # one-hot
+# run_DNN_2layer(Xtrain_1hot, y_train, Xtest_1hot, y_test, dropout_rate, '1hot_matrix_DNN_hid1_dropout{}.pdf'.format(dropout_rate), subdir)
+#
+# # tfidf DNN
+# run_DNN_2layer(Xtrain_tfidf, y_train, Xtest_tfidf, y_test, dropout_rate, 'tfidf_matrix_DNN_hid1dropout{}.pdf'.format(dropout_rate), subdir)
 
-# one-hot
-run_DNN_2layer(Xtrain_1hot, y_train, Xtest_1hot, y_test, dropout_rate, '1hot_matrix_DNN_hid1_dropout{}.pdf'.format(dropout_rate), subdir)
 
-# tfidf DNN
-run_DNN_2layer(Xtrain_tfidf, y_train, Xtest_tfidf, y_test, dropout_rate, 'tfidf_matrix_DNN_hid1dropout{}.pdf'.format(dropout_rate), subdir)
-
-
-plot_all_history(subdir, plot_filename='Plot_all_DNN_1layer_dropout{}.pdf'.format(dropout_rate))
+# plot_all_history(subdir, plot_filename='Plot_all_DNN_1layer_dropout{}.pdf'.format(dropout_rate))
