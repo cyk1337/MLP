@@ -48,14 +48,14 @@ from keras.callbacks import CSVLogger, EarlyStopping
 from CYK.plot_fit import visialize_model,save_history,plot_all_history
 from keras import metrics
 
-
+#MAX_SEQUENCE_LENGTH = 1000
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
 print('Indexing word vectors.')
 embeddings_index = {}
-#f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
-f = open(CBOW_embedding, encoding='utf-8')
+f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
+#f = open(CBOW_embedding, encoding='utf-8')
 #f = open(SkipGram_embedding, encoding='utf-8')
 ####hello
 #f = open('D:\MLP_Project\MLP\\embedding\gensim_word2vec.txt','r',encoding='utf-8')
@@ -143,14 +143,14 @@ model.add(Conv1D(100,
                  padding='valid',
                  activation='relu',
                  strides=1))
-#model.add(GlobalMaxPooling1D())
+model.add(GlobalMaxPooling1D())
+#
+#model.add(MaxPooling1D(pool_size=4))
 
-model.add(MaxPooling1D(pool_size=4))
-
-model.add(LSTM(80))
+#model.add(LSTM(80))
 print ('after maxpooling layer the shape is:',model.output_shape)
-#model.add(Dense(150,activation='relu'))
-#model.add(Dropout(0.5))
+model.add(Dense(150,activation='relu'))
+model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 
 ################################
@@ -185,8 +185,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='model_CBOW_2CNN_dropout_02_size5.pdf'
-save_history(history, 'CBOW_2CNN_dropout02_size5.csv', subdir='CBOW_CNN_dropout02_kernel_X_size')
+write_filename='FixedCNN_glove_embedding.pdf'
+save_history(history, 'FixedCNN_glove_embedding.csv', subdir='FixedCNN_Different_Embedding')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
