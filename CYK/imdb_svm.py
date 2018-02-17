@@ -79,6 +79,7 @@ del Xtrain_1hot
 del Xtest_1hot
 print('='*80)
 
+#"""
 # ==============================
 print('freq matrix beginning...')
 # freq matrix
@@ -86,9 +87,9 @@ Xtrain_freq = tokenizer.texts_to_matrix(texts=X_train, mode='freq')
 Xtest_freq = tokenizer.texts_to_matrix(texts=X_test, mode='freq')
 
 clf_freq = svm.SVC(verbose=True)
-print('---Beginning 1 hot fitting...')
+print('---Beginning freq fitting...')
 clf_freq.fit(Xtrain_freq, y_train)
-print('Beginning 1 hot evaluation...')
+print('Beginning freq evaluation...')
 score_freq = clf_freq.score(Xtest_freq, y_test)
 enc_dict['score_freq'] = score_freq
 print('1 hot validation accuracy:', score_freq)
@@ -104,19 +105,21 @@ Xtrain_tfidf = tokenizer.texts_to_matrix(texts=X_train, mode='tfidf')
 Xtest_tfidf = tokenizer.texts_to_matrix(texts=X_test, mode='tfidf')
 
 clf_tfidf = svm.SVC(verbose=True)
-print('---Beginning 1 hot fitting...')
+print('---Beginning tfidf fitting...')
 clf_tfidf.fit(Xtrain_tfidf, y_train)
-print('Beginning 1 hot evaluation...')
+print('Beginning tfidf evaluation...')
 score_tfidf = clf_tfidf.score(Xtest_tfidf, y_test)
 enc_dict['clf_tfidf'] = score_tfidf
-print('1 hot validation accuracy:', score_tfidf)
+print('tfidf validation accuracy:', score_tfidf)
 
 del Xtrain_tfidf
 del Xtest_tfidf
 print('='*80)
-# ++++++++++++++++++++++++++
+
+#"""
+
 with open('basic_matrix.txt', 'w') as f:
     f.write(str(enc_dict))
-#==========
-score_basic_matrix = pd.DataFrame.from_dict(enc_dict)
-score_basic_matrix.to_csv('basic matrics.csv')
+# ++++++++++++++++++++++++++
+score_basic_matrix = pd.DataFrame(list(enc_dict.items()))
+score_basic_matrix.to_csv('basic matrics.csv', index=False, encoding='utf-8')
