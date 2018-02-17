@@ -166,6 +166,8 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
     plt.show()
 
 
+# def visulize_embedding()
+
 
 
 if __name__=="__main__":
@@ -177,3 +179,5 @@ if __name__=="__main__":
     # subdir = 'dir to save csv'
     subdir = 'CNN1layer_pretrained'
     plot_all_history(subdir, plot_filename='Dropout_1_and_2_layers.pdf')
+
+
