@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Sat Feb 17 16:32:33 2018
+
+@author: pqw1995@163.com
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Fri Feb  9 16:03:06 2018
 
 @author: pqw1995@163.com
@@ -48,7 +55,8 @@ from keras.callbacks import CSVLogger, EarlyStopping
 from CYK.plot_fit import visialize_model,save_history,plot_all_history
 from keras import metrics
 
-MAX_SEQUENCE_LENGTH = 100
+MAX_SEQUENCE_LENGTH = 1000
+EMBEDDING_DIM=200
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
@@ -77,7 +85,7 @@ test_data=pd.read_csv(test_csv)
 #test_data['text'] = test_data['text'].str.replace('\d+', '')
 
 #tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
-tokenizer= Tokenizer(num_words=MAX_NUM_WORDS)
+tokenizer= Tokenizer(num_words=MAX_NUM_WORDS,char_level = True)
 
 tokenizer.fit_on_texts(train_data['text'])
 #X_train = tokenizer.texts_to_matrix(train_data['text'], mode='count')
@@ -113,20 +121,20 @@ y_test = np.array(y_test)
 print('Preparing embedding matrix.')
         
 num_words = min(MAX_NUM_WORDS, len(word_index))
-embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
-for word, i in word_index.items():
-    if i >= MAX_NUM_WORDS:
-        continue
-    embedding_vector = embeddings_index.get(word)
-    if embedding_vector is not None:
-        # words not found in embedding index will be all-zeros.
-        embedding_matrix[i] = embedding_vector
+#embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
+#for word, i in word_index.items():
+#    if i >= MAX_NUM_WORDS:
+#        continue
+#    embedding_vector = embeddings_index.get(word)
+#    if embedding_vector is not None:
+#        # words not found in embedding index will be all-zeros.
+#        embedding_matrix[i] = embedding_vector
         
 
 model = Sequential()
 embedding_layer = Embedding(num_words,
                             EMBEDDING_DIM,
-                            weights=[embedding_matrix],
+#                            weights=[embedding_matrix],
                             input_length=MAX_SEQUENCE_LENGTH,
                             trainable=False
                             #dropout=0.2
@@ -138,19 +146,27 @@ print ('embedding layer output shape is:',model.output_shape)
 
 
 #model.add(Dropout(0.4))
-#model.add(Conv1D(100,
-#                 4,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
+model.add(Conv1D(500,
+                 4,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
 #model.add(GlobalMaxPooling1D())
-#
-#model.add(MaxPooling1D(pool_size=2))
+model.add(MaxPooling1D(pool_size=2))
+model.add(Conv1D(500,
+                 4,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
+#model.add(GlobalMaxPooling1D())
+model.add(MaxPooling1D(pool_size=2))
 
-model.add(LSTM(50))
-print ('after maxpooling layer the shape is:',model.output_shape)
-#model.add(Dense(150,activation='relu'))
-#model.add(Dropout(0.5))
+#model.add(LSTM(50))
+#print ('after maxpooling layer the shape is:',model.output_shape)
+model.add(Flatten())
+model.add(Dropout(0.2))
+model.add(Dense(250,activation='relu'))
+model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 
 ################################
@@ -174,7 +190,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 
 #, callbacks=[earlystopping]
-history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=32)
+history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=128)
 #model.save_weights("own_vecmodel_model.h5")
 plot_model(model, to_file='model.png')
 # Evaluation on the test set
