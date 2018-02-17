@@ -5,4 +5,5 @@ __pycache__/*
 # *.ipynb
 
 # *.txt
+
 glove.6B.100d.txt
