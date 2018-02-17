@@ -56,24 +56,19 @@ from CYK.plot_fit import visialize_model,save_history,plot_all_history
 from keras import metrics
 
 MAX_SEQUENCE_LENGTH = 1000
-EMBEDDING_DIM=200
+EMBEDDING_DIM=70
+MAX_NUM_WORDS=5000
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
 print('Indexing word vectors.')
 embeddings_index = {}
 #f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
-f = open(CBOW_embedding, encoding='utf-8')
+#f = open(CBOW_embedding, encoding='utf-8')
 #f = open(SkipGram_embedding, encoding='utf-8')
 ####hello
 #f = open('D:\MLP_Project\MLP\\embedding\gensim_word2vec.txt','r',encoding='utf-8')
-for line in f:
-    values = line.split()
-    word = values[0]
-    coefs = np.asarray(values[1:], dtype='float32')
-    embeddings_index[word] = coefs
-f.close()
-print('Found %s word vectors.' % len(embeddings_index))
+
 
 
 print('Processing text dataset')
@@ -85,7 +80,8 @@ test_data=pd.read_csv(test_csv)
 #test_data['text'] = test_data['text'].str.replace('\d+', '')
 
 #tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
-tokenizer= Tokenizer(num_words=MAX_NUM_WORDS,char_level = True)
+tokenizer= Tokenizer(num_words=MAX_NUM_WORDS,
+                     char_level = True)
 
 tokenizer.fit_on_texts(train_data['text'])
 #X_train = tokenizer.texts_to_matrix(train_data['text'], mode='count')
@@ -119,7 +115,7 @@ y_test = np.array(y_test)
 
 
 print('Preparing embedding matrix.')
-        
+
 num_words = min(MAX_NUM_WORDS, len(word_index))
 #embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
 #for word, i in word_index.items():
@@ -136,7 +132,7 @@ embedding_layer = Embedding(num_words,
                             EMBEDDING_DIM,
 #                            weights=[embedding_matrix],
                             input_length=MAX_SEQUENCE_LENGTH,
-                            trainable=False
+                            trainable=True
                             #dropout=0.2
                             )
 
@@ -146,26 +142,52 @@ print ('embedding layer output shape is:',model.output_shape)
 
 
 #model.add(Dropout(0.4))
-model.add(Conv1D(500,
-                 4,
+model.add(Conv1D(256,
+                 7,
                  padding='valid',
                  activation='relu',
                  strides=1))
 #model.add(GlobalMaxPooling1D())
-model.add(MaxPooling1D(pool_size=2))
-model.add(Conv1D(500,
-                 4,
+model.add(MaxPooling1D(pool_size=3))
+model.add(Conv1D(256,
+                 7,
                  padding='valid',
                  activation='relu',
                  strides=1))
 #model.add(GlobalMaxPooling1D())
-model.add(MaxPooling1D(pool_size=2))
+model.add(MaxPooling1D(pool_size=3))
+model.add(Conv1D(256,
+                 3,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
+#model.add(GlobalMaxPooling1D())
+model.add(Conv1D(256,
+                 3,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
+#model.add(GlobalMaxPooling1D())
+model.add(Conv1D(256,
+                 3,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
+#model.add(GlobalMaxPooling1D())
+model.add(Conv1D(256,
+                 3,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
+#model.add(GlobalMaxPooling1D())
+model.add(MaxPooling1D(pool_size=3))
 
 #model.add(LSTM(50))
 #print ('after maxpooling layer the shape is:',model.output_shape)
 model.add(Flatten())
-model.add(Dropout(0.2))
-model.add(Dense(250,activation='relu'))
+model.add(Dense(1024,activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(1024,activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 

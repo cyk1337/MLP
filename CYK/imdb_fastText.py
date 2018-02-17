@@ -21,7 +21,15 @@
 
 @desc:         
                
-'''              
+'''         
+import sys
+sys.path.append('D:\\MLP_Project\\MLP')
+import __init__
+from config.setting import *
+from CYK.plot_fit import plot_fit
+import os
+
+     
 import numpy as np
 
 from keras.preprocessing import sequence
@@ -132,10 +140,12 @@ model = Sequential()
 # our vocab indices into embedding_dims dimensions
 model.add(Embedding(max_features,
                     embedding_dims,
-                    input_length=maxlen))
+                    input_length=maxlen,
+                    trainable=True))
 
 # we add a GlobalAveragePooling1D, which will average the embeddings
 # of all words in the document
+
 model.add(GlobalAveragePooling1D())
 
 # We project onto a single unit output layer, and squash it with a sigmoid:
