@@ -122,4 +122,3 @@ with open('basic_matrix.txt', 'w') as f:
     f.write(str(enc_dict))
 score_basic_matrix = pd.DataFrame(list(enc_dict.items()))
 score_basic_matrix.to_csv('svm_matrix.csv', index=False, encoding='utf-8')
-=======
