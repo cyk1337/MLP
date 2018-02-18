@@ -130,7 +130,7 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
 
         plt.plot(epochs, loss, color=colors[i%len(colors)], linestyle='-', label='{} training loss'.format(line_label))
         plt.plot(epochs, val_loss, color=colors[i%len(colors)], linestyle='dashed', label='{} validation loss'.format(line_label))
-    plt.title('Training and validation loss')
+    plt.title('Training and validation loss', fontsize='25')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
         # plt.grid()
@@ -150,7 +150,7 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
         # plot acc
         plt.plot(epochs, acc, color=colors[i%len(colors)], linestyle='-', label='{} training acc'.format(line_label))
         plt.plot(epochs, val_acc, color=colors[i%len(colors)], linestyle='dashed', label='{} validation acc'.format(line_label))
-        plt.title('Training and validation acc')
+        plt.title('Training and validation acc', fontsize='25')
     plt.xlabel('Epochs')
     plt.ylabel('Acc')
     plt.legend()
