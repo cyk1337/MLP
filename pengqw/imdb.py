@@ -24,6 +24,7 @@ import glob
 import re
 from string import punctuation
 from keras.preprocessing.text import text_to_word_sequence
+from CYK.data_loader import load_imdb
 
 
 
@@ -63,17 +64,23 @@ from keras.preprocessing.text import text_to_word_sequence
 
 #\d+|[\u4e00-\u9fff]+
 
+#
+#train_data=pd.read_csv(train_csv)
+#
+#train_data['text'] = train_data.apply(lambda row: text_to_word_sequence(row['text']), axis=1)
 
-train_data=pd.read_csv(train_csv)
+(X_train, y_train), (X_val, y_val) = load_imdb()
+#
+X_train = X_train.apply(text_to_word_sequence)
 
-train_data['text'] = train_data.apply(lambda row: text_to_word_sequence(row['text']), axis=1)
+
 #for inde, x in enumerate(train_data['text']):
 ##    mm= [w.lower() for w in x]
 #    mm= [word for word in x if word.isalpha()]
 #    train_data['text'][inde]=mm
 
 print ('the preprocessing is done')
-vec_model = Word2Vec(train_data['text'],size=100, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=0, iter=40,compute_loss=True)
+vec_model = Word2Vec(X_train,size=100, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=0, iter=40,compute_loss=True)
 
 print ('vector model training process is done') 
 print ('vocabulary size is :', len(vec_model.wv.index2word))
@@ -84,7 +91,7 @@ cbow_path = os.path.join(embedding_dir, '100d_cbow.txt')
 vec_model.wv.save_word2vec_format(skip_path,binary=False)
 
 
-cbow_vec_model = Word2Vec(train_data['text'],size=100, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=1, iter=40,compute_loss=True)
+cbow_vec_model = Word2Vec(X_train,size=100, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=1, iter=40,compute_loss=True)
 cbow_vec_model.wv.save_word2vec_format(cbow_path,binary=False)
 
 

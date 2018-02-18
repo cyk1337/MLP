@@ -50,7 +50,7 @@ from keras import metrics
 from CYK.data_loader import load_imdb
 
 
-MAX_SEQUENCE_LENGTH = 400
+#MAX_SEQUENCE_LENGTH = 400
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
@@ -129,7 +129,7 @@ print ('###########################################################')
 print ('embedding layer output shape is:',model.output_shape)
 
 model.add(Conv1D(100,
-                 4,
+                 5,
                  padding='valid',
                  activation='relu',
                  strides=1))
@@ -138,7 +138,7 @@ model.add(GlobalMaxPooling1D())
 print ('after maxpooling layer the shape is:',model.output_shape)
 
 #model.add(LSTM(90))
-model.add(Dense(150,activation='relu'))
+model.add(Dense(100,activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 
@@ -174,8 +174,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='MODEL_CNN_LSTM_LEN400.pdf'
-save_history(history, 'MODEL_CNN_LSTM_LEN400.csv', subdir='NEW_VAL/CBOW_CNN_dropout0.5_size5_X_unit')
+write_filename='CBOW_CNN_dropout0.5_size5_UNIT100.pdf'
+save_history(history, 'CBOW_CNN_dropout0.5_size5_UNIT100.csv', subdir='CBOW_CNN_dropout0.5_size5_X_unit')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
