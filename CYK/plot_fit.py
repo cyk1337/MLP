@@ -177,7 +177,7 @@ if __name__=="__main__":
     # save_history(history, 'train_val.csv', subdir='val')
 
     # subdir = 'dir to save csv'
-    subdir = 'CNN1layer_pretrained'
-    plot_all_history(subdir, plot_filename='Dropout_1_and_2_layers.pdf')
+    subdir = 'fastText'
+    plot_all_history(subdir, plot_filename='fastText_unigram_and_bigram.pdf')
 
 

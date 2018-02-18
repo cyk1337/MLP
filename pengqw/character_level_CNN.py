@@ -193,12 +193,12 @@ model = Sequential()
 
 
 #model.add(Dropout(0.4))
-model.add(Conv1D(256,
-                 3,
+model.add(Conv1D(100,
+                 4,
                  padding='valid',
                  activation='relu',
                  strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
-model.add(MaxPooling1D(pool_size=3))
+#model.add(MaxPooling1D(pool_size=3))
 #model.add(Conv1D(256,
 #                 7,
 #                 padding='valid',
@@ -216,16 +216,19 @@ model.add(MaxPooling1D(pool_size=3))
 #                 padding='valid',
 #                 activation='relu',
 #                 strides=1))
-model.add(Conv1D(256,
-                 3,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-model.add(MaxPooling1D(pool_size=3))
+#model.add(Conv1D(256,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+#model.add(MaxPooling1D(pool_size=3))
 
 #model.add(LSTM(50))
 #print ('after maxpooling layer the shape is:',model.output_shape)
-model.add(Flatten())
+model.add(GlobalMaxPooling1D())
+print ('after maxpooling layer the shape is:',model.output_shape)
+
+#model.add(Flatten())
 #model.add(Dense(1024,activation='relu'))
 #model.add(Dropout(0.5))
 model.add(Dense(1024,activation='relu'))
@@ -247,9 +250,9 @@ model.add(Dense(1,activation='sigmoid'))
 #model.add(Dense(1,activation='sigmoid'))
 
 
-sgd = SGD(lr=0.01, momentum=0.9)
+#sgd = SGD(lr=0.01, momentum=0.9)
 tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
-model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 
 #, callbacks=[earlystopping]
@@ -264,8 +267,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='char_CNN_2layer.pdf'
-save_history(history, 'char_CNN_3layer.csv', subdir='Character_Level_Models')
+write_filename='char_CNN_1layer.pdf'
+save_history(history, 'char_CNN_1layer.csv', subdir='Character_Level_Models')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
