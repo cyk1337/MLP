@@ -72,6 +72,7 @@ for i, label in enumerate(labels):
                  xy=(x, y),
                  xytext=(5, 2),
                  textcoords='offset points',
+                 fontsize = 15,
                  ha='right',
                  va='bottom')
 plt.title('CBOW embedding', fontsize=20)
@@ -92,6 +93,7 @@ for i, label in enumerate(labels2):
                  xy=(x, y),
                  xytext=(5, 2),
                  textcoords='offset points',
+                 fontsize=15,
                  ha='right',
                  va='bottom')
 plt.title('GloVe embedding', fontsize=20)
