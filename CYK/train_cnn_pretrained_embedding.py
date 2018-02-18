@@ -45,13 +45,13 @@ from CYK.data_loader import load_imdb
 from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_history
 
 
-def run_CNN_pretrianed_embedding(Xtrain, y_train, Xtest, y_test, embedding_matrix, dropout_rate, plot_filename, subdir):
+def run_CNN_pretrianed_embedding(Xtrain, y_train, Xval, y_val, embedding_matrix, dropout_rate, plot_filename, subdir):
     filters = 100
     kernel_size = 4
     units = 150
 
     # Xtrain_matrix = Xtrain_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
-    # Xtest_matrix = Xtest_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
+    # Xval_matrix = Xval_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
     print("Building model...")
     model = Sequential()
     embedding = Embedding(MAX_NUM_WORDS, EMBEDDING_DIM,input_length=MAX_SEQUENCE_LENGTH,
@@ -79,7 +79,7 @@ def run_CNN_pretrianed_embedding(Xtrain, y_train, Xtest, y_test, embedding_matri
 
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-    history = model.fit(Xtrain, y_train, epochs=EPOCH_NUM, batch_size=64, validation_data=(Xtest, y_test))
+    history = model.fit(Xtrain, y_train, epochs=EPOCH_NUM, batch_size=64, validation_data=(Xval, y_val))
 
     # save history info
     save_history(history, '{}.csv'.format(plot_filename[:-4]), subdir=subdir)
@@ -99,12 +99,12 @@ if __name__=='__main__':
     embeddings_index = load_pretrained_model(embedding_path)
 
     # load data
-    (X_train, y_train), (X_test, y_test) = load_imdb()
+    (X_train, y_train), (X_val, y_val) = load_imdb()
 
     # tokenize, filter punctuation, lowercase
     tokenizer = Tokenizer(num_words=MAX_NUM_WORDS, lower=True, char_level=False)
 
-    # test index
+    # val index
     # tokenizer = Tokenizer()
     tokenizer.fit_on_texts(X_train)
     vocarb_size = len(tokenizer.word_index) + 1
@@ -121,9 +121,9 @@ if __name__=='__main__':
     # print('index len:', len(word_index))
     train_pad_seq = pad_sequences(sequences=train_seq, maxlen=MAX_SEQUENCE_LENGTH)
 
-    # pad test sequence
-    test_seq = tokenizer.texts_to_sequences(X_test)
-    test_pad_seq = pad_sequences(sequences=test_seq, maxlen=MAX_SEQUENCE_LENGTH)
+    # pad val sequence
+    val_seq = tokenizer.texts_to_sequences(X_val)
+    val_pad_seq = pad_sequences(sequences=val_seq, maxlen=MAX_SEQUENCE_LENGTH)
 
     # labels = to_categorical(np.asarray(y_train))
     print("padding sequnce(X_input) shape:", train_pad_seq.shape)
@@ -148,6 +148,6 @@ if __name__=='__main__':
 
 
     # count DNN
-    run_CNN_pretrianed_embedding(train_pad_seq, y_train, test_pad_seq, y_test,embedding_matrix, dropout_rate, 'pretrained_{}_CNN_hid2_1dropout{}.pdf'.format(embeddings[embedding_num], dropout_rate), subdir)
+    run_CNN_pretrianed_embedding(train_pad_seq, y_train, val_pad_seq, y_val,embedding_matrix, dropout_rate, 'pretrained_{}_CNN_hid2_1dropout{}.pdf'.format(embeddings[embedding_num], dropout_rate), subdir)
 
 

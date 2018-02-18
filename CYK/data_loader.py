@@ -33,8 +33,15 @@ def load_imdb():
     train_data = pd.read_csv(train_csv)
     X_train = train_data['text']
     y_train = train_data['target']
+    ## val data
+    val_data = pd.read_csv(val_csv)
+    X_val = val_data['text']
+    y_val = val_data['target']
+    return (X_train, y_train), (X_val, y_val)
+
+def load_test():
     # test data
     test_data = pd.read_csv(test_csv)
     X_test = test_data['text']
     y_test = test_data['target']
-    return (X_train, y_train), (X_test, y_test)
+    return (X_test, y_test)
