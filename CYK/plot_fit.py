@@ -114,7 +114,7 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
 
     # set color list
     # colors = [c for c in list(matplotlib.colors.cnames.keys()) if not c.startswith('light')]
-    colors = ['green','red','blue','goldenrod','black','lime','cyan','chatreuse','yellow','m','purple','olive','salmon','darkred','pink']
+    colors = ['green','red','blue','goldenrod','black','lime','cyan','chartreuse','yellow','m','purple','olive','salmon','darkred','pink']
 
     plt.figure(figsize=figsize)
     plt.subplot(121)
