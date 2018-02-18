@@ -81,7 +81,7 @@ def add_ngram(sequences, token_indice, ngram_range=2):
 
 # Set parameters:
 # ngram_range = 2 will add bi-grams features
-ngram_range = 2
+ngram_range = 3
 max_features = 20000
 maxlen = 400
 batch_size = 64
@@ -160,7 +160,7 @@ history = model.fit(x_train, y_train,
           epochs=epochs,
           validation_data=(x_val, y_val))
 
-plot_filename = 'fasttext_bigram'
+plot_filename = 'fasttext_trigram'
 subdir = 'fastText'
 # save history info
 save_history(history, '{}.csv'.format(plot_filename), subdir=subdir)
