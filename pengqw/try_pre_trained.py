@@ -48,7 +48,7 @@ from keras.callbacks import CSVLogger, EarlyStopping
 from CYK.plot_fit import visialize_model,save_history,plot_all_history
 from keras import metrics
 
-MAX_SEQUENCE_LENGTH = 500
+MAX_SEQUENCE_LENGTH = 400
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
@@ -135,21 +135,18 @@ model.add(embedding_layer)
 print ('###########################################################')
 print ('embedding layer output shape is:',model.output_shape)
 
-
-#model.add(Dropout(0.5))
 model.add(Conv1D(100,
                  4,
                  padding='valid',
                  activation='relu',
                  strides=1))
 #model.add(GlobalMaxPooling1D())
-#
-model.add(MaxPooling1D(pool_size=2))
-
-model.add(LSTM(80))
+model.add(MaxPooling1D(pool_size=4))
 print ('after maxpooling layer the shape is:',model.output_shape)
-model.add(Dense(150,activation='relu'))
-model.add(Dropout(0.5))
+
+model.add(LSTM(90))
+#model.add(Dense(150,activation='relu'))
+#model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 
 ################################
@@ -184,8 +181,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='FixedCNN_CBOW_embedding.pdf'
-save_history(history, 'FixedCNN_CBOW_embedding.csv', subdir='FixedCNN_Different_Embedding')
+write_filename='MODEL_CNN_LSTM_LEN400.pdf'
+save_history(history, 'MODEL_CNN_LSTM_LEN400.csv', subdir='MODEL_CNN_LSTM')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 

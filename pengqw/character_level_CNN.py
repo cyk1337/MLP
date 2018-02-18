@@ -54,8 +54,10 @@ import matplotlib.pyplot as plt
 from keras.callbacks import CSVLogger, EarlyStopping
 from CYK.plot_fit import visialize_model,save_history,plot_all_history
 from keras import metrics
+from keras.optimizers import SGD
+import string
 
-MAX_SEQUENCE_LENGTH = 1000
+MAX_SEQUENCE_LENGTH = 500
 EMBEDDING_DIM=70
 MAX_NUM_WORDS=5000
 #earlystopping = EarlyStopping(patience=4)
@@ -76,38 +78,28 @@ print('Processing text dataset')
 train_data=pd.read_csv(train_csv)
 test_data=pd.read_csv(test_csv)
 
-#train_data['text'] = train_data['text'].str.replace('\d+', '')
-#test_data['text'] = test_data['text'].str.replace('\d+', '')
-
-#tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
-tokenizer= Tokenizer(num_words=MAX_NUM_WORDS,
-                     char_level = True)
-
-tokenizer.fit_on_texts(train_data['text'])
-#X_train = tokenizer.texts_to_matrix(train_data['text'], mode='count')
-X_train = tokenizer.texts_to_sequences(train_data['text'])
-
-word_index = tokenizer.word_index
-print('Found %s unique tokens.' % len(word_index))
-
-vocab_size=len(word_index)+1
-
-#text_to_word_sequence
-#X_test = tokenizer.texts_to_matrix(test_data['text'], mode='count')
-X_test = tokenizer.texts_to_sequences(test_data['text'])
-
-
-#train_data['score'][train_data['score']<=4]=0
-#train_data['score'][train_data['score']>=7]=1
+#tokenizer= Tokenizer(num_words=MAX_NUM_WORDS,
+#                     char_level = True)
 #
-#test_data['score'][test_data['score']<=4]=0
-#test_data['score'][test_data['score']>=7]=1
+#tokenizer.fit_on_texts(train_data['text'])
+#X_train = tokenizer.texts_to_sequences(train_data['text'])
+#
+#word_index = tokenizer.word_index
+#print('Found %s unique tokens.' % len(word_index))
+#
+#vocab_size=len(word_index)+1
+#
+#X_test = tokenizer.texts_to_sequences(test_data['text'])
+
+X_train=np.array(train_data['text'])
+X_test=np.array(test_data['text'])
+
 
 y_train=train_data['target']
 y_test=test_data['target']
 
-X_train = pad_sequences(X_train, maxlen=MAX_SEQUENCE_LENGTH)
-X_test = pad_sequences(X_test, maxlen=MAX_SEQUENCE_LENGTH)
+#X_train = pad_sequences(X_train, maxlen=MAX_SEQUENCE_LENGTH)
+#X_test = pad_sequences(X_test, maxlen=MAX_SEQUENCE_LENGTH)
 
 y_train = np.array(y_train)
 y_test = np.array(y_test)
@@ -116,7 +108,6 @@ y_test = np.array(y_test)
 
 print('Preparing embedding matrix.')
 
-num_words = min(MAX_NUM_WORDS, len(word_index))
 #embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
 #for word, i in word_index.items():
 #    if i >= MAX_NUM_WORDS:
@@ -127,66 +118,116 @@ num_words = min(MAX_NUM_WORDS, len(word_index))
 #        embedding_matrix[i] = embedding_vector
         
 
-model = Sequential()
-embedding_layer = Embedding(num_words,
-                            EMBEDDING_DIM,
-#                            weights=[embedding_matrix],
-                            input_length=MAX_SEQUENCE_LENGTH,
-                            trainable=True
-                            #dropout=0.2
-                            )
+def encode_data(x, maxlen, vocab, vocab_size, check):
+    #Iterate over the loaded data and create a matrix of size maxlen x vocabsize
+    #In this case that will be 1014x69. This is then placed in a 3D matrix of size
+    #data_samples x maxlen x vocab_size. Each character is encoded into a one-hot
+    #array. Chars not in the vocab are encoded into an all zero vector.
 
-model.add(embedding_layer)
-print ('###########################################################')
-print ('embedding layer output shape is:',model.output_shape)
+    input_data = np.zeros((len(x), maxlen, vocab_size))
+    for dix, sent in enumerate(x):
+        counter = 0
+        sent_array = np.zeros((maxlen, vocab_size))
+        chars = list(sent.lower().replace(' ', ''))
+        for c in chars:
+            if counter >= maxlen:
+                pass
+            else:
+                char_array = np.zeros(vocab_size, dtype=np.int)
+                if c in check:
+                    ix = vocab[c]
+                    char_array[ix] = 1
+                sent_array[counter, :] = char_array
+                counter += 1
+        input_data[dix, :, :] = sent_array
+
+    return input_data
+
+
+def shuffle_matrix(x, y):
+    stacked = np.hstack((np.matrix(x).T, y))
+    np.random.shuffle(stacked)
+    xi = np.array(stacked[:, 0]).flatten()
+    yi = np.array(stacked[:, 1:])
+
+    return xi, yi
+
+
+def create_vocab_set():
+    #This alphabet is 69 chars vs. 70 reported in the paper since they include two
+    # '-' characters. See https://github.com/zhangxiangxiao/Crepe#issues.
+
+    alphabet = (list(string.ascii_lowercase) + list(string.digits) +
+                list(string.punctuation) + ['\n'])
+    vocab_size = len(alphabet)
+    check = set(alphabet)
+
+    vocab = {}
+    reverse_vocab = {}
+    for ix, t in enumerate(alphabet):
+        vocab[t] = ix
+        reverse_vocab[ix] = t
+
+    return vocab, reverse_vocab, vocab_size, check
+
+
+vocab, reverse_vocab, vocab_size, check=create_vocab_set()
+X_train=encode_data(X_train, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check)
+X_test=encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check)
+
+num_words = min(MAX_NUM_WORDS, vocab_size)
+
+
+model = Sequential()
+#embedding_layer = Embedding(num_words,
+#                            num_words,
+##                            weights=[embedding_matrix],
+#                            input_length=MAX_SEQUENCE_LENGTH,
+#                            trainable=False
+#                            #dropout=0.2
+#                            )
+#
+#model.add(embedding_layer)
+#print ('###########################################################')
+#print ('embedding layer output shape is:',model.output_shape)
 
 
 #model.add(Dropout(0.4))
 model.add(Conv1D(256,
-                 7,
+                 3,
                  padding='valid',
                  activation='relu',
-                 strides=1))
-#model.add(GlobalMaxPooling1D())
+                 strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
 model.add(MaxPooling1D(pool_size=3))
-model.add(Conv1D(256,
-                 7,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-#model.add(GlobalMaxPooling1D())
-model.add(MaxPooling1D(pool_size=3))
-model.add(Conv1D(256,
-                 3,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-#model.add(GlobalMaxPooling1D())
-model.add(Conv1D(256,
-                 3,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-#model.add(GlobalMaxPooling1D())
+#model.add(Conv1D(256,
+#                 7,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+##model.add(GlobalMaxPooling1D())
+#model.add(MaxPooling1D(pool_size=3))
+#model.add(Conv1D(256,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+#model.add(Conv1D(256,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
 model.add(Conv1D(256,
                  3,
                  padding='valid',
                  activation='relu',
                  strides=1))
-#model.add(GlobalMaxPooling1D())
-model.add(Conv1D(256,
-                 3,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-#model.add(GlobalMaxPooling1D())
 model.add(MaxPooling1D(pool_size=3))
 
 #model.add(LSTM(50))
 #print ('after maxpooling layer the shape is:',model.output_shape)
 model.add(Flatten())
-model.add(Dense(1024,activation='relu'))
-model.add(Dropout(0.5))
+#model.add(Dense(1024,activation='relu'))
+#model.add(Dropout(0.5))
 model.add(Dense(1024,activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
@@ -206,13 +247,13 @@ model.add(Dense(1,activation='sigmoid'))
 #model.add(Dense(1,activation='sigmoid'))
 
 
-
+sgd = SGD(lr=0.01, momentum=0.9)
 tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 
 #, callbacks=[earlystopping]
-history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=128)
+history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=64)
 #model.save_weights("own_vecmodel_model.h5")
 plot_model(model, to_file='model.png')
 # Evaluation on the test set
@@ -223,8 +264,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='FixedCNN_glove_embedding.pdf'
-save_history(history, 'FixedCNN_glove_embedding.csv', subdir='FixedCNN_Different_Embedding')
+write_filename='char_CNN_2layer.pdf'
+save_history(history, 'char_CNN_3layer.csv', subdir='Character_Level_Models')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
