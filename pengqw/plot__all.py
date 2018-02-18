@@ -9,7 +9,7 @@ sys.path.append('D:\\MLP_Project\\MLP')
 from config.setting import *
 from CYK.plot_fit import *
 
-subdir = 'LSTM_CBOW_UNIT'
-plot_all_history(subdir, plot_filename='LSTM_CBOW_X_UNIT_100length.pdf',figsize=(16,8))
+subdir = 'X_embedding_CNN'
+plot_all_history(subdir, plot_filename='X_embedding_CNN.pdf',figsize=(16,8))
 
 
