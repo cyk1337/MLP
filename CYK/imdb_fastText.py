@@ -90,17 +90,17 @@ epochs = 15
 
 print('Loading data...')
 from CYK.data_loader import load_imdb
-(X_train, y_train), (X_test, y_test) = load_imdb()
+(X_train, y_train), (X_val, y_val) = load_imdb()
 tokenizer = Tokenizer(num_words=max_features)
 
 tokenizer.fit_on_texts(X_train)
 x_train = tokenizer.texts_to_sequences(X_train)
-x_test = tokenizer.texts_to_sequences(X_test)
+x_val = tokenizer.texts_to_sequences(X_val)
 
 print(len(x_train), 'train sequences')
-print(len(x_test), 'test sequences')
+print(len(x_val), 'val sequences')
 print('Average train sequence length: {}'.format(np.mean(list(map(len, x_train)), dtype=int)))
-print('Average test sequence length: {}'.format(np.mean(list(map(len, x_test)), dtype=int)))
+print('Average val sequence length: {}'.format(np.mean(list(map(len, x_val)), dtype=int)))
 
 if ngram_range > 1:
     print('Adding {}-gram features'.format(ngram_range))
@@ -121,17 +121,17 @@ if ngram_range > 1:
     # max_features is the highest integer that could be found in the dataset.
     max_features = np.max(list(indice_token.keys())) + 1
 
-    # Augmenting x_train and x_test with n-grams features
+    # Augmenting x_train and x_val with n-grams features
     x_train = add_ngram(x_train, token_indice, ngram_range)
-    x_test = add_ngram(x_test, token_indice, ngram_range)
+    x_val = add_ngram(x_val, token_indice, ngram_range)
     print('Average train sequence length: {}'.format(np.mean(list(map(len, x_train)), dtype=int)))
-    print('Average test sequence length: {}'.format(np.mean(list(map(len, x_test)), dtype=int)))
+    print('Average val sequence length: {}'.format(np.mean(list(map(len, x_val)), dtype=int)))
 
 print('Pad sequences (samples x time)')
 x_train = sequence.pad_sequences(x_train, maxlen=maxlen)
-x_test = sequence.pad_sequences(x_test, maxlen=maxlen)
+x_val = sequence.pad_sequences(x_val, maxlen=maxlen)
 print('x_train shape:', x_train.shape)
-print('x_test shape:', x_test.shape)
+print('x_val shape:', x_val.shape)
 
 print('Build model...')
 model = Sequential()
@@ -158,7 +158,7 @@ model.compile(loss='binary_crossentropy',
 history = model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
-          validation_data=(x_test, y_test))
+          validation_data=(x_val, y_val))
 
 plot_filename = 'fasttext_bigram'
 subdir = 'fastText'

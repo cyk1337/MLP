@@ -171,10 +171,10 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
 
 
 if __name__=="__main__":
-    # save_history({'val_acc':[1,1], 'val_loss':[2,3], 'acc':[3,3], 'loss':[5,3]}, 'test1.csv', 'test')
+    # save_history({'val_acc':[1,1], 'val_loss':[2,3], 'acc':[3,3], 'loss':[5,3]}, 'val1.csv', 'val')
     # history = 'history example'
     # use example
-    # save_history(history, 'train_test.csv', subdir='Test')
+    # save_history(history, 'train_val.csv', subdir='val')
 
     # subdir = 'dir to save csv'
     subdir = 'CNN1layer_pretrained'
