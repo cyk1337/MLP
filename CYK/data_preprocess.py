@@ -82,7 +82,7 @@ def generate_csv(folders, csv_file, shuffle_seed=SEED):
 
 
 
-def split_data(folders, shuffle_seed=SEED):
+def split_data(folders, split_bound=[0.70, 0.15, 0.15], shuffle_seed=SEED):
     # hand label then shuffle
     # =============================
     # num_neg = get_file_num(train_neg)
@@ -101,7 +101,6 @@ def split_data(folders, shuffle_seed=SEED):
     shuffle_data = dataset.sample(frac=1, random_state=shuffle_seed)
 
     # split
-    split_bound = [0.70, 0.15, 0.15]
     RECORDS_NUM = len(shuffle_data)
     train_bound = int(split_bound[0]* RECORDS_NUM)
     val_bound = int((split_bound[0] + split_bound[1]) * RECORDS_NUM)
