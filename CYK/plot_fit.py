@@ -130,7 +130,7 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
 
         plt.plot(epochs, loss, color=colors[i%len(colors)], linestyle='-', label='{} training loss'.format(line_label))
         plt.plot(epochs, val_loss, color=colors[i%len(colors)], linestyle='dashed', label='{} validation loss'.format(line_label))
-    plt.title('Training and validation loss')
+    plt.title('Training and validation loss', fontsize='25')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
         # plt.grid()
@@ -150,7 +150,7 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
         # plot acc
         plt.plot(epochs, acc, color=colors[i%len(colors)], linestyle='-', label='{} training acc'.format(line_label))
         plt.plot(epochs, val_acc, color=colors[i%len(colors)], linestyle='dashed', label='{} validation acc'.format(line_label))
-        plt.title('Training and validation acc')
+        plt.title('Training and validation acc', fontsize='25')
     plt.xlabel('Epochs')
     plt.ylabel('Acc')
     plt.legend()
@@ -177,7 +177,7 @@ if __name__=="__main__":
     # save_history(history, 'train_val.csv', subdir='val')
 
     # subdir = 'dir to save csv'
-    subdir = 'CNN1layer_pretrained'
-    plot_all_history(subdir, plot_filename='Dropout_1_and_2_layers.pdf')
+    subdir = 'fastText'
+    plot_all_history(subdir, plot_filename='fastText_unigram_and_bigram.pdf')
 
 
