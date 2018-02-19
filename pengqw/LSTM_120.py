@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+Created on Mon Feb 19 02:21:26 2018
+
+@author: pqw1995@163.com
+"""
+# -*- coding: utf-8 -*-
+"""
 Created on Fri Feb  9 16:03:06 2018
 
 @author: pqw1995@163.com
@@ -137,7 +143,7 @@ print ('embedding layer output shape is:',model.output_shape)
 #model.add(MaxPooling1D(pool_size=4))
 print ('after maxpooling layer the shape is:',model.output_shape)
 
-model.add(LSTM(100))
+model.add(LSTM(120))
 #model.add(Dense(250,activation='relu'))
 #model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
@@ -174,14 +180,15 @@ print (history.history.keys())
 
 
 write_filename='CBOW_LSTM_UNIT100.pdf'
-save_history(history, 'CBOW_LSTM_UNIT100.csv', subdir='LSTM_MODEL_CBOW')
-visialize_model(model, write_filename)
+save_history(history, 'CBOW_LSTM_UNIT120.csv', subdir='LSTM_MODEL_CBOW')
+# visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
 print ('the process for {} is done'.format(write_filename))
 ##### CBOW_CNN_dropout05_size5_100unit: val_loss 0.2674; val_acc 0.8890 
 ##### CBOW_CNN_dropout05_size5_150unit: val_loss 0.2675; val_acc 0.8898
 ##### CBOW_CNN_dropout05_size5_200unit: val_loss 0.2711; val_acc 0.8852
+
 
 
 
