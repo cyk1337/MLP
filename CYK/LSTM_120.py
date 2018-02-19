@@ -44,8 +44,8 @@ from keras.preprocessing.text import text_to_word_sequence
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils.np_utils import to_categorical
 from tensorflow.python.client import device_lib
-from nltk.corpus import stopwords
-import nltk
+#from nltk.corpus import stopwords
+#import nltk
 from keras.layers import Dense, Input, GlobalMaxPooling1D,Bidirectional
 from keras.layers import Conv1D, MaxPooling1D, Embedding
 from keras.models import Model
@@ -170,7 +170,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 #, callbacks=[earlystopping]
 history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=32)
 #model.save_weights("own_vecmodel_model.h5")
-plot_model(model, to_file='model.png')
+#plot_model(model, to_file='model.png')
 # Evaluation on the val set
 scores = model.evaluate(X_val, y_val, verbose=0)
 print ('=====================the result for val set==============================')
@@ -181,9 +181,9 @@ print (history.history.keys())
 
 write_filename='CBOW_LSTM_UNIT100.pdf'
 save_history(history, 'CBOW_LSTM_UNIT120.csv', subdir='LSTM_MODEL_CBOW')
-# visialize_model(model, write_filename)
+# 
 plot_fit(history, plot_filename=write_filename)
-
+#visialize_model(model, write_filename)
 print ('the process for {} is done'.format(write_filename))
 ##### CBOW_CNN_dropout05_size5_100unit: val_loss 0.2674; val_acc 0.8890 
 ##### CBOW_CNN_dropout05_size5_150unit: val_loss 0.2675; val_acc 0.8898
