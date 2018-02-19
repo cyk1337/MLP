@@ -137,7 +137,7 @@ print ('embedding layer output shape is:',model.output_shape)
 #model.add(MaxPooling1D(pool_size=4))
 print ('after maxpooling layer the shape is:',model.output_shape)
 
-model.add(LSTM(100))
+model.add(LSTM(80))
 #model.add(Dense(250,activation='relu'))
 #model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
@@ -173,8 +173,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='CBOW_LSTM_UNIT100.pdf'
-save_history(history, 'CBOW_LSTM_UNIT100.csv', subdir='LSTM_MODEL_CBOW')
+write_filename='CBOW_LSTM_UNIT80.pdf'
+save_history(history, 'CBOW_LSTM_UNIT80.csv', subdir='LSTM_MODEL_CBOW')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 

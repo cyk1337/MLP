@@ -44,8 +44,6 @@ from keras.preprocessing.text import text_to_word_sequence
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils.np_utils import to_categorical
 from tensorflow.python.client import device_lib
-from nltk.corpus import stopwords
-import nltk
 from keras.layers import Dense, Input, GlobalMaxPooling1D,Bidirectional
 from keras.layers import Conv1D, MaxPooling1D, Embedding
 from keras.models import Model
@@ -179,7 +177,7 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='CBOW_LSTM_UNIT100.pdf'
+write_filename='CBOW_LSTM_UNIT120.pdf'
 save_history(history, 'CBOW_LSTM_UNIT120.csv', subdir='LSTM_MODEL_CBOW')
 # visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
