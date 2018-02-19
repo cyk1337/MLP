@@ -45,8 +45,8 @@ from keras.preprocessing.text import text_to_word_sequence
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils.np_utils import to_categorical
 from tensorflow.python.client import device_lib
-from nltk.corpus import stopwords
-import nltk
+#from nltk.corpus import stopwords
+#import nltk
 from keras.layers import Dense, Input, GlobalMaxPooling1D,Bidirectional
 from keras.layers import Conv1D, MaxPooling1D, Embedding
 from keras.models import Model
