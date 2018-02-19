@@ -50,14 +50,14 @@ from keras import metrics
 from CYK.data_loader import load_imdb
 
 
-MAX_SEQUENCE_LENGTH = 100
+#MAX_SEQUENCE_LENGTH = 100
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
 print('Indexing word vectors.')
 embeddings_index = {}
-#f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
-f = open(CBOW_embedding, encoding='utf-8')
+f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
+#f = open(CBOW_embedding, encoding='utf-8')
 #f = open(SkipGram_embedding, encoding='utf-8')
 ####hello
 #f = open('D:\MLP_Project\MLP\\embedding\gensim_word2vec.txt','r',encoding='utf-8')
@@ -128,18 +128,18 @@ model.add(embedding_layer)
 print ('###########################################################')
 print ('embedding layer output shape is:',model.output_shape)
 
-#model.add(Conv1D(100,
-#                 5,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(GlobalMaxPooling1D())
+model.add(Conv1D(100,
+                 3,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
+model.add(GlobalMaxPooling1D())
 #model.add(MaxPooling1D(pool_size=4))
 print ('after maxpooling layer the shape is:',model.output_shape)
 
-model.add(LSTM(90))
-#model.add(Dense(250,activation='relu'))
-#model.add(Dropout(0.5))
+#model.add(LSTM(100))
+model.add(Dense(250,activation='relu'))
+model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 
 ################################
@@ -149,7 +149,6 @@ model.add(Dense(1,activation='sigmoid'))
 #model.add(Dropout(0.2))
 #model.add(Dense(250,activation='relu'))
 #model.add(Dropout(0.2))
-#model.add(Dense(1,activation='sigmoid'))
 
 #
 #model.add(LSTM(100))
@@ -174,8 +173,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='CBOW_LSTM_UNIT90.pdf'
-save_history(history, 'CBOW_LSTM_UNIT90.csv', subdir='CBOW_LSTM')
+write_filename='Glove_embedding_CNN.pdf'
+save_history(history, 'Glove_embedding_CNN.csv', subdir='X_embedding_CNN')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
