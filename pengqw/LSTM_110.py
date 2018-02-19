@@ -13,7 +13,7 @@ Created on Fri Feb  9 16:03:06 2018
 """
 
 import sys
-sys.path.append('D:\\MLP_Project\\MLP')
+# sys.path.append('D:\\MLP_Project\\MLP')
 import __init__
 from config.setting import *
 from CYK.plot_fit import plot_fit
