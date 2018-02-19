@@ -137,7 +137,7 @@ print ('embedding layer output shape is:',model.output_shape)
 #model.add(MaxPooling1D(pool_size=4))
 print ('after maxpooling layer the shape is:',model.output_shape)
 
-model.add(LSTM(100))
+model.add(LSTM(80))
 #model.add(Dense(250,activation='relu'))
 #model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
@@ -164,7 +164,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 #, callbacks=[earlystopping]
 history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=32)
 #model.save_weights("own_vecmodel_model.h5")
-plot_model(model, to_file='model.png')
+#plot_model(model, to_file='model.png')
 # Evaluation on the val set
 scores = model.evaluate(X_val, y_val, verbose=0)
 print ('=====================the result for val set==============================')
@@ -173,8 +173,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='CBOW_LSTM_UNIT100.pdf'
-save_history(history, 'CBOW_LSTM_UNIT100.csv', subdir='LSTM_MODEL_CBOW')
+write_filename='CBOW_LSTM_UNIT80.pdf'
+save_history(history, 'CBOW_LSTM_UNIT80.csv', subdir='LSTM_MODEL_CBOW')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 

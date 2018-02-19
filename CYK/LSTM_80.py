@@ -45,8 +45,6 @@ from keras.preprocessing.text import text_to_word_sequence
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils.np_utils import to_categorical
 from tensorflow.python.client import device_lib
-from nltk.corpus import stopwords
-import nltk
 from keras.layers import Dense, Input, GlobalMaxPooling1D,Bidirectional
 from keras.layers import Conv1D, MaxPooling1D, Embedding
 from keras.models import Model
@@ -183,7 +181,6 @@ write_filename='CBOW_LSTM_UNIT80.pdf'
 save_history(history, 'CBOW_LSTM_UNIT80.csv', subdir='LSTM_MODEL_CBOW')
 # visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
-
 print ('the process for {} is done'.format(write_filename))
 ##### CBOW_CNN_dropout05_size5_100unit: val_loss 0.2674; val_acc 0.8890 
 ##### CBOW_CNN_dropout05_size5_150unit: val_loss 0.2675; val_acc 0.8898
