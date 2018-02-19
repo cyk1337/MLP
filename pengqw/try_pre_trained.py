@@ -47,12 +47,12 @@ import matplotlib.pyplot as plt
 from keras.callbacks import CSVLogger, EarlyStopping
 from CYK.plot_fit import visialize_model,save_history,plot_all_history
 from keras import metrics
+from CYK.data_loader import load_imdb
 
 
+MAX_SEQUENCE_LENGTH = 100
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
-
-#MAX_SEQUENCE_LENGTH=100
 
 print('Indexing word vectors.')
 embeddings_index = {}
@@ -72,18 +72,17 @@ print('Found %s word vectors.' % len(embeddings_index))
 
 print('Processing text dataset')
 
-train_data=pd.read_csv(train_csv)
-test_data=pd.read_csv(test_csv)
+#train_data=pd.read_csv(train_csv)
+#val_data=pd.read_csv(val_csv)
 
-#train_data['text'] = train_data['text'].str.replace('\d+', '')
-#test_data['text'] = test_data['text'].str.replace('\d+', '')
+(X_train, y_train), (X_val, y_val) = load_imdb()
 
 #tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
 tokenizer= Tokenizer(num_words=MAX_NUM_WORDS)
 
-tokenizer.fit_on_texts(train_data['text'])
+tokenizer.fit_on_texts(X_train)
 #X_train = tokenizer.texts_to_matrix(train_data['text'], mode='count')
-X_train = tokenizer.texts_to_sequences(train_data['text'])
+X_train = tokenizer.texts_to_sequences(X_train)
 
 word_index = tokenizer.word_index
 print('Found %s unique tokens.' % len(word_index))
@@ -91,24 +90,16 @@ print('Found %s unique tokens.' % len(word_index))
 vocab_size=len(word_index)+1
 
 #text_to_word_sequence
-#X_test = tokenizer.texts_to_matrix(test_data['text'], mode='count')
-X_test = tokenizer.texts_to_sequences(test_data['text'])
+#X_val = tokenizer.texts_to_matrix(val_data['text'], mode='count')
+X_val = tokenizer.texts_to_sequences(X_val)
 
 
-#train_data['score'][train_data['score']<=4]=0
-#train_data['score'][train_data['score']>=7]=1
-#
-#test_data['score'][test_data['score']<=4]=0
-#test_data['score'][test_data['score']>=7]=1
-
-y_train=train_data['target']
-y_test=test_data['target']
 
 X_train = pad_sequences(X_train, maxlen=MAX_SEQUENCE_LENGTH)
-X_test = pad_sequences(X_test, maxlen=MAX_SEQUENCE_LENGTH)
+X_val = pad_sequences(X_val, maxlen=MAX_SEQUENCE_LENGTH)
 
 y_train = np.array(y_train)
-y_test = np.array(y_test)
+y_val = np.array(y_val)
 
 
 
@@ -131,25 +122,24 @@ embedding_layer = Embedding(num_words,
                             weights=[embedding_matrix],
                             input_length=MAX_SEQUENCE_LENGTH,
                             trainable=False
-                            #dropout=0.2
                             )
 
 model.add(embedding_layer)
 print ('###########################################################')
 print ('embedding layer output shape is:',model.output_shape)
 
-
-#model.add(Dropout(0.4))
-model.add(Conv1D(100,
-                 4,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-model.add(GlobalMaxPooling1D())
-
+#model.add(Conv1D(100,
+#                 5,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+#model.add(GlobalMaxPooling1D())
+#model.add(MaxPooling1D(pool_size=4))
 print ('after maxpooling layer the shape is:',model.output_shape)
-model.add(Dense(150,activation='relu'))
-model.add(Dropout(0.5))
+
+model.add(LSTM(90))
+#model.add(Dense(250,activation='relu'))
+#model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 
 ################################
@@ -173,19 +163,19 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 
 #, callbacks=[earlystopping]
-history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=128, callbacks=[tensorBoardCallback])
+history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=32)
 #model.save_weights("own_vecmodel_model.h5")
 plot_model(model, to_file='model.png')
-# Evaluation on the test set
-scores = model.evaluate(X_test, y_test, verbose=0)
-print ('=====================the result for test set==============================')
+# Evaluation on the val set
+scores = model.evaluate(X_val, y_val, verbose=0)
+print ('=====================the result for val set==============================')
 print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
 print (history.history.keys())
 
 
-write_filename='model_CBOW_CNN_dropout_02_size5.pdf'
-save_history(history, 'CBOW_CNN_dropout02_size5.csv', subdir='CBOW_CNN_dropout02_kernel_X_size')
+write_filename='CBOW_LSTM_UNIT90.pdf'
+save_history(history, 'CBOW_LSTM_UNIT90.csv', subdir='CBOW_LSTM')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
@@ -193,6 +183,8 @@ print ('the process for {} is done'.format(write_filename))
 ##### CBOW_CNN_dropout05_size5_100unit: val_loss 0.2674; val_acc 0.8890 
 ##### CBOW_CNN_dropout05_size5_150unit: val_loss 0.2675; val_acc 0.8898
 ##### CBOW_CNN_dropout05_size5_200unit: val_loss 0.2711; val_acc 0.8852
+
+
 
 
 

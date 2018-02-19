@@ -114,7 +114,7 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
 
     # set color list
     # colors = [c for c in list(matplotlib.colors.cnames.keys()) if not c.startswith('light')]
-    colors = ['green','red','blue','goldenrod','black','lime','cyan','chatreuse','yellow','m','purple','olive','salmon','darkred','pink']
+    colors = ['green','red','blue','goldenrod','black','lime','cyan','chartreuse','yellow','m','purple','olive','salmon','darkred','pink']
 
     plt.figure(figsize=figsize)
     plt.subplot(121)
@@ -130,7 +130,7 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
 
         plt.plot(epochs, loss, color=colors[i%len(colors)], linestyle='-', label='{} training loss'.format(line_label))
         plt.plot(epochs, val_loss, color=colors[i%len(colors)], linestyle='dashed', label='{} validation loss'.format(line_label))
-    plt.title('Training and validation loss')
+    plt.title('Training and validation loss', fontsize='25')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
         # plt.grid()
@@ -150,7 +150,7 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
         # plot acc
         plt.plot(epochs, acc, color=colors[i%len(colors)], linestyle='-', label='{} training acc'.format(line_label))
         plt.plot(epochs, val_acc, color=colors[i%len(colors)], linestyle='dashed', label='{} validation acc'.format(line_label))
-        plt.title('Training and validation acc')
+        plt.title('Training and validation acc', fontsize='25')
     plt.xlabel('Epochs')
     plt.ylabel('Acc')
     plt.legend()
@@ -166,14 +166,18 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
     plt.show()
 
 
+# def visulize_embedding()
+
 
 
 if __name__=="__main__":
-    # save_history({'val_acc':[1,1], 'val_loss':[2,3], 'acc':[3,3], 'loss':[5,3]}, 'test1.csv', 'test')
+    # save_history({'val_acc':[1,1], 'val_loss':[2,3], 'acc':[3,3], 'loss':[5,3]}, 'val1.csv', 'val')
     # history = 'history example'
     # use example
-    # save_history(history, 'train_test.csv', subdir='Test')
+    # save_history(history, 'train_val.csv', subdir='val')
 
     # subdir = 'dir to save csv'
-    subdir = 'CNN1layer_pretrained'
-    plot_all_history(subdir, plot_filename='Dropout_1_and_2_layers.pdf')
+    subdir = 'fastText'
+    plot_all_history(subdir, plot_filename='fastText_unigram_and_bigram.pdf')
+
+

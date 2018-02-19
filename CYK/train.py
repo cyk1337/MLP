@@ -54,12 +54,12 @@ if __name__=='__main__':
     embeddings_index = load_pretrained_model(embedding_path)
 
     # load data
-    (X_train, y_train), (X_test, y_test) = load_imdb()
+    (X_train, y_train), (X_val, y_val) = load_imdb()
 
     # tokenize, filter punctuation, lowercase
     tokenizer = Tokenizer(num_words=MAX_NUM_WORDS, lower=True, char_level=False)
 
-    # test index
+    # val index
     # tokenizer = Tokenizer()
     tokenizer.fit_on_texts(X_train)
     vocarb_size = len(tokenizer.word_index) + 1
@@ -81,11 +81,11 @@ if __name__=='__main__':
 # check TODO
 #     Xtrain_matrix = tokenizer.texts_to_matrix(X_train)
 #
-#     Xtest_matrix = tokenizer.texts_to_matrix(X_test)
+#     Xval_matrix = tokenizer.texts_to_matrix(X_val)
 
-    # pad test sequence
-    test_seq = tokenizer.texts_to_sequences(X_test)
-    test_pad_seq = pad_sequences(sequences=test_seq, maxlen=MAX_SEQUENCE_LENGTH)
+    # pad val sequence
+    val_seq = tokenizer.texts_to_sequences(X_val)
+    val_pad_seq = pad_sequences(sequences=val_seq, maxlen=MAX_SEQUENCE_LENGTH)
 
     # labels = to_categorical(np.asarray(y_train))
     print("padding sequnce(X_input) shape:", train_pad_seq.shape)
@@ -131,7 +131,7 @@ if __name__=='__main__':
     model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
 
     # visualize model
-    visialize_model(model,filepath='plot_test_DNN.pdf')
+    visialize_model(model,filepath='plot_val_DNN.pdf')
 
     # Log to tensorboard
     tensorBoardCallback = TensorBoard(log_dir=log_dir, write_graph=True)
@@ -139,15 +139,15 @@ if __name__=='__main__':
     # early stopping
     earlystopping = EarlyStopping('val_loss', patience=2)
 
-    history = model.fit(train_pad_seq, y_train, epochs=1, callbacks=[tensorBoardCallback, earlystopping], batch_size=128, validation_data=(test_pad_seq, y_test))
+    history = model.fit(train_pad_seq, y_train, epochs=1, callbacks=[tensorBoardCallback, earlystopping], batch_size=128, validation_data=(val_pad_seq, y_val))
 
-    save_history(history, 'train_test.csv', subdir='Test')
-    # Evaluation on the test set
-    scores = model.evaluate(test_pad_seq, y_test, verbose=0)
+    save_history(history, 'train_val.csv', subdir='val')
+    # Evaluation on the val set
+    scores = model.evaluate(val_pad_seq, y_val, verbose=0)
     print("Accuracy: %.2f%%" % (scores[1] * 100))
 
     # save performance
-    plot_fit(history, plot_filename='DNN_test.pdf',)
+    plot_fit(history, plot_filename='DNN_val.pdf',)
 
     # run tensorboard
     # tensorboard --logdir=logs

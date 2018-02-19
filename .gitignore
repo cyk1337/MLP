@@ -4,4 +4,6 @@ __pycache__/*
 
 # *.ipynb
 
-*.txt
+# *.txt
+
+glove.6B.100d.txt

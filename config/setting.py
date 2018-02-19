@@ -15,7 +15,9 @@ test_neg = os.path.join(work_dir, Imdb_file, 'test', 'neg')
 # csv raw docs
 data_file = os.path.join(work_dir, 'csv')
 train_csv = os.path.join(data_file, 'train.csv')
+val_csv = os.path.join(data_file,'val.csv')
 test_csv = os.path.join(data_file,'test.csv')
+
 
 # dir path
 embedding_dir = os.path.join(work_dir, 'embedding')

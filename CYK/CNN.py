@@ -55,16 +55,16 @@ nb_epoch = 10        # 迭代次数
 
 # 载入 imdb 数据
 print('Loading data...')
-(X_train, y_train), (X_test, y_test) = imdb.load_data(num_words=max_features)
+(X_train, y_train), (X_val, y_val) = imdb.load_data(num_words=max_features)
 print(len(X_train), 'train sequences')
-print(len(X_test), 'test sequences')
+print(len(X_val), 'val sequences')
 
 # 样本填充到固定长度 maxlen，在每个样本前补 0
 print('Pad sequences (samples x time)')
 X_train = sequence.pad_sequences(X_train, maxlen=maxlen)
-X_test = sequence.pad_sequences(X_test, maxlen=maxlen)
+X_val = sequence.pad_sequences(X_val, maxlen=maxlen)
 print('X_train shape:', X_train.shape)
-print('X_test shape:', X_test.shape)
+print('X_val shape:', X_val.shape)
 
 # 构建模型
 print('Build model...')
@@ -113,6 +113,6 @@ model.compile(loss='binary_crossentropy',
 history = model.fit(X_train, y_train,
           batch_size=batch_size,
           epochs=nb_epoch,
-          validation_data=(X_test, y_test))
+          validation_data=(X_val, y_val))
 
 plot_fit(history,plot_filename='CNN_layer1.pdf')
