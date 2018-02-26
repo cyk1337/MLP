@@ -165,10 +165,6 @@ subdir = 'fastText'
 # save history info
 save_history(history, '{}.csv'.format(plot_filename), subdir=subdir)
 # save model
-<<<<<<< HEAD
 # visialize_model(model, filepath="{}.pdf".format(plot_filename))
-=======
-#visialize_model(model, filepath="{}.pdf".format(plot_filename))
->>>>>>> 02964c543630bca3e970e397961bc3a73bfa4d27
 # save single history
 plot_fit(history, "{}.pdf".format(plot_filename))
