@@ -81,12 +81,12 @@ def add_ngram(sequences, token_indice, ngram_range=2):
 
 # Set parameters:
 # ngram_range = 2 will add bi-grams features
-ngram_range = 3
+ngram_range = 1
 max_features = 20000
 maxlen = 400
 batch_size = 64
 embedding_dims = 50
-epochs = 15
+epochs = 3
 
 print('Loading data...')
 from CYK.data_loader import load_imdb
@@ -160,15 +160,11 @@ history = model.fit(x_train, y_train,
           epochs=epochs,
           validation_data=(x_val, y_val))
 
-plot_filename = 'fasttext_trigram'
+plot_filename = 'fasttext_test'
 subdir = 'fastText'
 # save history info
 save_history(history, '{}.csv'.format(plot_filename), subdir=subdir)
 # save model
-<<<<<<< HEAD
-# visialize_model(model, filepath="{}.pdf".format(plot_filename))
-=======
 #visialize_model(model, filepath="{}.pdf".format(plot_filename))
->>>>>>> 02964c543630bca3e970e397961bc3a73bfa4d27
 # save single history
 plot_fit(history, "{}.pdf".format(plot_filename))
