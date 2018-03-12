@@ -162,14 +162,14 @@ model.add(Dense(1,activation='sigmoid'))
 
 
 
-tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
+#tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 
 #, callbacks=[earlystopping]
 history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=32)
 #model.save_weights("own_vecmodel_model.h5")
-plot_model(model, to_file='model.png')
+#plot_model(model, to_file='model.png')
 # Evaluation on the val set
 scores = model.evaluate(X_val, y_val, verbose=0)
 print ('=====================the result for val set==============================')
