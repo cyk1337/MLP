@@ -13,19 +13,26 @@ from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
+from keras.preprocessing import sequence
 from collections import namedtuple
 
 from CYK.data_loader import load_imdb, load_test
 from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_history
 
-
+max_num=500
 (X_train, y_train), (X_val, y_val) = load_imdb()
 (X_test, y_test) = load_test()
-tokenizer = Tokenizer(num_words=200)
+tokenizer = Tokenizer(num_words=max_num)
 tokenizer.fit_on_texts(X_train)
 x_train = tokenizer.texts_to_sequences(X_train)
 x_valid = tokenizer.texts_to_sequences(X_val)
 x_test = tokenizer.texts_to_sequences(X_test)
+
+maxlen = max(len(i) for i in x_train)
+x_train = sequence.pad_sequences(x_train, maxlen)
+x_valid = sequence.pad_sequences(x_valid, maxlen)
+x_test = sequence.pad_sequences(x_test, maxlen)
+
 
 def get_batches(x, y, batch_size):
     '''Create the batches for the training and validation data'''
@@ -173,8 +180,9 @@ def train(model, epochs, log_string):
 
             with tqdm(total=len(x_train)) as pbar:
                 for _, (x, y) in enumerate(get_batches(x_train, y_train, batch_size), 1):
+                    # print(y.shape, y.values.reshape(-1,1).shape, '\n', '-'*80)
                     feed = {model.inputs: x,
-                            model.labels: y[:, None],
+                            model.labels: y.values.reshape(-1,1),
                             model.keep_prob: dropout,
                             model.initial_state: state}
                     summary, loss, acc, state, _ = sess.run([model.merged,
@@ -202,7 +210,7 @@ def train(model, epochs, log_string):
             with tqdm(total=len(x_valid)) as pbar:
                 for x, y in get_batches(x_valid, y_valid, batch_size):
                     feed = {model.inputs: x,
-                            model.labels: y[:, None],
+                            model.labels: y.values.reshape(-1,1),
                             model.keep_prob: 1,
                             model.initial_state: val_state}
                     summary, batch_loss, batch_acc, val_state = sess.run([model.merged,
@@ -253,12 +261,12 @@ word_index = tokenizer.word_index
 
 
 # The default parameters of the model
-n_words = 500
+n_words = max_num
 #len(word_index)
 embed_size = 300
-batch_size = 250
-lstm_size = 128
-num_layers = 2
+batch_size = 100
+lstm_size = 64
+num_layers = 1
 dropout = 0.5
 learning_rate = 0.001
 epochs = 100
