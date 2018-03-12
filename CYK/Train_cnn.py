@@ -74,9 +74,13 @@ def run_CNN_1layer(Xtrain_matrix, y_train, Xval_matrix, y_val, dropout_rate, plo
     plot_fit(history, plot_filename=plot_filename)
 
 
+<<<<<<< HEAD
 MAX_NUM_WORDS=40000
 (X_train, y_train), (X_val, y_val) = load_imdb()
 
+=======
+(X_train, y_train), (X_val, y_val) = load_imdb()
+>>>>>>> 949d27a9b9134e48f09ba1e0ea2b3516b9b64ff0
 tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
 tokenizer.fit_on_texts(X_train)
 
