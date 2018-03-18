@@ -6,6 +6,7 @@ Created on Wed Feb  7 19:49:20 2018
 """
 import sys
 sys.path.append('D:\\MLP_Project\\MLP')
+import __init__
 from config.setting import *
 import json
 import os
@@ -80,19 +81,19 @@ X_train = X_train.apply(text_to_word_sequence)
 #    train_data['text'][inde]=mm
 
 print ('the preprocessing is done')
-vec_model = Word2Vec(X_train,size=100, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=0, iter=40,compute_loss=True)
+skip_vec_model = Word2Vec(X_train,size=100, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=1, iter=40,compute_loss=True)
 
 print ('vector model training process is done') 
-print ('vocabulary size is :', len(vec_model.wv.index2word))
-print ('the latese loss is :', vec_model.get_latest_training_loss())
+print ('vocabulary size is :', len(skip_vec_model.wv.index2word))
+print ('the latese loss is :', skip_vec_model.get_latest_training_loss())
 #vec_model.save('vec_model_sg')
-skip_path = os.path.join(embedding_dir, '100d_skipgram.txt')
-cbow_path = os.path.join(embedding_dir, '100d_cbow.txt')
-vec_model.wv.save_word2vec_format(skip_path,binary=False)
+#skip_path = os.path.join(embedding_dir, 'new/100d_skipgram.txt')
+#cbow_path = os.path.join(embedding_dir, '100d_cbow.txt')
 
+skip_vec_model.wv.save_word2vec_format('../../skip_gram.txt',binary=False)
 
-cbow_vec_model = Word2Vec(X_train,size=100, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=1, iter=40,compute_loss=True)
-cbow_vec_model.wv.save_word2vec_format(cbow_path,binary=False)
+cbow_vec_model = Word2Vec(X_train,size=100, window=5, min_count=5, workers=multiprocessing.cpu_count()*2, sg=0, iter=40,compute_loss=True)
+cbow_vec_model.wv.save_word2vec_format('../../cbow_gram.txt',binary=False)
 
 
 

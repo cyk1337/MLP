@@ -56,8 +56,9 @@ from CYK.plot_fit import visialize_model,save_history,plot_all_history
 from keras import metrics
 from keras.optimizers import SGD
 import string
+from CYK.data_loader import load_imdb, load_test
 
-MAX_SEQUENCE_LENGTH = 500
+MAX_SEQUENCE_LENGTH = 1014
 EMBEDDING_DIM=70
 MAX_NUM_WORDS=5000
 #earlystopping = EarlyStopping(patience=4)
@@ -75,8 +76,11 @@ embeddings_index = {}
 
 print('Processing text dataset')
 
-train_data=pd.read_csv(train_csv)
-test_data=pd.read_csv(test_csv)
+(X_train, y_train), (X_val, y_val) = load_imdb()
+X_test, y_test = load_test()
+
+#train_data=pd.read_csv(train_csv)
+#test_data=pd.read_csv(test_csv)
 
 #tokenizer= Tokenizer(num_words=MAX_NUM_WORDS,
 #                     char_level = True)
@@ -91,17 +95,18 @@ test_data=pd.read_csv(test_csv)
 #
 #X_test = tokenizer.texts_to_sequences(test_data['text'])
 
-X_train=np.array(train_data['text'])
-X_test=np.array(test_data['text'])
-
-
-y_train=train_data['target']
-y_test=test_data['target']
+#X_train=np.array(train_data['text'])
+#X_test=np.array(test_data['text'])
+#
+#
+#y_train=train_data['target']
+#y_test=test_data['target']
 
 #X_train = pad_sequences(X_train, maxlen=MAX_SEQUENCE_LENGTH)
 #X_test = pad_sequences(X_test, maxlen=MAX_SEQUENCE_LENGTH)
 
 y_train = np.array(y_train)
+y_val = np.array(y_val)
 y_test = np.array(y_test)
 
 
@@ -172,8 +177,20 @@ def create_vocab_set():
 
 
 vocab, reverse_vocab, vocab_size, check=create_vocab_set()
-X_train=encode_data(X_train, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check)
-X_test=encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check)
+#X_train=encode_data(X_train, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check)
+#X_val=encode_data(X_val, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check)
+
+def data_generator(X, y):
+    while 1:
+        for i in range(35):
+             yield encode_data(X[i*1000:(i+1)*1000], MAX_SEQUENCE_LENGTH, vocab, vocab_size, check), y[i*1000:(i+1)*1000]
+
+def val_generator(X_val, y_val):
+    while 1:
+        for i in range(15):
+            yield encode_data(X_val[i*500:(i+1)*500],MAX_SEQUENCE_LENGTH, vocab, vocab_size, check), y_val[i*500:(i+1)*500]  
+
+#encode_data(X_val[i*1000:(i+1)*1000], MAX_SEQUENCE_LENGTH, vocab, vocab_size, check)
 
 num_words = min(MAX_NUM_WORDS, vocab_size)
 
@@ -191,26 +208,20 @@ model = Sequential()
 #print ('###########################################################')
 #print ('embedding layer output shape is:',model.output_shape)
 
-
 #model.add(Dropout(0.4))
-model.add(Conv1D(100,
-                 4,
+model.add(Conv1D(256,
+                 7,
                  padding='valid',
                  activation='relu',
                  strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
-#model.add(MaxPooling1D(pool_size=3))
-#model.add(Conv1D(256,
-#                 7,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-##model.add(GlobalMaxPooling1D())
-#model.add(MaxPooling1D(pool_size=3))
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
+model.add(MaxPooling1D(pool_size=3))
+model.add(Conv1D(256,
+                 7,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
+#model.add(GlobalMaxPooling1D())
+model.add(MaxPooling1D(pool_size=3))
 #model.add(Conv1D(256,
 #                 3,
 #                 padding='valid',
@@ -221,33 +232,29 @@ model.add(Conv1D(100,
 #                 padding='valid',
 #                 activation='relu',
 #                 strides=1))
-#model.add(MaxPooling1D(pool_size=3))
+#model.add(Conv1D(256,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+model.add(Conv1D(256,
+                 3,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
+model.add(MaxPooling1D(pool_size=3))
 
-#model.add(LSTM(50))
-#print ('after maxpooling layer the shape is:',model.output_shape)
-model.add(GlobalMaxPooling1D())
+
+print ('after maxpooling layer the shape is:',model.output_shape)
+#model.add(GlobalMaxPooling1D())
 print ('after maxpooling layer the shape is:',model.output_shape)
 
-#model.add(Flatten())
-#model.add(Dense(1024,activation='relu'))
-#model.add(Dropout(0.5))
+model.add(Flatten())
+model.add(Dense(1024,activation='relu'))
+model.add(Dropout(0.5))
 model.add(Dense(1024,activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
-
-################################
-#model.add(Flatten())
-#print ('Flatten layer output shape is:',model.output_shape)
-#model.add(Dense(250,activation='relu'))
-#model.add(Dropout(0.2))
-#model.add(Dense(250,activation='relu'))
-#model.add(Dropout(0.2))
-#model.add(Dense(1,activation='sigmoid'))
-
-#
-#model.add(LSTM(100))
-##model.add(Bidirectional(LSTM(64)))
-#model.add(Dense(1,activation='sigmoid'))
 
 
 #sgd = SGD(lr=0.01, momentum=0.9)
@@ -256,26 +263,32 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 
 #, callbacks=[earlystopping]
-history=model.fit(X_train,y_train , validation_data=(X_test,y_test), epochs=15, batch_size=64)
+
+#history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=64)
+
+history=model.fit_generator(data_generator(X_train, y_train), 
+                            steps_per_epoch=35,epochs=15,verbose=1,
+                            validation_data=val_generator(X_val,y_val),
+                            validation_steps=15)
+
 #model.save_weights("own_vecmodel_model.h5")
 plot_model(model, to_file='model.png')
 # Evaluation on the test set
-scores = model.evaluate(X_test, y_test, verbose=0)
+scores = model.evaluate(encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check ), y_test, verbose=0)
+
 print ('=====================the result for test set==============================')
 print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
 print (history.history.keys())
 
 
-write_filename='char_CNN_1layer.pdf'
-save_history(history, 'char_CNN_1layer.csv', subdir='Character_Level_Models')
+write_filename='char_CNN_4_layer_same_dense.pdf'
+save_history(history, 'char_CNN_4_layer_same_dense.csv', subdir='Character_Level_Models')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
 print ('the process for {} is done'.format(write_filename))
-##### CBOW_CNN_dropout05_size5_100unit: val_loss 0.2674; val_acc 0.8890 
-##### CBOW_CNN_dropout05_size5_150unit: val_loss 0.2675; val_acc 0.8898
-##### CBOW_CNN_dropout05_size5_200unit: val_loss 0.2711; val_acc 0.8852
+
 
 
 

@@ -9,7 +9,7 @@ sys.path.append('D:\\MLP_Project\\MLP')
 from config.setting import *
 from CYK.plot_fit import *
 
-subdir = 'X_embedding_CNN'
+subdir = 'Character_Level_Models'
 plot_all_history(subdir, plot_filename='X_embedding_CNN.pdf',figsize=(16,8))
 
 
