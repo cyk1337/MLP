@@ -59,7 +59,7 @@ import string
 from CYK.data_loader import load_imdb, load_test
 
 MAX_SEQUENCE_LENGTH = 1014
-EMBEDDING_DIM=70
+EMBEDDING_DIM=69
 MAX_NUM_WORDS=5000
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
@@ -194,7 +194,6 @@ def val_generator(X_val, y_val):
 
 num_words = min(MAX_NUM_WORDS, vocab_size)
 
-
 model = Sequential()
 #embedding_layer = Embedding(num_words,
 #                            num_words,
@@ -244,6 +243,37 @@ model = Sequential()
 #model.add(MaxPooling1D(pool_size=3))
 
 
+#print ('after maxpooling layer the shape is:',model.output_shape)
+##model.add(GlobalMaxPooling1D())
+#print ('after maxpooling layer the shape is:',model.output_shape)
+
+
+
+
+#model.add(Flatten())
+#model.add(Dense(1024,activation='relu'))
+#model.add(Dropout(0.5))
+#model.add(Dense(1024,activation='relu'))
+#model.add(Dropout(0.5))
+#model.add(Dense(1,activation='sigmoid'))
+
+
+model.add(Conv1D(100,
+                 3,
+                 padding='valid',
+                 activation='relu',
+                 strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
+#model.add(GlobalMaxPooling1D())
+model.add(MaxPooling1D(pool_size=3))
+
+model.add(Conv1D(100,
+                 3,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
+#model.add(GlobalMaxPooling1D())
+model.add(MaxPooling1D(pool_size=3))
+
 model.add(Conv1D(100,
                  3,
                  padding='valid',
@@ -255,13 +285,6 @@ print ('after maxpooling layer the shape is:',model.output_shape)
 #model.add(GlobalMaxPooling1D())
 print ('after maxpooling layer the shape is:',model.output_shape)
 
-#model.add(Flatten())
-#model.add(Dense(1024,activation='relu'))
-#model.add(Dropout(0.5))
-#model.add(Dense(1024,activation='relu'))
-#model.add(Dropout(0.5))
-#model.add(Dense(1,activation='sigmoid'))
-
 model.add(Dense(250,activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
@@ -272,8 +295,6 @@ tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 
-#, callbacks=[earlystopping]
-
 #history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=64)
 
 history=model.fit_generator(data_generator(X_train, y_train), 
@@ -281,23 +302,27 @@ history=model.fit_generator(data_generator(X_train, y_train),
                             validation_data=val_generator(X_val,y_val),
                             validation_steps=15)
 
+
 #model.save_weights("own_vecmodel_model.h5")
 plot_model(model, to_file='model.png')
 # Evaluation on the test set
 scores = model.evaluate(encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check ), y_test, verbose=0)
+
 
 print ('=====================the result for test set==============================')
 print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
 print (history.history.keys())
 
-write_filename='char_CNN_word_level_model.pdf'
-save_history(history, 'char_CNN_word_level_model.csv', subdir='Character_Level_Models')
+write_filename='char_CNN_word_level_model_+2CNNlayer.pdf'
+save_history(history, 'char_CNN_word_level_model_+2CNNlayer.csv', subdir='Character_Level_Models')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
-print ('the process for {} is done'.format(write_filename))
+with open('test_result.txt', 'a') as f:
+    f.write('\n the model name is {0}, the score on test is: {1} \n'.format(write_filename, scores))
 
+print ('the process for {} is done'.format(write_filename))
 
 
 
