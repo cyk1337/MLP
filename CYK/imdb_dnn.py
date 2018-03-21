@@ -30,7 +30,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Embedding, Conv1D, GlobalMaxPool1D, MaxPooling1D, Activation
 from keras import regularizers
 
-from CYK.data_loader import load_imdb
+from CYK.data_loader import load_imdb, load_test
 from CYK.plot_fit import plot_fit, visialize_model, save_history, plot_all_history
 
 

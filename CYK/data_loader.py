@@ -49,6 +49,7 @@ def load_test():
     return (X_test, y_test)
 
 
+
 def mini_batch_generator(x,y, vocab, vocab_size, vocab_check, maxlen, batch_size=128):
     for i in range(0, len(x), batch_size):
         x_sample = x[i:i+batch_size]
@@ -58,6 +59,7 @@ def mini_batch_generator(x,y, vocab, vocab_size, vocab_check, maxlen, batch_size
         yield (input_data, y_sample)
 
 
+# for character level training below
 def encode_data(x, maxlen, vocab, vocab_size, check):
     """
     Iterate over the loaded data and create a matrix of size maxlen x vocab size
@@ -91,14 +93,6 @@ def encode_data(x, maxlen, vocab, vocab_size, check):
 
     return input_data
 
-
-def shuffle_matrix(x, y):
-    stacked = np.hstack((np.matrix(x).T, y))
-    np.random.shuffle(stacked)
-    xi = np.array(stacked[:,0]).flatten()
-    yi = np.arrayprint(stacked[:, 1:])
-
-    return xi, yi
 
 
 def create_vocab_set():
