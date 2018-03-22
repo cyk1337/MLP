@@ -207,87 +207,87 @@ model = Sequential()
 #print ('###########################################################')
 #print ('embedding layer output shape is:',model.output_shape)
 
-#model.add(Conv1D(256,
-#                 7,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
-#model.add(MaxPooling1D(pool_size=3))
-#model.add(Conv1D(256,
-#                 7,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(MaxPooling1D(pool_size=3))
-
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(MaxPooling1D(pool_size=3))
-
-
-#print ('after maxpooling layer the shape is:',model.output_shape)
-##model.add(GlobalMaxPooling1D())
-#print ('after maxpooling layer the shape is:',model.output_shape)
-
-
-
-
-#model.add(Flatten())
-#model.add(Dense(1024,activation='relu'))
-#model.add(Dropout(0.5))
-#model.add(Dense(1024,activation='relu'))
-#model.add(Dropout(0.5))
-#model.add(Dense(1,activation='sigmoid'))
-
-
-model.add(Conv1D(100,
-                 3,
+model.add(Conv1D(256,
+                 7,
                  padding='valid',
                  activation='relu',
                  strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
-#model.add(GlobalMaxPooling1D())
+model.add(MaxPooling1D(pool_size=3))
+model.add(Conv1D(256,
+                 7,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
 model.add(MaxPooling1D(pool_size=3))
 
-model.add(Conv1D(100,
+#model.add(Conv1D(256,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+#model.add(Conv1D(256,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+#model.add(Conv1D(256,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+model.add(Conv1D(256,
                  3,
                  padding='valid',
                  activation='relu',
                  strides=1))
-#model.add(GlobalMaxPooling1D())
 model.add(MaxPooling1D(pool_size=3))
 
-model.add(Conv1D(100,
-                 3,
-                 padding='valid',
-                 activation='relu',
-                 strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
-model.add(GlobalMaxPooling1D())
 
 print ('after maxpooling layer the shape is:',model.output_shape)
 #model.add(GlobalMaxPooling1D())
 print ('after maxpooling layer the shape is:',model.output_shape)
 
-model.add(Dense(250,activation='relu'))
+
+
+
+model.add(Flatten())
+model.add(Dense(1024,activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(1024,activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
+
+
+#model.add(Conv1D(100,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
+##model.add(GlobalMaxPooling1D())
+#model.add(MaxPooling1D(pool_size=3))
+#
+#model.add(Conv1D(100,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+##model.add(GlobalMaxPooling1D())
+#model.add(MaxPooling1D(pool_size=3))
+#
+#model.add(Conv1D(100,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
+#model.add(GlobalMaxPooling1D())
+
+#print ('after maxpooling layer the shape is:',model.output_shape)
+##model.add(GlobalMaxPooling1D())
+#print ('after maxpooling layer the shape is:',model.output_shape)
+#
+#model.add(Dense(250,activation='relu'))
+#model.add(Dropout(0.5))
+#model.add(Dense(1,activation='sigmoid'))
 
 
 #sgd = SGD(lr=0.01, momentum=0.9)
@@ -314,8 +314,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
 print (history.history.keys())
 
-write_filename='char_CNN_word_level_model_+2CNNlayer.pdf'
-save_history(history, 'char_CNN_word_level_model_+2CNNlayer.csv', subdir='Character_Level_Models')
+write_filename='char_CNN_3_CNNlayer.pdf'
+save_history(history, 'char_CNN_3_CNNlayer.csv', subdir='Character_Level_Models')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 

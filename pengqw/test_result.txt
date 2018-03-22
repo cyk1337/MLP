@@ -1,2 +1,6 @@
 
  the model name is char_CNN_word_level_model_+1CNNlayer.pdf, the score on test is: [0.42013323987325035, 0.80600000003178918] 
+
+ the model name is char_CNN_word_level_model_+2CNNlayer.pdf, the score on test is: [0.50068981782595312, 0.76293333330154423] 
+
+ the model name is char_CNN_3_CNNlayer.pdf, the score on test is: [0.4577379383722941, 0.82906666663487749] 
