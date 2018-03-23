@@ -213,18 +213,18 @@ model.add(Conv1D(256,
                  activation='relu',
                  strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
 model.add(MaxPooling1D(pool_size=3))
-model.add(Conv1D(256,
-                 7,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-model.add(MaxPooling1D(pool_size=3))
+#model.add(Conv1D(256,
+#                 7,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+#model.add(MaxPooling1D(pool_size=3))
 
-model.add(Conv1D(256,
-                 3,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
+#model.add(Conv1D(256,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
 #model.add(Conv1D(256,
 #                 3,
 #                 padding='valid',
@@ -312,8 +312,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
 print (history.history.keys())
 
-write_filename='char_CNN_4_CNNlayer.pdf'
-save_history(history, 'char_CNN_4_CNNlayer.csv', subdir='Character_Level_Models')
+write_filename='char_CNN_2_CNNlayer.pdf'
+save_history(history, 'char_CNN_2_CNNlayer.csv', subdir='Character_Level_Models')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
