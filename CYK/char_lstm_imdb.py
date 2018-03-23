@@ -28,7 +28,7 @@ from config.setting import *
 import numpy as np
 from keras.preprocessing.text import Tokenizer
 from keras.models import Sequential
-import datetime, json
+import datetime, json, sys
 from keras.models import Model
 from keras.optimizers import SGD
 from keras.layers import Input, Dense, Dropout, Convolution1D, \
@@ -62,22 +62,21 @@ print('Build model...')
 #Filters for conv layers
 
 
-units = 512
+# units = 512
+units = 100
 dropout_rate = 0
-
+# dropout_rate = float(sys.argv[1])
 maxlen = 1014
 
 
-# Xtrain_matrix = Xtrain_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
-# Xval_matrix = Xval_matrix.reshape((RECORDS_NUM, MAX_NUM_WORDS, 1))
 print("Building model...")
 
-inputs = Input(shape=(maxlen, vocab_size,))
+inputs = Input(shape=( maxlen,vocab_size,))
 
-l1 = LSTM(units) (inputs)
-l2 = LSTM(units) (l1)
-
-predictions = Dense(1, activation='sigmoid',dropout_rate=dropout_rate)(l2)
+l1 = LSTM(units,return_sequences=True)(inputs)
+l2 = LSTM(units)(l1)
+dropout = Dropout(dropout_rate)(l2)
+predictions = Dense(1, activation='sigmoid')(dropout)
 
 model = Model(inputs=inputs, outputs=predictions)
 
@@ -86,24 +85,28 @@ model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
 
 
 
+training_batch_size = 500
+training_steps = 70
+
+val_batch_size = 500
+val_steps = 15
 
 # 35000
-train_data_generator = mini_batch_generator(X_train,y_train, vocab, vocab_size, vocab_check, maxlen, batch_size=2500)
+train_data_generator = mini_batch_generator(X_train,y_train, vocab, vocab_size, vocab_check, maxlen, batch_size=training_batch_size)
 # 7500
-val_data_generator = mini_batch_generator(X_train,y_train, vocab, vocab_size, vocab_check, maxlen, batch_size=2500)
+val_data_generator = mini_batch_generator(X_train,y_train, vocab, vocab_size, vocab_check, maxlen, batch_size=val_batch_size)
 
 
-history = model.fit_generator(train_data_generator, steps_per_epoch=14, epochs=15, verbose=1,
-                              validation_data=val_data_generator, validation_steps=3,
-                              # use_multiprocessing=True
+history = model.fit_generator(train_data_generator, steps_per_epoch=training_steps, epochs=15, verbose=1,
+                              validation_data=val_data_generator, validation_steps=val_steps
                               )
 
-subdir = 'cnn_char'
-plot_filename = 'cnn_char.pdf'
+subdir = 'lstm_char'
+plot_filename = 'lstm_char_units{}_dropout_{}.pdf'.format(units, dropout_rate)
 # save history info
 save_history(history, '{}.csv'.format(plot_filename[:-4]), subdir=subdir)
 # save model
-visialize_model(model, filepath=plot_filename)
+# visialize_model(model, filepath=plot_filename)
 # save single history
 plot_fit(history, plot_filename=plot_filename)
 
