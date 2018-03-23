@@ -177,7 +177,7 @@ if __name__=="__main__":
     # save_history(history, 'train_val.csv', subdir='val')
 
     # subdir = 'dir to save csv'
-    subdir = 'fastText'
-    plot_all_history(subdir, plot_filename='fastText_unigram_and_bigram.pdf')
+    subdir = 'Word_LSTM'
+    plot_all_history(subdir, plot_filename='word_lstm_all.pdf')
 
 
