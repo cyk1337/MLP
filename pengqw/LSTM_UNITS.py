@@ -65,8 +65,13 @@ csv_logger = CSVLogger('log.csv', append=True, separator=';')
 print('Indexing word vectors.')
 embeddings_index = {}
 #f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
-f = open(CBOW_embedding, encoding='utf-8')
+#f = open(CBOW_embedding, encoding='utf-8')
 #f = open(SkipGram_embedding, encoding='utf-8')
+
+
+#f = open('../../skip_gram.txt', encoding='utf-8')
+##f = open('../../cbow_gram.txt', encoding='utf-8')
+
 ####hello
 #f = open('D:\MLP_Project\MLP\\embedding\gensim_word2vec.txt','r',encoding='utf-8')
 for line in f:

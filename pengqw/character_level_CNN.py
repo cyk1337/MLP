@@ -220,11 +220,11 @@ model.add(Conv1D(256,
                  strides=1))
 model.add(MaxPooling1D(pool_size=3))
 
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
+model.add(Conv1D(256,
+                 3,
+                 padding='valid',
+                 activation='relu',
+                 strides=1))
 #model.add(Conv1D(256,
 #                 3,
 #                 padding='valid',
@@ -246,8 +246,6 @@ model.add(MaxPooling1D(pool_size=3))
 print ('after maxpooling layer the shape is:',model.output_shape)
 #model.add(GlobalMaxPooling1D())
 print ('after maxpooling layer the shape is:',model.output_shape)
-
-
 
 
 model.add(Flatten())
@@ -314,8 +312,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
 print (history.history.keys())
 
-write_filename='char_CNN_3_CNNlayer.pdf'
-save_history(history, 'char_CNN_3_CNNlayer.csv', subdir='Character_Level_Models')
+write_filename='char_CNN_4_CNNlayer.pdf'
+save_history(history, 'char_CNN_4_CNNlayer.csv', subdir='Character_Level_Models')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
