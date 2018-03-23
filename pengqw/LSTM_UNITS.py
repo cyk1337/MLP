@@ -68,7 +68,7 @@ embeddings_index = {}
 #f = open(CBOW_embedding, encoding='utf-8')
 #f = open(SkipGram_embedding, encoding='utf-8')
 
-unit=32
+unit=64
 #unit=64
 #unit=128
 
