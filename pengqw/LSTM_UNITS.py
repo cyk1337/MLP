@@ -68,8 +68,12 @@ embeddings_index = {}
 #f = open(CBOW_embedding, encoding='utf-8')
 #f = open(SkipGram_embedding, encoding='utf-8')
 
+unit=32
+#unit=64
+#unit=128
 
-#f = open('../../skip_gram.txt', encoding='utf-8')
+embed_type='skipgram'
+f = open(SkipGram_embedding, encoding='utf-8')
 ##f = open('../../cbow_gram.txt', encoding='utf-8')
 
 ####hello
@@ -133,8 +137,7 @@ model = Sequential()
 embedding_layer = Embedding(num_words,
                             EMBEDDING_DIM,
                             weights=[embedding_matrix],
-                            input_length=MAX_SEQUENCE_LENGTH,
-                            trainable=False
+                            input_length=MAX_SEQUENCE_LENGTH
                             )
 
 model.add(embedding_layer)
@@ -150,7 +153,10 @@ print ('embedding layer output shape is:',model.output_shape)
 #model.add(MaxPooling1D(pool_size=4))
 print ('after maxpooling layer the shape is:',model.output_shape)
 
-model.add(LSTM(110))
+
+
+
+model.add(LSTM(unit))
 #model.add(Dense(250,activation='relu'))
 #model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
@@ -170,7 +176,7 @@ model.add(Dense(1,activation='sigmoid'))
 
 
 
-tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
+#tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 
@@ -186,8 +192,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='CBOW_LSTM_UNIT110.pdf'
-save_history(history, 'CBOW_LSTM_UNIT110.csv', subdir='LSTM_MODEL_CBOW')
+write_filename='{}_LSTM_UNIT{}.pdf'.format(embed_type,unit)
+save_history(history, '{}_LSTM_UNIT{}.csv'.format(embed_type, unit), subdir='Word_LSTM')
 #visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
