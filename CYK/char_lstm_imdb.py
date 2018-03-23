@@ -63,9 +63,10 @@ print('Build model...')
 
 
 # units = 512
-units = 100
-dropout_rate = 0
-# dropout_rate = float(sys.argv[1])
+#units = 100
+units = int(sys.argv[1])
+#dropout_rate = 0
+dropout_rate = float(sys.argv[2])
 maxlen = 1014
 
 
