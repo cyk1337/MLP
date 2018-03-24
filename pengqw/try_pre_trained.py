@@ -44,10 +44,11 @@ from keras.layers import Dense, Input, GlobalMaxPooling1D,Bidirectional
 from keras.layers import Conv1D, MaxPooling1D, Embedding
 from keras.models import Model
 import matplotlib.pyplot as plt
-from keras.callbacks import CSVLogger, EarlyStopping
+from keras.callbacks import CSVLogger, EarlyStopping,ModelCheckpoint
 from CYK.plot_fit import visialize_model,save_history,plot_all_history
 from keras import metrics
-from CYK.data_loader import load_imdb
+from CYK.data_loader import load_imdb,load_test
+from keras.models import load_model
 
 
 MAX_SEQUENCE_LENGTH = 1000
@@ -60,7 +61,7 @@ embeddings_index = {}
 #f = open(CBOW_embedding, encoding='utf-8')
 #f = open(SkipGram_embedding, encoding='utf-8')
 
-f = open('../../skip_gram.txt', encoding='utf-8')
+f = open('../../cbow_gram.txt', encoding='utf-8')
 #f = open('../../cbow_gram.txt', encoding='utf-8')
 
 
@@ -84,6 +85,8 @@ print('Processing text dataset')
 #val_data=pd.read_csv(val_csv)
 
 (X_train, y_train), (X_val, y_val) = load_imdb()
+X_test, y_test = load_test()
+
 
 #tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
 tokenizer= Tokenizer(num_words=MAX_NUM_WORDS)
@@ -100,14 +103,20 @@ vocab_size=len(word_index)+1
 #text_to_word_sequence
 #X_val = tokenizer.texts_to_matrix(val_data['text'], mode='count')
 X_val = tokenizer.texts_to_sequences(X_val)
+X_test = tokenizer.texts_to_sequences(X_test)
+
 
 
 
 X_train = pad_sequences(X_train, maxlen=MAX_SEQUENCE_LENGTH)
 X_val = pad_sequences(X_val, maxlen=MAX_SEQUENCE_LENGTH)
+X_test = pad_sequences(X_test, maxlen=MAX_SEQUENCE_LENGTH)
+
 
 y_train = np.array(y_train)
 y_val = np.array(y_val)
+y_test = np.array(y_test)
+
 
 
 
@@ -164,12 +173,16 @@ model.add(Dense(1,activation='sigmoid'))
 
 
 
-tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
+#tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
+
+filepath='keras_models/NEW_CBOW_CNN_WORD.hdf5'
+checkpoint = ModelCheckpoint(filepath, save_best_only=True, monitor='val_loss', mode = 'min')
+
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 
 #, callbacks=[earlystopping]
-history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=32)
+history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=32,callbacks=[checkpoint])
 #model.save_weights("own_vecmodel_model.h5")
 #plot_model(model, to_file='model.png')
 # Evaluation on the val set
@@ -180,13 +193,24 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='SKIP_CNN.pdf'
-save_history(history, 'SKIP_CNN.csv', subdir='EM_TEST')
+write_filename='NEW_CBOW_CNN_WORD.pdf'
+save_history(history, 'NEW_CBOW_CNN_WORD.csv', subdir='EM_TEST')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
 print ('the process for {} is done'.format(write_filename))
 
+
+
+
+new_model = load_model('keras_models/NEW_CBOW_CNN_WORD.hdf5')
+#new_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+scores = new_model.evaluate(X_test,y_test, verbose=0)
+print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
+
+with open('test_result.txt', 'a') as f:
+    f.write('\n the model name is {0}, the  best loss on test is: {1}, the acc on test is: {2} \n'.format(write_filename, 
+            scores[0],scores[1]))
 
 
 

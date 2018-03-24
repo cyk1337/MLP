@@ -51,12 +51,13 @@ from keras.layers import Dense, Input, GlobalMaxPooling1D,Bidirectional
 from keras.layers import Conv1D, MaxPooling1D, Embedding
 from keras.models import Model
 import matplotlib.pyplot as plt
-from keras.callbacks import CSVLogger, EarlyStopping
+from keras.callbacks import CSVLogger, EarlyStopping,ModelCheckpoint
 from CYK.plot_fit import visialize_model,save_history,plot_all_history
 from keras import metrics
 from keras.optimizers import SGD
 import string
 from CYK.data_loader import load_imdb, load_test
+from keras.models import load_model
 
 MAX_SEQUENCE_LENGTH = 1014
 EMBEDDING_DIM=69
@@ -190,6 +191,12 @@ def val_generator(X_val, y_val):
         for i in range(15):
             yield encode_data(X_val[i*500:(i+1)*500],MAX_SEQUENCE_LENGTH, vocab, vocab_size, check), y_val[i*500:(i+1)*500]  
 
+
+def test_generator(X_test, y_test):
+    while 1:
+        for i in range(15):
+            yield encode_data(X_test[i*500:(i+1)*500],MAX_SEQUENCE_LENGTH, vocab, vocab_size, check), y_test[i*500:(i+1)*500]  
+
 #encode_data(X_val[i*1000:(i+1)*1000], MAX_SEQUENCE_LENGTH, vocab, vocab_size, check)
 
 num_words = min(MAX_NUM_WORDS, vocab_size)
@@ -207,7 +214,7 @@ model = Sequential()
 #print ('###########################################################')
 #print ('embedding layer output shape is:',model.output_shape)
 
-model.add(Conv1D(256,
+model.add(Conv1D(128,
                  7,
                  padding='valid',
                  activation='relu',
@@ -235,12 +242,12 @@ model.add(MaxPooling1D(pool_size=3))
 #                 padding='valid',
 #                 activation='relu',
 #                 strides=1))
-model.add(Conv1D(256,
-                 3,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-model.add(MaxPooling1D(pool_size=3))
+#model.add(Conv1D(256,
+#                 3,
+#                 padding='valid',
+#                 activation='relu',
+#                 strides=1))
+#model.add(MaxPooling1D(pool_size=3))
 
 
 print ('after maxpooling layer the shape is:',model.output_shape)
@@ -249,9 +256,11 @@ print ('after maxpooling layer the shape is:',model.output_shape)
 
 
 model.add(Flatten())
-model.add(Dense(1024,activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(1024,activation='relu'))
+
+#model.add(Dense(1024,activation='relu'))
+#model.add(Dropout(0.5))
+
+model.add(Dense(256,activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 
@@ -289,41 +298,48 @@ model.add(Dense(1,activation='sigmoid'))
 
 
 #sgd = SGD(lr=0.01, momentum=0.9)
-tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
+#tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
+
+#filepath='keras_models/char_CNN_1_CNNlayer_2DNN_lessunits_{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5'
+filepath='keras_models/char_CNN_1_CNNlayer_2DNN_lessunits.hdf5'
+
+#checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
+checkpoint = ModelCheckpoint(filepath, save_best_only=True, monitor='val_loss', mode = 'min')
+
+
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-
 #history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=64)
+
 
 history=model.fit_generator(data_generator(X_train, y_train), 
                             steps_per_epoch=35,epochs=15,verbose=1,
                             validation_data=val_generator(X_val,y_val),
-                            validation_steps=15)
+                            validation_steps=15, callbacks=[checkpoint])
 
-
-#model.save_weights("own_vecmodel_model.h5")
-plot_model(model, to_file='model.png')
 # Evaluation on the test set
-scores = model.evaluate(encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check ), y_test, verbose=0)
+#scores = model.evaluate(encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check ), y_test, verbose=0)
 
 
-print ('=====================the result for test set==============================')
-print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
+#print ('=====================the result for test set==============================')
+#print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
 print (history.history.keys())
 
-write_filename='char_CNN_2_CNNlayer.pdf'
-save_history(history, 'char_CNN_2_CNNlayer.csv', subdir='Character_Level_Models')
-visialize_model(model, write_filename)
-plot_fit(history, plot_filename=write_filename)
-
-with open('test_result.txt', 'a') as f:
-    f.write('\n the model name is {0}, the score on test is: {1} \n'.format(write_filename, scores))
+write_filename='char_CNN_1_CNNlayer_2DNN_less_units.pdf'
+save_history(history, 'char_CNN_1_CNNlayer_2DNN_less_units.csv', subdir='Character_Level_Models')
 
 print ('the process for {} is done'.format(write_filename))
 
+new_model = load_model('keras_models/char_CNN_1_CNNlayer_2DNN_lessunits.hdf5')
+#new_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+#scores = new_model.evaluate(X_test,y_test, verbose=0)
+scores = new_model.evaluate(encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check ), y_test, verbose=0)
 
+print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
+with open('test_result.txt', 'a') as f:
+    f.write('\n the model name is {0}, the  best loss on test is: {1}, the acc on test is: {2} \n'.format(write_filename, 
+            scores[0],scores[1]))
 
 
 
