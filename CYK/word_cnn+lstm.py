@@ -135,13 +135,13 @@ model.add(Conv1D(100,
                  padding='valid',
                  activation='relu',
                  strides=1))
-model.add(GlobalMaxPooling1D())
-#model.add(MaxPooling1D(pool_size=3))
+#model.add(GlobalMaxPooling1D())
+model.add(MaxPooling1D(pool_size=4))
 print ('after maxpooling layer the shape is:',model.output_shape)
 
 ################################
-model.add(Reshape((100,1,)))
-print ('after reshape layer the shape is:',model.output_shape)
+#model.add(Reshape((100,1,)))
+#print ('after reshape layer the shape is:',model.output_shape)
 #
 model.add(LSTM(128))
 ##model.add(Bidirectional(LSTM(64)))
@@ -165,8 +165,8 @@ print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 print (history.history.keys())
 
 
-write_filename='CNN+LSTM.pdf'
-save_history(history, 'CBOW_CNN+LSTM.csv', subdir='CNN+LSTM')
+write_filename='CNN+LSTM_maxpooling_4.pdf'
+save_history(history, 'CBOW_CNN+LSTM_maxpooling_4.csv', subdir='CNN+LSTM')
 visialize_model(model, write_filename)
 plot_fit(history, plot_filename=write_filename)
 
