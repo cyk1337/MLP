@@ -64,7 +64,7 @@ def add_ngram(sequences, token_indice, ngram_range=2):
     [[1, 3, 4, 5, 1337, 2017], [1, 3, 7, 9, 2, 1337, 42]]
     Example: adding tri-gram
     #>>> sequences = [[1, 3, 4, 5], [1, 3, 7, 9, 2]]
-    #>>> token_indice = {(1, 3): 1337, (9, 2): 42, (4, 5): 2017, (7, 9, 2): 2018}
+    #>>> token_indice = {(1, 3): 1337, (9, 2): 42, bigram_fasttex(4, 5): 2017, (7, 9, 2): 2018}
     #>>> add_ngram(sequences, token_indice, ngram_range=3)
     [[1, 3, 4, 5, 1337], [1, 3, 7, 9, 2, 1337, 2018]]
     """
@@ -188,6 +188,6 @@ scores = model.evaluate(x_test,y_test)
 score={}
 score[model.metrics_names[0]] = scores[0]
 score[model.metrics_names[1]] = scores[1]
-with open('bigram_fasttext_test', 'w') as f:
+with open('bigram_fasttext_test.txt', 'w') as f:
     f.write(str(score))
 print(score)
