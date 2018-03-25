@@ -48,11 +48,6 @@ MAX_SEQUENCE_LENGTH = 100
 print('Indexing word vectors.')
 embeddings_index = {}
 
-
-embed_type='CBOW'
-#f = open(SkipGram_embedding, encoding='utf-8')
-f = open(CBOW_embedding, encoding='utf-8')
-
 import sys
 #unit=int(sys.argv[1])
 #unit=32
@@ -60,8 +55,9 @@ import sys
 unit=128
 
 
-
-
+embed_type='CBOW'
+#f = open(SkipGram_embedding, encoding='utf-8')
+f = open(CBOW_embedding, encoding='utf-8')
 
 for line in f:
     values = line.split()
