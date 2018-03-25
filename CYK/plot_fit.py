@@ -63,7 +63,7 @@ def plot_fit(history, plot_filename):
     plt.legend()
     plt.grid()
     save_fig(plt, plot_filename=plot_filename)
-    plt.show()
+    # plt.show()
 
 
 def save_fig(plt, plot_filename, plot_dir=plot_dir):
@@ -115,6 +115,7 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
     # set color list
     # colors = [c for c in list(matplotlib.colors.cnames.keys()) if not c.startswith('light')]
     colors = ['green','red','blue','goldenrod','black','lime','cyan','chartreuse','yellow','m','purple','olive','salmon','darkred','pink']
+    markers = ['d', '^', 's', '*']
 
     plt.figure(figsize=figsize)
     plt.subplot(121)
@@ -128,8 +129,8 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
         val_loss = history['val_loss']
         epochs = range(1, len(loss) + 1)
 
-        plt.plot(epochs, loss, color=colors[i%len(colors)], linestyle='-', label='{} training loss'.format(line_label))
-        plt.plot(epochs, val_loss, color=colors[i%len(colors)], linestyle='dashed', label='{} validation loss'.format(line_label))
+        plt.plot(epochs, loss, color=colors[i%len(colors)], linestyle='-',marker=markers[i % len(markers)], label='{} training loss'.format(line_label))
+        plt.plot(epochs, val_loss, color=colors[i%len(colors)], marker=markers[i % len(markers)],linestyle='dashed', label='{} validation loss'.format(line_label))
     plt.title('Training and validation loss', fontsize='25')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
@@ -148,8 +149,8 @@ def plot_all_history(subdir, plot_filename='default.pdf', figsize=(16, 9)):
         val_acc = history['val_acc']
         epochs = range(1, len(acc) + 1)
         # plot acc
-        plt.plot(epochs, acc, color=colors[i%len(colors)], linestyle='-', label='{} training acc'.format(line_label))
-        plt.plot(epochs, val_acc, color=colors[i%len(colors)], linestyle='dashed', label='{} validation acc'.format(line_label))
+        plt.plot(epochs, acc, color=colors[i%len(colors)], marker=markers[i % len(markers)],linestyle='-', label='{} training acc'.format(line_label))
+        plt.plot(epochs, val_acc, color=colors[i%len(colors)], marker=markers[i % len(markers)], linestyle='dashed', label='{} validation acc'.format(line_label))
         plt.title('Training and validation acc', fontsize='25')
     plt.xlabel('Epochs')
     plt.ylabel('Acc')
