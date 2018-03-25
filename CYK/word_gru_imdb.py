@@ -60,9 +60,10 @@ print('Indexing word vectors.')
 embeddings_index = {}
 
 
-embed_type='CBOW'
-#f = open(SkipGram_embedding, encoding='utf-8')
-f = open(CBOW_embedding, encoding='utf-8')
+#embed_type='CBOW'
+embed_type='Skipgram'
+f = open(SkipGram_embedding, encoding='utf-8')
+#f = open(CBOW_embedding, encoding='utf-8')
 
 import sys
 unit=int(sys.argv[1])
