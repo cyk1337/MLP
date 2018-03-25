@@ -33,10 +33,10 @@ from keras.utils.np_utils import to_categorical
 from keras.layers import Dense, Input, GlobalMaxPooling1D,Bidirectional
 from keras.layers import Conv1D, MaxPooling1D, Embedding, Reshape
 from keras.models import Model
-from keras.callbacks import CSVLogger, EarlyStopping
+from keras.callbacks import CSVLogger, EarlyStopping, ModelCheckpoint
 from CYK.plot_fit import visialize_model,save_history,plot_all_history
 from keras import metrics
-from CYK.data_loader import load_imdb
+from CYK.data_loader import load_imdb, load_test
 
 
 MAX_SEQUENCE_LENGTH = 1000
@@ -79,7 +79,7 @@ print('Processing text dataset')
 #val_data=pd.read_csv(val_csv)
 
 (X_train, y_train), (X_val, y_val) = load_imdb()
-
+(X_test, y_test)=load_test()
 #tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
 tokenizer= Tokenizer(num_words=MAX_NUM_WORDS)
 
@@ -95,7 +95,7 @@ vocab_size=len(word_index)+1
 #text_to_word_sequence
 #X_val = tokenizer.texts_to_matrix(val_data['text'], mode='count')
 X_val = tokenizer.texts_to_sequences(X_val)
-
+x_test = tokenizer.texts_to_sequences(X_test)
 
 
 X_train = pad_sequences(X_train, maxlen=MAX_SEQUENCE_LENGTH)
@@ -103,7 +103,7 @@ X_val = pad_sequences(X_val, maxlen=MAX_SEQUENCE_LENGTH)
 
 y_train = np.array(y_train)
 y_val = np.array(y_val)
-
+y_test = np.array(y_test)
 
 
 print('Preparing embedding matrix.')
@@ -152,25 +152,42 @@ model.add(Dense(1,activation='sigmoid'))
 #tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
+filepath = os.path.join(best_model_dir, 'bigram_fasttext_test')
+save_best_point = ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+
 
 #, callbacks=[earlystopping]
-history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=32)
+history=model.fit(X_train,y_train , validation_data=(X_val,y_val), 
+                  epochs=15, batch_size=32, 
+                  callbacks=[save_best_point])
 #model.save_weights("own_vecmodel_model.h5")
 #plot_model(model, to_file='model.png')
 # Evaluation on the val set
-scores = model.evaluate(X_val, y_val, verbose=0)
-print ('=====================the result for val set==============================')
-print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
+#scores = model.evaluate(X_val, y_val, verbose=0)
+#print ('=====================the result for val set==============================')
+#print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
 print (history.history.keys())
 
 
 write_filename='CNN+LSTM_maxpooling_4.pdf'
 save_history(history, 'CBOW_CNN+LSTM_maxpooling_4.csv', subdir='CNN+LSTM')
-visialize_model(model, write_filename)
-plot_fit(history, plot_filename=write_filename)
+#visialize_model(model, write_filename)
+#plot_fit(history, plot_filename=write_filename)
 
-print ('the process for {} is done'.format(write_filename))
+#print ('the process for {} is done'.format(write_filename))
+
+
+from keras.models import load_model
+#filepath = os.path.join(best_model_dir, 'bigram_fasttext_testset')
+model = load_model(filepath)
+scores = model.evaluate(x_test,y_test)
+score={}
+score[model.metrics_names[0]] = scores[0]
+score[model.metrics_names[1]] = scores[1]
+with open('cnn+lstm_test_maxpooling_4', 'w') as f:
+    f.write(str(score))
+print(score)
 
 
 

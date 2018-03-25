@@ -25,6 +25,7 @@ plot_dir = os.path.join(work_dir, 'plot')
 log_dir = os.path.join(work_dir, 'logs')
 model_dir = os.path.join(work_dir, 'model')
 history_dir = os.path.join(work_dir, 'history')
+best_model_dir = os.path.join(work_dir, 'best_model')
 
 CBOW_embedding = os.path.join(embedding_dir, '100d_cbow.txt')
 SkipGram_embedding = os.path.join(embedding_dir, '100d_skipgram.txt')
