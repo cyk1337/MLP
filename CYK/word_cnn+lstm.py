@@ -51,9 +51,9 @@ OPTIMAL SETTINGS:
     CBOW embedding,
     CNN:
         layer 1,
+        filters 100,
         kernel_size 3,
-        250 dense unit,
-        dropout 0.5.
+        maxpooling size 4,
     LSTM units 128
 """
 
@@ -137,7 +137,7 @@ model.add(MaxPooling1D(pool_size=4))
 print ('after maxpooling layer the shape is:',model.output_shape)
 
 ################################
-#model.add(Reshape((100,1,)))
+#model.add(Reshape((100,1,, LSTM units 128 )))
 #print ('after reshape layer the shape is:',model.output_shape)
 #
 model.add(LSTM(128))
