@@ -1,0 +1,8 @@
+lstm_char_units32_layer_num()_dropout_1:
+{'loss': 0.69124500354131058, 'acc': 0.5165333410104116}
+lstm_char_units64_layer_num()_dropout_1:
+{'loss': 0.6917545358339946, 'acc': 0.51146665811538694}
+
+lstm_char_units128_layer_num()_dropout_1:
+{'loss': 0.69110287427902217, 'acc': 0.51986666719118757}
+

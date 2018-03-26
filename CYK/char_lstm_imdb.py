@@ -63,25 +63,25 @@ print('Build model...')
 
 
 # units = 512
-units = 32
+units = 64
 #units = int(sys.argv[1])
 dropout_rate = 0
 #dropout_rate = float(sys.argv[2])
 maxlen = 1014
 
-layer_num=1
+layer_num = 2
 
 print("Building model...")
 print('LSTM units:',units)
 inputs = Input(shape=( maxlen,vocab_size,))
 ####### 1layer ###############
-l1 = LSTM(units)(inputs)
-dropout = Dropout(dropout_rate)(l1)
+#l1 = LSTM(units)(inputs)
+#dropout = Dropout(dropout_rate)(l1)
 
 # ---------------- 2 layer 
-#l1 = LSTM(units,return_sequences=True)(inputs)
-#l2 = LSTM(units)(l1)
-#dropout = Dropout(dropout_rate)(l2)
+l1 = LSTM(units,return_sequences=True)(inputs)
+l2 = LSTM(units)(l1)
+dropout = Dropout(dropout_rate)(l2)
 predictions = Dense(1, activation='sigmoid')(dropout)
 
 model = Model(inputs=inputs, outputs=predictions)
@@ -132,7 +132,7 @@ score={}
 score[model.metrics_names[0]] = scores[0]
 score[model.metrics_names[1]] = scores[1]
 with open('char_LSTM_optimal.txt', 'a') as f:
-    f.write('lstm_char_units{}_layer_num()_dropout_{}:\n'.format(units, layer_num,  dropout_rate))
+    f.write('lstm_char_units{}_layer_num{}_dropout_{}:\n'.format(units, layer_num,  dropout_rate))
     f.write(str(score))
 print(score)
 

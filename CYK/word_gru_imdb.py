@@ -38,7 +38,7 @@ import matplotlib.pyplot as plt
 from keras.callbacks import CSVLogger, EarlyStopping,ModelCheckpoint
 from CYK.plot_fit import visialize_model,save_history,plot_all_history
 from keras import metrics
-from CYK.data_loader import load_imdb
+from CYK.data_loader import load_imdb, load_test
 
 
 MAX_SEQUENCE_LENGTH = 100
