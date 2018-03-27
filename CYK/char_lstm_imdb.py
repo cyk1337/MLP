@@ -69,24 +69,27 @@ dropout_rate = 0
 #dropout_rate = float(sys.argv[2])
 maxlen = 1014
 
-layer_num = 3
+layer_num = 1
 
 print("Building model...")
 print('LSTM units:',units)
 inputs = Input(shape=( maxlen,vocab_size,))
 ####### 1layer ###############
-#l1 = LSTM(units)(inputs)
-#dropout = Dropout(dropout_rate)(l1)
+if layer_num == 1:
+    l1 = LSTM(units)(inputs)
+    dropout = Dropout(dropout_rate)(l1)
 
 # ---------------- 2 layer 
-l1 = LSTM(units,return_sequences=True)(inputs)
-l2 = LSTM(units)(l1)
-dropout = Dropout(dropout_rate)(l2)
+elif layer_num == 2:
+    l1 = LSTM(units,return_sequences=True)(inputs)
+    l2 = LSTM(units)(l1)
+    dropout = Dropout(dropout_rate)(l2)
 # ================ 3 layer
-l1 = LSTM(units,return_sequences=True)(inputs)
-l2 = LSTM(units,return_sequences=True)(l1)
-l3 = LSTM(units)(l2)
-dropout = Dropout(dropout_rate)(l3)
+elif layer_num == 3:
+    l1 = LSTM(units,return_sequences=True)(inputs)
+    l2 = LSTM(units,return_sequences=True)(l1)
+    l3 = LSTM(units)(l2)
+    dropout = Dropout(dropout_rate)(l3)
 
 predictions = Dense(1, activation='sigmoid')(dropout)
 
@@ -109,7 +112,7 @@ train_data_generator = mini_batch_generator(X_train,y_train, vocab, vocab_size, 
 val_data_generator = mini_batch_generator(X_train,y_train, vocab, vocab_size, vocab_check, maxlen, batch_size=val_batch_size)
 
 filepath = os.path.join(best_model_dir, 'lstm_char_units{}_layer_num{}_dropout_{}.hdf5'.format(units, layer_num,  dropout_rate))
-save_best_point = ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+save_best_point = ModelCheckpoint(filepath, monitor='val_acc', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 
 
 history = model.fit_generator(train_data_generator, steps_per_epoch=training_steps, epochs=15, verbose=1,
@@ -137,9 +140,11 @@ scores = model.evaluate_generator(test_data_generator, steps=15)
 score={}
 score[model.metrics_names[0]] = scores[0]
 score[model.metrics_names[1]] = scores[1]
-with open('char_LSTM_optimal.txt', 'a') as f:
+with open('char_result_optimal.txt', 'a') as f:
     f.write('lstm_char_units{}_layer_num{}_dropout_{}:\n'.format(units, layer_num,  dropout_rate))
     f.write(str(score))
+    f.write('\n')
+    
 print(score)
 
 
