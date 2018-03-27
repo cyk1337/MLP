@@ -69,7 +69,7 @@ dropout_rate = 0
 #dropout_rate = float(sys.argv[2])
 maxlen = 1014
 
-layer_num = 2
+layer_num = 3
 
 print("Building model...")
 print('LSTM units:',units)
@@ -82,6 +82,12 @@ inputs = Input(shape=( maxlen,vocab_size,))
 l1 = LSTM(units,return_sequences=True)(inputs)
 l2 = LSTM(units)(l1)
 dropout = Dropout(dropout_rate)(l2)
+# ================ 3 layer
+l1 = LSTM(units,return_sequences=True)(inputs)
+l2 = LSTM(units,return_sequences=True)(l1)
+l3 = LSTM(units)(l2)
+dropout = Dropout(dropout_rate)(l3)
+
 predictions = Dense(1, activation='sigmoid')(dropout)
 
 model = Model(inputs=inputs, outputs=predictions)
@@ -102,7 +108,7 @@ train_data_generator = mini_batch_generator(X_train,y_train, vocab, vocab_size, 
 # 7500
 val_data_generator = mini_batch_generator(X_train,y_train, vocab, vocab_size, vocab_check, maxlen, batch_size=val_batch_size)
 
-filepath = os.path.join(best_model_dir, 'lstm_char_units{}_layer_num()_dropout_{}.hdf5'.format(units, layer_num,  dropout_rate))
+filepath = os.path.join(best_model_dir, 'lstm_char_units{}_layer_num{}_dropout_{}.hdf5'.format(units, layer_num,  dropout_rate))
 save_best_point = ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 
 

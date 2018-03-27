@@ -148,7 +148,7 @@ model.add(Dense(1,activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 filepath = os.path.join(best_model_dir, 'CBOW_GRU_optimal_test.hdf5')
-save_best_point = ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+save_best_point = ModelCheckpoint(filepath, monitor='val_acc', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 
 #, callbacks=[earlystopping]
 history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=32,
