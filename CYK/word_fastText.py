@@ -188,6 +188,8 @@ scores = model.evaluate(x_test,y_test)
 score={}
 score[model.metrics_names[0]] = scores[0]
 score[model.metrics_names[1]] = scores[1]
-with open('bigram_fasttext_test.txt', 'w') as f:
+with open('result_optimal.txt', 'a') as f:
+    f.write('bigram_fasttext_test')
     f.write(str(score))
+    f.write('\n')
 print(score)
