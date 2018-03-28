@@ -60,6 +60,19 @@ def mini_batch_generator(x,y, vocab, vocab_size, vocab_check, maxlen, batch_size
             yield (input_data, y_sample)
 
 
+def enc_dec_batch_generator(x,y, vocab, vocab_size, vocab_check, maxlen, batch_size=128):
+    while True:
+        for i in range(0, len(x), batch_size):
+            x_sample = x[i:i+batch_size]
+            y_sample = y[i:i+batch_size]
+            input_data = encode_data(x_sample, maxlen, vocab, vocab_size, vocab_check)
+            enc_data = np.zeros((len(x_sample), maxlen+1, vocab_size))
+            enc_data[:,:-1,:] = input_data
+            dec_data = np.zeros((len(x_sample), maxlen+1, vocab_size))
+            dec_data[:,1:,:] = input_data
+            yield ([enc_data,dec_data], enc_data)
+
+
 # for character level training below
 def encode_data(x, maxlen, vocab, vocab_size, check):
     """
