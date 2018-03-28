@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Mar 26 22:36:56 2018
+
+@author: s1700808
+"""
+
 # -*- coding: utf-8 -*-
 """
 Created on Sat Feb 17 16:32:33 2018
@@ -253,15 +261,14 @@ model.add(MaxPooling1D(pool_size=3))
 print ('after maxpooling layer the shape is:',model.output_shape)
 #model.add(GlobalMaxPooling1D())
 print ('after maxpooling layer the shape is:',model.output_shape)
-
-
-model.add(Flatten())
+#model.add(Flatten())
 
 #model.add(Dense(1024,activation='relu'))
 #model.add(Dropout(0.5))
+model.add(LSTM(128))
 
-model.add(Dense(1024,activation='relu'))
-model.add(Dropout(0.5))
+#model.add(Dense(1024,activation='relu'))
+#model.add(Dropout(0.5))
 model.add(Dense(1,activation='sigmoid'))
 
 
@@ -301,7 +308,7 @@ model.add(Dense(1,activation='sigmoid'))
 #tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
 
 #filepath='keras_models/char_CNN_1_CNNlayer_2DNN_lessunits_{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5'
-filepath='../../MLP_models/char_CNN_2_CNNlayer_2DNN_newtest.hdf5'
+filepath='../../MLP_models/char_CNN_LSTM.hdf5'
 
 #checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 checkpoint = ModelCheckpoint(filepath, save_best_only=True, monitor='val_acc', mode = 'max')
@@ -325,19 +332,19 @@ history=model.fit_generator(data_generator(X_train, y_train),
 
 print (history.history.keys())
 
-write_filename='char_CNN_2_CNNlayer_2DNN_newtest.pdf'
-save_history(history, 'char_CNN_2_CNNlayer_2DNN_newtest.csv', subdir='Character_Level_Models')
+write_filename='char_CNN_LSTM.pdf'
+save_history(history, 'char_CNN_LSTM.csv', subdir='Character_Level_Models')
 
 print ('the process for {} is done'.format(write_filename))
 
-new_model = load_model('../../MLP_models/char_CNN_2_CNNlayer_2DNN_newtest.hdf5')
+new_model = load_model('../../MLP_models/char_CNN_LSTM.hdf5')
 #new_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 #scores = new_model.evaluate(X_test,y_test, verbose=0)
 scores = new_model.evaluate(encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check ), y_test, verbose=0)
 
 print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
-with open('new_new_test_result.txt', 'a') as f:
+with open('test_result.txt', 'a') as f:
     f.write('\n the model name is {0}, the  best loss on test is: {1}, the acc on test is: {2} \n'.format(write_filename, 
             scores[0],scores[1]))
 

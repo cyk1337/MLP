@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Mar 28 20:06:09 2018
+
+@author: s1700808
+"""
+
 # -*- coding: utf-8 -*-
 """
 Created on Sat Feb 17 16:32:33 2018
@@ -218,8 +226,9 @@ model.add(Conv1D(256,
                  7,
                  padding='valid',
                  activation='relu',
-                 strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
-model.add(MaxPooling1D(pool_size=3))
+                 strides=2,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
+#model.add(MaxPooling1D(pool_size=3))
+
 #model.add(Conv1D(256,
 #                 7,
 #                 padding='valid',
@@ -246,8 +255,8 @@ model.add(Conv1D(256,
                  3,
                  padding='valid',
                  activation='relu',
-                 strides=1))
-model.add(MaxPooling1D(pool_size=3))
+                 strides=2))
+#model.add(MaxPooling1D(pool_size=3))
 
 
 print ('after maxpooling layer the shape is:',model.output_shape)
@@ -301,7 +310,7 @@ model.add(Dense(1,activation='sigmoid'))
 #tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
 
 #filepath='keras_models/char_CNN_1_CNNlayer_2DNN_lessunits_{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5'
-filepath='../../MLP_models/char_CNN_2_CNNlayer_2DNN_newtest.hdf5'
+filepath='../../MLP_models/char_CNN_2_CNNlayer_2DNN_newtest_stride.hdf5'
 
 #checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 checkpoint = ModelCheckpoint(filepath, save_best_only=True, monitor='val_acc', mode = 'max')
@@ -325,12 +334,12 @@ history=model.fit_generator(data_generator(X_train, y_train),
 
 print (history.history.keys())
 
-write_filename='char_CNN_2_CNNlayer_2DNN_newtest.pdf'
-save_history(history, 'char_CNN_2_CNNlayer_2DNN_newtest.csv', subdir='Character_Level_Models')
+write_filename='char_CNN_2_CNNlayer_2DNN_newtest_stride.pdf'
+save_history(history, 'char_CNN_2_CNNlayer_2DNN_newtest_stride.csv', subdir='new_Character_Level_Models')
 
 print ('the process for {} is done'.format(write_filename))
 
-new_model = load_model('../../MLP_models/char_CNN_2_CNNlayer_2DNN_newtest.hdf5')
+new_model = load_model('../../MLP_models/char_CNN_2_CNNlayer_2DNN_newtest_stride.hdf5')
 #new_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 #scores = new_model.evaluate(X_test,y_test, verbose=0)
 scores = new_model.evaluate(encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check ), y_test, verbose=0)
