@@ -1,0 +1,2 @@
+lstm_char_units64_layer_num1_dropout_0:
+{'loss': 0.69276534716288252, 'acc': 0.50919999480247502}

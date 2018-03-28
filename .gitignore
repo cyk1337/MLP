@@ -1,6 +1,6 @@
 .idea/*
 
-__pycache__/*
+*/__pycache__/*
 
 # *.ipynb
 
@@ -9,3 +9,5 @@ __pycache__/*
 glove.6B.100d.txt
 
 *.sh
+best_model
+best_model/old_ref_loss/bigram_fasttext_test best_model/old_ref_loss/CBOW_CNN+LSTM_maxpooling_4_test best_model/old_ref_loss/CBOW_GRU_optimal_test.hdf5 best_model/old_ref_loss/CBOW_LSTM_optimal_test.hdf5 best_model/old_ref_loss/lstm_char_units128_layer_num1_dropout_0.hdf5 best_model/old_ref_loss/lstm_char_units32_layer_num1_dropout_0.hdf5 best_model/old_ref_loss/lstm_char_units64_layer_num1_dropout_0.hdf5 best_model/old_ref_loss/lstm_char_units64_layer_num2_dropout_0.hdf5

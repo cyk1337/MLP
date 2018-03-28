@@ -69,7 +69,7 @@ dropout_rate = 0
 #dropout_rate = float(sys.argv[2])
 maxlen = 1014
 
-layer_num = 1
+layer_num = 2
 
 print("Building model...")
 print('LSTM units:',units)
@@ -122,7 +122,7 @@ history = model.fit_generator(train_data_generator, steps_per_epoch=training_ste
 
 
 subdir = 'lstm_char'
-plot_filename = 'lstm_char_units{}_layer_num()_dropout_{}.pdf'.format(units, layer_num,  dropout_rate)
+plot_filename = 'lstm_char_units{}_layer_num{}_dropout_{}.pdf'.format(units, layer_num,  dropout_rate)
 # save history info
 save_history(history, '{}.csv'.format(plot_filename[:-4]), subdir=subdir)
 # save model
