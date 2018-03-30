@@ -5,3 +5,7 @@ CBOW_LSTM_UNIT128:
 bigram_fasttext_test{'loss': 0.2207225945154826, 'acc': 0.91759999999999997}
 cnn_lstm_test_maxpooling_4:
 {'loss': 0.22466384637355805, 'acc': 0.9126666666348775}
+word_lstm+cnn:
+{'loss': 0.22702711160977682, 'acc': 0.91373333336512252}
+word_lstm+cnn:
+{'loss': 0.24989103873570759, 'acc': 0.91053333330154418}
