@@ -221,8 +221,6 @@ char_model.add(Flatten())
 #char_model.add(Dense(1024,activation='relu'))
 #char_model.add(Dropout(0.5))
 
-
-
 #####################################word####################
 MAX_SEQUENCE_LENGTH_Word=1000
 #tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
@@ -297,7 +295,7 @@ merged_model.add(Dense(1,activation='sigmoid'))
 
 
 #filepath='keras_models/char_CNN_1_CNNlayer_2DNN_lessunits_{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5'
-filepath='../../MLP_models/char_word_CNN_new_new.hdf5'
+filepath='../../MLP_models/char_word_CNN_new_new_1.hdf5'
 checkpoint = ModelCheckpoint(filepath, save_best_only=True, monitor='val_acc', mode = 'max')
 
 
@@ -319,13 +317,13 @@ history=merged_model.fit_generator(data_generator(X_train,X_train_word, y_train)
 
 print (history.history.keys())
 
-write_filename='char_word_CNN_new_new.pdf'
-save_history(history, 'char_word_CNN_new_new.csv', subdir='Character_WORD_Models')
+write_filename='char_word_CNN_new_new_1.pdf'
+save_history(history, 'char_word_CNN_new_new_1.csv', subdir='Character_WORD_Models')
 
 print ('the process for {} is done'.format(write_filename))
 
 #new_model = load_model('keras_models/char_word_CNN.hdf5')
-merged_model.load_weights('../../MLP_models/char_word_CNN_new_new.hdf5')
+merged_model.load_weights('../../MLP_models/char_word_CNN_new_new_1.hdf5')
 merged_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 #scores = new_model.evaluate(X_test,y_test, verbose=0)
 scores = merged_model.evaluate([encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check), X_test_word], y_test, verbose=0)

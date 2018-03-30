@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Mar 28 20:06:09 2018
+Created on Thu Mar 29 16:51:46 2018
+
+@author: s1700808
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Mar 25 16:20:02 2018
 
 @author: s1700808
 """
@@ -56,7 +64,7 @@ from tensorflow.python.client import device_lib
 from nltk.corpus import stopwords
 import nltk
 from keras.layers import Dense, Input, GlobalMaxPooling1D,Bidirectional
-from keras.layers import Conv1D, MaxPooling1D, Embedding
+from keras.layers import Conv1D, MaxPooling1D, Embedding, Merge
 from keras.models import Model
 import matplotlib.pyplot as plt
 from keras.callbacks import CSVLogger, EarlyStopping,ModelCheckpoint
@@ -68,7 +76,7 @@ from CYK.data_loader import load_imdb, load_test
 from keras.models import load_model
 
 MAX_SEQUENCE_LENGTH = 1014
-EMBEDDING_DIM=69
+EMBEDDING_DIM=100
 MAX_NUM_WORDS=5000
 #earlystopping = EarlyStopping(patience=4)
 csv_logger = CSVLogger('log.csv', append=True, separator=';')
@@ -76,43 +84,29 @@ csv_logger = CSVLogger('log.csv', append=True, separator=';')
 print('Indexing word vectors.')
 embeddings_index = {}
 #f = open('D:\MLP_Project\glove.6B.100d.txt','r',encoding="utf-8")
-#f = open(CBOW_embedding, encoding='utf-8')
+f = open(CBOW_embedding, encoding='utf-8')
 #f = open(SkipGram_embedding, encoding='utf-8')
-####hello
 #f = open('D:\MLP_Project\MLP\\embedding\gensim_word2vec.txt','r',encoding='utf-8')
-
 
 
 print('Processing text dataset')
 
+for line in f:
+    values = line.split()
+    word = values[0]
+    coefs = np.asarray(values[1:], dtype='float32')
+    embeddings_index[word] = coefs
+f.close()
+print('Found %s word vectors.' % len(embeddings_index))
+
 (X_train, y_train), (X_val, y_val) = load_imdb()
 X_test, y_test = load_test()
 
-#train_data=pd.read_csv(train_csv)
-#test_data=pd.read_csv(test_csv)
 
-#tokenizer= Tokenizer(num_words=MAX_NUM_WORDS,
-#                     char_level = True)
-#
-#tokenizer.fit_on_texts(train_data['text'])
-#X_train = tokenizer.texts_to_sequences(train_data['text'])
-#
-#word_index = tokenizer.word_index
-#print('Found %s unique tokens.' % len(word_index))
-#
-#vocab_size=len(word_index)+1
-#
-#X_test = tokenizer.texts_to_sequences(test_data['text'])
+X_train_word = X_train.copy()
+X_val_word = X_val.copy()
+X_test_word = X_test.copy()
 
-#X_train=np.array(train_data['text'])
-#X_test=np.array(test_data['text'])
-#
-#
-#y_train=train_data['target']
-#y_test=test_data['target']
-
-#X_train = pad_sequences(X_train, maxlen=MAX_SEQUENCE_LENGTH)
-#X_test = pad_sequences(X_test, maxlen=MAX_SEQUENCE_LENGTH)
 
 y_train = np.array(y_train)
 y_val = np.array(y_val)
@@ -189,140 +183,110 @@ vocab, reverse_vocab, vocab_size, check=create_vocab_set()
 #X_train=encode_data(X_train, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check)
 #X_val=encode_data(X_val, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check)
 
-def data_generator(X, y):
+def data_generator(X, X_word, y):
     while 1:
-        for i in range(35):
-             yield encode_data(X[i*1000:(i+1)*1000], MAX_SEQUENCE_LENGTH, vocab, vocab_size, check), y[i*1000:(i+1)*1000]
+        for i in range(70):
+             yield [encode_data(X[i*500:(i+1)*500], MAX_SEQUENCE_LENGTH, vocab, vocab_size, check), X_word[i*500:(i+1)*500]],y[i*500:(i+1)*500]
 
-def val_generator(X_val, y_val):
-    while 1:
-        for i in range(15):
-            yield encode_data(X_val[i*500:(i+1)*500],MAX_SEQUENCE_LENGTH, vocab, vocab_size, check), y_val[i*500:(i+1)*500]  
-
-
-def test_generator(X_test, y_test):
+def val_generator(X_val, X_word, y_val):
     while 1:
         for i in range(15):
-            yield encode_data(X_test[i*500:(i+1)*500],MAX_SEQUENCE_LENGTH, vocab, vocab_size, check), y_test[i*500:(i+1)*500]  
+            yield [encode_data(X_val[i*500:(i+1)*500],MAX_SEQUENCE_LENGTH, vocab, vocab_size, check),X_word[i*500:(i+1)*500]], y_val[i*500:(i+1)*500]  
+
+
+def test_generator(X_test, X_word, y_test):
+    while 1:
+        for i in range(15):
+            yield [encode_data(X_test[i*500:(i+1)*500],MAX_SEQUENCE_LENGTH, vocab, vocab_size, check),X_word[i*500:(i+1)*500]], y_test[i*500:(i+1)*500]  
 
 #encode_data(X_val[i*1000:(i+1)*1000], MAX_SEQUENCE_LENGTH, vocab, vocab_size, check)
 
 num_words = min(MAX_NUM_WORDS, vocab_size)
 
-model = Sequential()
-#embedding_layer = Embedding(num_words,
-#                            num_words,
-##                            weights=[embedding_matrix],
-#                            input_length=MAX_SEQUENCE_LENGTH,
-#                            trainable=False
-#                            #dropout=0.2
-#                            )
-#
-#model.add(embedding_layer)
-#print ('###########################################################')
-#print ('embedding layer output shape is:',model.output_shape)
 
-model.add(Conv1D(256,
-                 7,
-                 padding='valid',
-                 activation='relu',
-                 strides=2,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
-#model.add(MaxPooling1D(pool_size=3))
+###################################char############
+char_model = Sequential()
+char_model.add(LSTM(64, input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
+#char_model.add(Dense(1024,activation='relu'))
+#char_model.add(Dropout(0.5))
 
-#model.add(Conv1D(256,
-#                 7,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(MaxPooling1D(pool_size=3))
+#####################################word####################
+MAX_SEQUENCE_LENGTH_Word=1000
+#tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
+tokenizer= Tokenizer(num_words=MAX_NUM_WORDS)
 
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-model.add(Conv1D(256,
-                 3,
-                 padding='valid',
-                 activation='relu',
-                 strides=2))
-#model.add(MaxPooling1D(pool_size=3))
+tokenizer.fit_on_texts(X_train_word)
+#X_train = tokenizer.texts_to_matrix(train_data['text'], mode='count')
+X_train_word = tokenizer.texts_to_sequences(X_train_word)
+
+word_index = tokenizer.word_index
+print('Found %s unique tokens.' % len(word_index))
 
 
-print ('after maxpooling layer the shape is:',model.output_shape)
-#model.add(GlobalMaxPooling1D())
-print ('after maxpooling layer the shape is:',model.output_shape)
+#text_to_word_sequence
+#X_val = tokenizer.texts_to_matrix(val_data['text'], mode='count')
+X_val_word = tokenizer.texts_to_sequences(X_val_word)
+X_test_word = tokenizer.texts_to_sequences(X_test_word)
 
 
-model.add(Flatten())
-
-#model.add(Dense(1024,activation='relu'))
-#model.add(Dropout(0.5))
-
-model.add(Dense(1024,activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(1,activation='sigmoid'))
+X_train_word = pad_sequences(X_train_word, maxlen=MAX_SEQUENCE_LENGTH_Word)
+X_val_word = pad_sequences(X_val_word, maxlen=MAX_SEQUENCE_LENGTH_Word)
+X_test_word = pad_sequences(X_test_word, maxlen=MAX_SEQUENCE_LENGTH_Word)
 
 
-#model.add(Conv1D(100,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
-##model.add(GlobalMaxPooling1D())
-#model.add(MaxPooling1D(pool_size=3))
-#
-#model.add(Conv1D(100,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-##model.add(GlobalMaxPooling1D())
-#model.add(MaxPooling1D(pool_size=3))
-#
-#model.add(Conv1D(100,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
-#model.add(GlobalMaxPooling1D())
-
-#print ('after maxpooling layer the shape is:',model.output_shape)
-##model.add(GlobalMaxPooling1D())
-#print ('after maxpooling layer the shape is:',model.output_shape)
-#
-#model.add(Dense(250,activation='relu'))
-#model.add(Dropout(0.5))
-#model.add(Dense(1,activation='sigmoid'))
+print('Preparing embedding matrix.')
+        
+num_words = min(MAX_NUM_WORDS, len(word_index))
+embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
+for word, i in word_index.items():
+    if i >= MAX_NUM_WORDS:
+        continue
+    embedding_vector = embeddings_index.get(word)
+    if embedding_vector is not None:
+        # words not found in embedding index will be all-zeros.
+        embedding_matrix[i] = embedding_vector
 
 
-#sgd = SGD(lr=0.01, momentum=0.9)
-#tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
+word_model = Sequential()
+embedding_layer = Embedding(num_words,
+                            EMBEDDING_DIM,
+                            weights=[embedding_matrix],
+                            input_length=MAX_SEQUENCE_LENGTH_Word,
+                            trainable=True
+                            )
+
+word_model.add(embedding_layer)
+print ('###########################################################')
+print ('embedding layer output shape is:',word_model.output_shape)
+
+#model.add(MaxPooling1D(pool_size=4))
+
+word_model.add(LSTM(128))
+
+
+
+
+merged =  Merge([char_model, word_model], mode='concat')
+
+merged_model = Sequential()
+merged_model.add(merged)
+#word_model.add(Dense(512,activation='relu'))
+#word_model.add(Dropout(0.5))
+merged_model.add(Dense(1,activation='sigmoid'))
+
 
 #filepath='keras_models/char_CNN_1_CNNlayer_2DNN_lessunits_{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5'
-filepath='../../MLP_models/char_CNN_2_CNNlayer_2DNN_newtest_stride.hdf5'
-
-#checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
+filepath='../../MLP_models/char_word_LSTM_new_new_1.hdf5'
 checkpoint = ModelCheckpoint(filepath, save_best_only=True, monitor='val_acc', mode = 'max')
 
 
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+merged_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 #history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, batch_size=64)
 
 
-history=model.fit_generator(data_generator(X_train, y_train), 
-                            steps_per_epoch=35,epochs=15,verbose=1,
-                            validation_data=val_generator(X_val,y_val),
+history=merged_model.fit_generator(data_generator(X_train,X_train_word, y_train),
+                            steps_per_epoch=70,epochs=15,verbose=1,
+                            validation_data=val_generator(X_val,X_val_word,y_val),
                             validation_steps=15, callbacks=[checkpoint])
 
 # Evaluation on the test set
@@ -334,15 +298,16 @@ history=model.fit_generator(data_generator(X_train, y_train),
 
 print (history.history.keys())
 
-write_filename='char_CNN_2_CNNlayer_2DNN_newtest_stride.pdf'
-save_history(history, 'char_CNN_2_CNNlayer_2DNN_newtest_stride.csv', subdir='new_Character_Level_Models')
+write_filename='char_word_LSTM_new_new_1.pdf'
+save_history(history, 'char_word_LSTM_new_new_1.csv', subdir='Character_WORD_Models')
 
 print ('the process for {} is done'.format(write_filename))
 
-new_model = load_model('../../MLP_models/char_CNN_2_CNNlayer_2DNN_newtest_stride.hdf5')
-#new_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+#new_model = load_model('keras_models/char_word_CNN.hdf5')
+merged_model.load_weights('../../MLP_models/char_word_LSTM_new_new_1.hdf5')
+merged_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 #scores = new_model.evaluate(X_test,y_test, verbose=0)
-scores = new_model.evaluate(encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check ), y_test, verbose=0)
+scores = merged_model.evaluate([encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check), X_test_word], y_test, verbose=0)
 
 print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 

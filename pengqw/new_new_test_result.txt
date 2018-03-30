@@ -1,8 +1,0 @@
-
- the model name is NEW_CBOW_CNN_WORD_3.pdf, the  best loss on test is: 0.24076979524294537, the acc on test is: 0.9038666666348775 
-
- the model name is char_CNN_2_CNNlayer_2DNN_newtest.pdf, the  best loss on test is: 0.38765101985931394, the acc on test is: 0.8450666666984558 
-
- the model name is char_word_CNN_1.pdf, the  best loss on test is: 0.2576172051270803, the acc on test is: 0.9054666666348775 
-
- the model name is char_LSTM(1layer)_128_new.pdf, the  best loss on test is: 0.4372087688287099, the acc on test is: 0.7932 

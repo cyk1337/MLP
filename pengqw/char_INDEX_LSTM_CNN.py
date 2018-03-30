@@ -1,3 +1,19 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Mar 28 23:52:57 2018
+
+@author: s1700808
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Mar 25 22:23:40 2018
+
+@author: s1700808
+"""
+
 # -*- coding: utf-8 -*-
 """
 Created on Sat Feb 17 16:32:33 2018
@@ -82,8 +98,8 @@ X_test, y_test = load_test()
 #train_data=pd.read_csv(train_csv)
 #test_data=pd.read_csv(test_csv)
 
-tokenizer= Tokenizer(char_level = True,lower=True)
-
+tokenizer= Tokenizer(char_level = True)
+#
 tokenizer.fit_on_texts(X_train)
 
 word_index = tokenizer.word_index
@@ -102,7 +118,7 @@ y_val = np.array(y_val)
 y_test = np.array(y_test)
 
 print('Preparing embedding matrix.')
-num_words = min(MAX_NUM_WORDS, len(word_index))
+
 
 #embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
 #for word, i in word_index.items():
@@ -112,10 +128,11 @@ num_words = min(MAX_NUM_WORDS, len(word_index))
 #    if embedding_vector is not None:
 #        # words not found in embedding index will be all-zeros.
 #        embedding_matrix[i] = embedding_vector
-        
+
+
 
 model = Sequential()
-embedding_layer = Embedding(num_words,
+embedding_layer = Embedding(200,
                             69,
                             input_length=MAX_SEQUENCE_LENGTH
                             )
@@ -123,63 +140,19 @@ model.add(embedding_layer)
 print ('###########################################################')
 print ('embedding layer output shape is:',model.output_shape)
 
-model.add(Conv1D(256,
-                 7,
-                 padding='valid',
-                 activation='relu',
-                 strides=1,input_shape=(MAX_SEQUENCE_LENGTH,num_words)))
-model.add(MaxPooling1D(pool_size=3))
-#model.add(Conv1D(256,
-#                 7,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(MaxPooling1D(pool_size=3))
 
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-#model.add(Conv1D(256,
-#                 3,
-#                 padding='valid',
-#                 activation='relu',
-#                 strides=1))
-model.add(Conv1D(256,
-                 3,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-model.add(MaxPooling1D(pool_size=3))
+#model.add(LSTM(128, return_sequences=True))
 
 
-print ('after maxpooling layer the shape is:',model.output_shape)
-#model.add(GlobalMaxPooling1D())
-print ('after maxpooling layer the shape is:',model.output_shape)
-
-
-model.add(Flatten())
-
-#model.add(Dense(1024,activation='relu'))
-#model.add(Dropout(0.5))
-
-model.add(Dense(1024,activation='relu'))
-model.add(Dropout(0.5))
+model.add(LSTM(128))
 model.add(Dense(1,activation='sigmoid'))
-
 
 
 #sgd = SGD(lr=0.01, momentum=0.9)
 #tensorBoardCallback = TensorBoard(log_dir='./pqw_logs', write_graph=True)
 
 #filepath='keras_models/char_CNN_1_CNNlayer_2DNN_lessunits_{epoch:02d}-{val_loss:.4f}-{val_acc:.4f}.hdf5'
-filepath='../../MLP_models/char_CNN_2_CNNlayer_2DNN_kerastrue_test.hdf5'
+filepath='../../MLP_models/char_LSTM(1layer)_128.hdf5'
 
 #checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 checkpoint = ModelCheckpoint(filepath, save_best_only=True, monitor='val_acc', mode = 'max')
@@ -197,28 +170,27 @@ history=model.fit(X_train,y_train , validation_data=(X_val,y_val), epochs=15, ba
 # Evaluation on the test set
 #scores = model.evaluate(encode_data(X_test, MAX_SEQUENCE_LENGTH, vocab, vocab_size, check ), y_test, verbose=0)
 
+
 #print ('=====================the result for test set==============================')
 #print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
 print (history.history.keys())
 
-write_filename='char_CNN_2_CNNlayer_2DNN_kerastrue_test.pdf'
-save_history(history, 'char_CNN_2_CNNlayer_2DNN_kerastrue_test.csv', subdir='Character_Level_Models_Keras_True')
+write_filename='char_LSTM(1layer)_128_new.pdf'
+save_history(history, 'char_LSTM(1layer)_128_new.csv', subdir='Character_Level_Models_Keras_True')
 
 print ('the process for {} is done'.format(write_filename))
 
-new_model = load_model('../../MLP_models/char_CNN_2_CNNlayer_2DNN_kerastrue_test.hdf5')
+
+new_model = load_model('../../MLP_models/char_LSTM(1layer)_128.hdf5')
 #new_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 #scores = new_model.evaluate(X_test,y_test, verbose=0)
 scores = new_model.evaluate(X_test, y_test, verbose=0)
 
 print("Loss: %.2f,  Accuracy: %.2f%%" % (scores[0],scores[1]*100))
 
-with open('test_result.txt', 'a') as f:
+with open('new_new_test_result.txt', 'a') as f:
     f.write('\n the model name is {0}, the  best loss on test is: {1}, the acc on test is: {2} \n'.format(write_filename, 
             scores[0],scores[1]))
-
-
-
 
 
