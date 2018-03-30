@@ -1,25 +1,5 @@
 # encoding: utf-8
-
-'''
-  
-             \ \ / /__| | ___   _ _ __    / ___| | | |  / \  |_ _|
-              \ V / _ \ |/ / | | | '_ \  | |   | |_| | / _ \  | | 
-               | |  __/   <| |_| | | | | | |___|  _  |/ ___ \ | | 
-               |_|\___|_|\_\\__,_|_| |_|  \____|_| |_/_/   \_\___
- ==========================================================================
-@author: CYK
-
-@license: School of Informatics, Edinburgh
-
-@contact: s1718204@sms.ed.ac.uk
-
-@file: plot_fit.py
-
-@time: 11/02/2018 10:31
-
-@desc:         
-               
-'''              
+           
 
 import __init__
 from config.setting import *

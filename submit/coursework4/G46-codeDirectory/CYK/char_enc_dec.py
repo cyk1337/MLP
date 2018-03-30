@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # encoding: utf-8
-       
+
 import __init__
 from config.setting import *
 
